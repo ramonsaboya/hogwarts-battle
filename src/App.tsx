@@ -22,13 +22,17 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input type="text" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
         <button onClick={handleClick}>
-          <img src={logo} className="App-logo" alt="logo" />
+          Submit
         </button>
         <p>
-          {response || 'XXXX'}
+          {response || '<server address>'}
         </p>
-        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
       </header>
     </div>
   );
