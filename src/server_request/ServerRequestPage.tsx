@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from './../logo.svg';
+import './../App.css';
 
-export default function App() {
+export default function ServerRequestPage() {
   const [response, setResponse] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
