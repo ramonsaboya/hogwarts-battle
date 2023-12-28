@@ -4,11 +4,19 @@ import './App.css';
 
 function App() {
   const [response, setResponse] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleClick = async () => {
-    const res = await fetch(process.env.REACT_APP_REQUEST_GAME_SERVER_LAMBDA_URL || '');
-    const data = await res.text();
-    setResponse(data);
+    fetch(process.env.REACT_APP_REQUEST_GAME_SERVER_LAMBDA_URL || '', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password })
+    })
+      .then(res => res.text())
+      .then(data => setResponse(data))
+      .catch(error => setResponse('Error: ' + error.message));
   };
 
   return (
@@ -20,6 +28,7 @@ function App() {
         <p>
           {response || 'XXXX'}
         </p>
+        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
       </header>
     </div>
   );
