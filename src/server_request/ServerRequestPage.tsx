@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import logo from './../logo.svg';
 import './../App.css';
 import { isValidIpAddress } from '../utils';
+import { Link } from 'react-router-dom';
 
 export default function ServerRequestPage() {
   const [response, setResponseRaw] = useState('');
@@ -51,7 +52,7 @@ export default function ServerRequestPage() {
           <p>Loading...</p>
         ) : (
             gameServerAddress ? (
-              <a href={`/${gameServerAddress}`}>Click here to redirect to game room</a>
+              <Link to={`${gameServerAddress}`}>Click here to redirect to game room</Link>
             ) : (
               <p>
                 {response || '<server address>'}
