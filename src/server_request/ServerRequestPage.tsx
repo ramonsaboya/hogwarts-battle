@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import logo from './../logo.svg';
 import './../App.css';
+import { isValidIpAddress } from '../utils';
 
 export default function ServerRequestPage() {
-  const [response, setResponse] = useState('');
+  const [response, setResponseRaw] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [gameServerAddress, setGameServerAddress] = useState<string | undefined>(undefined);
+
+  const setResponse = (response: string) => {
+    setResponseRaw(response);
+    if (isValidIpAddress(response)) {
+      setGameServerAddress(response)
+    }
+  }
 
   const handleClick = async () => {
     if (isLoading) {
@@ -41,9 +50,12 @@ export default function ServerRequestPage() {
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          <p>
-            {response || '<server address>'}
-          </p>
+            gameServerAddress ? (
+              <a href={`/${gameServerAddress}`}>Click here to redirect to game room</a>
+            ) : (
+              <p>
+                {response || '<server address>'}
+              </p>)
         )}
       </header>
     </div>

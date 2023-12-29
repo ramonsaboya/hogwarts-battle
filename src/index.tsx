@@ -8,7 +8,9 @@ import {
 } from "react-router-dom";
 import ServerRequestPage from './server_request/ServerRequestPage';
 import ErrorPage from './ErrorPage';
-import GamePage from './game/GamePage';
+import GamePage, {
+  loader as gameLoader,
+} from './game/GamePage';
 
 const router = createBrowserRouter([
   {
@@ -17,8 +19,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/:path",
+    path: "/:serverAddress",
     element: <GamePage />,
+    errorElement: <ErrorPage />,
+    loader: gameLoader,
   }
 ]);
 
