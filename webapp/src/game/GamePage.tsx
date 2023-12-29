@@ -36,10 +36,10 @@ export default function GamePage() {
           'Content-Type': 'application/json',
         },
       });
+      const body = await response.json();
       if (response.ok) {
-        setApiResponse('Success');
+        setApiResponse(`Success! Player ID: ${body.playerID}`);
       } else {
-        const body = await response.json();
         setApiResponse(body.error);
       }
     } catch (error) {

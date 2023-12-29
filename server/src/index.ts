@@ -4,7 +4,8 @@ import cors from 'cors';
 const app = express();
 const port = 4000;
 
-const players: { name: string }[] = [];
+const players: { id: number, name: string }[] = [];
+let nextPlayerID = 1;
 const maxPlayers = 4;
 
 app.use(cors({
@@ -24,9 +25,10 @@ app.post('/join', (req, res) => {
         return res.status(400).json({ error: 'Room is full' });
     }
 
-    players.push({ name: playerName });
+    const playerID = nextPlayerID++;
+    players.push({ id: playerID, name: playerName });
 
-    return res.status(200).json({ message: 'Player joined successfully' });
+    return res.status(200).json({ playerID: playerID, message: 'Player joined successfully' });
 });
 
 app.listen(port, () => {
