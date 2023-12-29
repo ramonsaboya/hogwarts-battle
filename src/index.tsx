@@ -14,12 +14,12 @@ import GamePage, {
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/hogwarts-battle/",
     element: <ServerRequestPage />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/:serverAddress",
+    path: "/hogwarts-battle/:serverAddress",
     element: <GamePage />,
     errorElement: <ErrorPage />,
     loader: gameLoader,
