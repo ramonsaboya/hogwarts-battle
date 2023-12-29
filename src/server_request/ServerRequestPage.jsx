@@ -8,9 +8,9 @@ export default function ServerRequestPage() {
   const [response, setResponseRaw] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [gameServerAddress, setGameServerAddress] = useState<string | undefined>(undefined);
+  const [gameServerAddress, setGameServerAddress] = useState(undefined);
 
-  const setResponse = (response: string) => {
+  const setResponse = (response) => {
     setResponseRaw(response);
     if (isValidIpAddress(response)) {
       setGameServerAddress(response)
