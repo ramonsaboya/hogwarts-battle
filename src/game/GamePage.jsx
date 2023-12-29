@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { isValidIpAddress } from '../utils';
-import HogwartsBattle from './HogwartsBattle';
 import { useLoaderData } from 'react-router-dom';
 
 export async function loader({params}) {
@@ -8,11 +7,21 @@ export async function loader({params}) {
   if (!serverAddress || !isValidIpAddress(serverAddress)) {
     throw new Response("Not Found", { status: 404 });
   }
-  return { serverAddress: serverAddress };
+  return { serverAddress };
 }
 
 export default function GamePage() {
   const { serverAddress } = useLoaderData();
+  const [playerName, setPlayerName] = useState('');
 
-  return <HogwartsBattle playerID="Ramon" serverAddress={serverAddress} />;
+  const handlePlayerNameChange = (event) => {
+    setPlayerName(event.target.value);
+  };
+
+  return (
+    <div>
+      <input type="text" value={playerName} onChange={handlePlayerNameChange} />
+      <button>Call API</button>
+    </div>
+  );
 }

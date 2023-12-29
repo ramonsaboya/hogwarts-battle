@@ -9,6 +9,7 @@ export default function ServerRequestPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [gameServerAddress, setGameServerAddress] = useState(undefined);
+  const [playerID, setPlayerID] = useState(undefined);
 
   const setResponse = (response) => {
     setResponseRaw(response);
@@ -44,6 +45,8 @@ export default function ServerRequestPage() {
         <div>
           <label htmlFor="password">Password:</label>
           <input type="text" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <label htmlFor="id">Nickname:</label>
+          <input type="text" id="id" value={playerID} onChange={(e) => setPlayerID(e.target.value)} />
         </div>
         <button onClick={handleClick} disabled={isLoading}>
           Submit
@@ -51,8 +54,8 @@ export default function ServerRequestPage() {
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-            gameServerAddress ? (
-              <Link to={`${gameServerAddress}`}>Click here to redirect to game room</Link>
+            gameServerAddress && playerID ? (
+              <Link to={`${gameServerAddress}/${playerID}`}>Click here to redirect to game room</Link>
             ) : (
               <p>
                 {response || '<server address>'}
