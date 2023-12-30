@@ -1,27 +1,19 @@
 import React from 'react';
-import {socket} from '../socket/socket';
-import {PlayerView} from './player_view';
-import {usePlayerView, useSetPlayerView} from './PlayerViewContext';
+import {usePlayerView} from './PlayerViewContext';
+import {useAction} from '../socket/useAction';
 
 export default function Game() {
   const playerView = usePlayerView();
-  const setPlayerView = useSetPlayerView();
+  const runAction = useAction();
 
   if (playerView.activeVillain === undefined) {
     return <div>loading...</div>;
   }
 
-  function handleKillVillain() {
-    socket.emit('kill villain', (playerView: PlayerView) => {
-      console.log('kill villain callback', playerView);
-      setPlayerView(playerView);
-    });
-  }
-
   return (
     <div>
       <div>{playerView.activeVillain.name}</div>
-      <button onClick={handleKillVillain}>Kill Villain</button>
+      <button onClick={() => runAction('kill villain')}>Kill Villain</button>
     </div>
   );
 }

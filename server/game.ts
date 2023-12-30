@@ -1,3 +1,4 @@
+import {Socket} from 'socket.io';
 import {Stack} from '../common/stack';
 import {Card, GameState, getInitialGameState} from './game_state';
 
@@ -14,13 +15,16 @@ const MAX_PLAYERS = 4;
 
 export class Game {
   private state: GameState;
+
   private players: Player[];
+  private playerSocketMap: Map<PlayerID, Socket>;
 
   static nextPlayerID = 1;
 
   constructor() {
     this.state = getInitialGameState();
     this.players = [];
+    this.playerSocketMap = new Map();
   }
 
   public getState(): GameState {
@@ -35,7 +39,15 @@ export class Game {
     return this.players;
   }
 
-  public addPlayer(playerName: string): Player {
+  public getPlayerSocket(playerID: PlayerID): Socket {
+    const socket = this.playerSocketMap.get(playerID);
+    if (!socket) {
+      throw new Error('Socket not found for player');
+    }
+    return socket;
+  }
+
+  public addPlayer(playerName: string, socket: Socket): Player {
     if (this.isGameFull()) {
       throw new Error('Game is full');
     }
@@ -49,6 +61,7 @@ export class Game {
       name: playerName,
     };
     this.players.push(player);
+    this.playerSocketMap.set(player.id, socket);
 
     this.state = {
       ...this.state,

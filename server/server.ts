@@ -41,7 +41,7 @@ io.on('connection', socket => {
 
       socket.leave('outside');
 
-      const player = game.addPlayer(playerName);
+      const player = game.addPlayer(playerName, socket);
       registerListeners(player.id, socket);
 
       callback(createPlayerView(game.getState(), player.id));
@@ -54,31 +54,35 @@ io.on('connection', socket => {
 });
 
 function registerListeners(playerID: number, socket: Socket) {
-  socket.on('kill villain', (callback: (playerView: PlayerView) => {}) => {
-    console.log('kill vilain action');
+  socket.on(
+    'kill villain',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (args: any, callback: (playerView: PlayerView) => {}) => {
+      console.log('kill vilain action');
 
-    const state = game.getState();
+      const state = game.getState();
 
-    const activeVillain = state.villains.active;
-    console.log('killing villain: ' + activeVillain.name);
+      const activeVillain = state.villains.active;
+      console.log('killing villain: ' + activeVillain.name);
 
-    const newDeck = state.villains.deck;
-    const newVillain = newDeck.pop();
-    if (!newVillain) {
-      throw new Error('No more villains');
+      const newDeck = state.villains.deck;
+      const newVillain = newDeck.pop();
+      if (!newVillain) {
+        throw new Error('No more villains');
+      }
+
+      game.setState({
+        ...state,
+        villains: {
+          deck: newDeck,
+          active: newVillain,
+        },
+      });
+
+      callback(createPlayerView(game.getState(), playerID));
+      broadcastPlayerViews(playerID);
     }
-
-    game.setState({
-      ...state,
-      villains: {
-        deck: newDeck,
-        active: newVillain,
-      },
-    });
-
-    callback(createPlayerView(game.getState(), playerID));
-    broadcastPlayerViews(playerID);
-  });
+  );
 }
 
 function broadcastPlayerViews(expectPlayerID: number) {
@@ -88,8 +92,9 @@ function broadcastPlayerViews(expectPlayerID: number) {
   players
     .filter(player => player.id !== expectPlayerID)
     .forEach(player => {
+      console.log('broadcasting to player: ' + player.name);
       const playerView = createPlayerView(gameState, player.id);
-      io.emit('sync', playerView);
+      game.getPlayerSocket(player.id).emit('sync', playerView);
     });
 }
 
