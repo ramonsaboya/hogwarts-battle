@@ -7,6 +7,7 @@ import {Game} from './game';
 import {PlayerView} from '../src/game/player_view';
 import {ClientToServerEvents, ServerToClientEvents} from '../src/socket/socket';
 import {registerListeners} from './actions';
+import {Hero} from './player/player_state';
 
 const PORT = 4030;
 
@@ -33,7 +34,11 @@ io.on('connection', socket => {
 
   socket.on(
     'join',
-    (playerName: string, callback: (gameState: PlayerView | null) => void) => {
+    (
+      playerName: string,
+      hero: Hero,
+      callback: (gameState: PlayerView | null) => void
+    ) => {
       const [canJoin, reason] = game.canPlayerJoin(playerName);
       if (!canJoin) {
         console.log(`player ${playerName} cannot join: ${reason}`);
@@ -43,7 +48,7 @@ io.on('connection', socket => {
 
       socket.leave('outside');
 
-      const player = game.addPlayer(playerName, socket);
+      const player = game.addPlayer(playerName, hero, socket);
       registerListeners(game, player.id, socket);
 
       callback(createPlayerView(game.getState(), player.id));

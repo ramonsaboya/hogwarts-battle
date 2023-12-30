@@ -1,7 +1,7 @@
 import {Socket} from 'socket.io';
 import {Stack} from '../common/stack';
 import {GameState, createPlayerView, getInitialGameState} from './game_state';
-import {Card} from './player/player_state';
+import {Card, Hero} from './player/player_state';
 
 export type PlayerID = number;
 
@@ -48,7 +48,7 @@ export class Game {
     return socket;
   }
 
-  public addPlayer(playerName: string, socket: Socket): Player {
+  public addPlayer(playerName: string, hero: Hero, socket: Socket): Player {
     if (this.isGameFull()) {
       throw new Error('Game is full');
     }
@@ -69,7 +69,7 @@ export class Game {
       players: {
         ...this.state.players,
         [player.id]: {
-          hero: null,
+          hero: hero,
           hand: [
             {name: 'test1', type: 'SPELL'},
             {name: 'test2', type: 'ITEM'},

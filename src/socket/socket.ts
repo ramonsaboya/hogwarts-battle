@@ -4,6 +4,7 @@ import {VillainsEvents} from '../../server/villain/villains_actions';
 import {PlayerEvents} from '../../server/player/player_actions';
 import {GameState} from '../../server/game_state';
 import {PlayerID} from '../../server/game';
+import {Hero} from '../../server/player/player_state';
 
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   'http://localhost:4030',
@@ -19,6 +20,7 @@ export interface ServerToClientEvents {
 export type ClientToServerEvents = {
   join: (
     playerName: string,
+    hero: Hero,
     callback: (playerView: PlayerView | null) => void
   ) => void;
 } & VillainsEvents &
