@@ -6,7 +6,6 @@ import {isValidIpAddress} from '../utils';
 import {getErrorMessage} from '../error_handling';
 import Game from './Game';
 import {GameStateContextProvider} from './GameStateContext';
-import {SocketContextProvider} from '../socket/SocketContext';
 
 type GameLoaderData = {
   serverAddress: string | undefined;
@@ -54,9 +53,7 @@ export default function GameLobbyPage() {
     <div>
       {apiResponse.startsWith('Success') ? (
         <GameStateContextProvider>
-          <SocketContextProvider>
-            <Game />
-          </SocketContextProvider>
+          <Game />
         </GameStateContextProvider>
       ) : (
         <>

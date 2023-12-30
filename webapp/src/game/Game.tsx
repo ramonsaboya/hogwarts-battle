@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {useSocket} from '../socket/SocketContext';
-import {useGameState} from './GameStateContext';
+import React, {useEffect, useState} from 'react';
+import {useGameState, useSetGameState} from './GameStateContext';
+import {socket} from '../socket/socket';
 
 export interface GameState {
   playerView: {
@@ -10,15 +10,17 @@ export interface GameState {
   currentPlayer: number;
 }
 
-export default function Game() {
-  const socket = useSocket();
+function Game() {
   const gameState = useGameState();
 
   const [villainName, setVillainName] = useState('');
 
-  const handleKillVillain = () => {
-    socket.emit('kill villain', villainName);
-  };
+  function handleKillVillain() {
+    console.log('matando');
+    socket.emit('vilain', villainName, (state: GameState) => {
+      console.log('kill villain callback', state);
+    });
+  }
 
   return (
     <div>
@@ -31,4 +33,33 @@ export default function Game() {
       <button onClick={handleKillVillain}>Kill Villain</button>
     </div>
   );
+}
+
+export default function GameWithSocket() {
+  const setGameState = useSetGameState();
+
+  useEffect(() => {
+    socket.connect();
+
+    function onConnect() {
+      console.log('connected');
+      socket.emit('message', 'user connected');
+    }
+
+    function onSyncEvent(gameState: GameState) {
+      console.log('sync', gameState);
+      setGameState(gameState);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('sync', onSyncEvent);
+
+    return () => {
+      socket.off('sync', onSyncEvent);
+      socket.off('connect', onConnect);
+      socket.disconnect();
+    };
+  }, []);
+
+  return <Game />;
 }

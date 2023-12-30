@@ -75,7 +75,7 @@ io.on('connection', socket => {
     console.log('user disconnected');
   });
 
-  socket.on('kill vilain', (vilain: string) => {
+  socket.on('vilain', (vilain: string, callback) => {
     console.log('kill vilain: ' + vilain);
     gameState = {
       ...gameState,
@@ -86,12 +86,13 @@ io.on('connection', socket => {
         ),
       },
     };
+    callback(gameState);
   });
 
   setInterval(() => {
     console.log(gameState);
     socket.emit('sync', gameState);
-  }, 1000);
+  }, 5000);
 });
 
 httpServer.listen(PORT, () => {
