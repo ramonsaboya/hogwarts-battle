@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import {Server} from 'socket.io';
 import {createServer} from 'http';
+import {GameState} from '../src/game/Game';
 
 const PORT = 4030;
 
@@ -13,14 +14,6 @@ const io = new Server(httpServer, {
     methods: ['GET', 'POST'],
   },
 });
-
-interface GameState {
-  playerView: {
-    activeVillains: string[];
-  };
-  players: number[];
-  currentPlayer: number;
-}
 
 const players: {id: number; name: string}[] = [];
 let nextPlayerID = 1;
@@ -82,7 +75,7 @@ io.on('connection', socket => {
       playerView: {
         ...gameState.playerView,
         activeVillains: gameState.playerView.activeVillains.filter(
-          v => v !== vilain
+          (v: string) => v !== vilain
         ),
       },
     };
