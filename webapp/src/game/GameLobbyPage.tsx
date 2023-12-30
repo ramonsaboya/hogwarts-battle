@@ -4,6 +4,9 @@ import {useLoaderData} from '../useLoaderData';
 import {LoaderFunctionArgs, Params} from 'react-router-dom';
 import {isValidIpAddress} from '../utils';
 import {getErrorMessage} from '../error_handling';
+import Game from './Game';
+import {GameStateContextProvider} from './GameStateContext';
+import {SocketContextProvider} from '../socket/SocketContext';
 
 type GameLoaderData = {
   serverAddress: string | undefined;
@@ -19,7 +22,7 @@ export async function loader({
   return {serverAddress: params.serverAddress};
 }
 
-export default function GamePage() {
+export default function GameLobbyPage() {
   const {serverAddress} = useLoaderData<GameLoaderData>();
 
   const [playerName, setPlayerName] = useState('');
@@ -29,7 +32,7 @@ export default function GamePage() {
     event.preventDefault();
     try {
       console.log(playerName);
-      const response = await fetch(`http://${serverAddress}:4000/join`, {
+      const response = await fetch(`http://${serverAddress}:4030/join`, {
         method: 'POST',
         body: JSON.stringify({playerName}),
         headers: {
@@ -49,8 +52,12 @@ export default function GamePage() {
 
   return (
     <div>
-      {apiResponse === 'Success' ? (
-        <div>Success</div>
+      {apiResponse.startsWith('Success') ? (
+        <GameStateContextProvider>
+          <SocketContextProvider>
+            <Game />
+          </SocketContextProvider>
+        </GameStateContextProvider>
       ) : (
         <>
           <form onSubmit={handleSubmit}>
