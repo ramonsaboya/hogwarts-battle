@@ -12,7 +12,7 @@ export default function Game() {
   };
 
   const handlePlayCard = () => {
-    runAction('play card', {cardIndex: selectedCard});
+    runAction({action: 'playCard', args: {cardIndex: selectedCard}});
   };
 
   if (playerView.activeVillain === undefined) {
@@ -24,7 +24,9 @@ export default function Game() {
   return (
     <div>
       <div>{playerView.activeVillain.name}</div>
-      <button onClick={() => runAction('kill villain')}>Kill Villain</button>
+      <button onClick={() => runAction({action: 'killVillain', args: {}})}>
+        Kill Villain
+      </button>
       <select value={selectedCard} onChange={handleCardSelection}>
         <option value="">Select a card</option>
         {playerState.hand.map((card, idx) => (
