@@ -1,30 +1,26 @@
-import React, {useState} from 'react';
-import {useGameState} from './GameStateContext';
+import React from 'react';
 import {socket} from '../socket/socket';
-import {GameState} from './GameState';
+import {PlayerView} from './player_view';
+import {usePlayerView, useSetPlayerView} from './PlayerViewContext';
 
 export default function Game() {
-  const gameState = useGameState();
-  const [villainName, setVillainName] = useState('');
+  const playerView = usePlayerView();
+  const setPlayerView = useSetPlayerView();
 
-  if (gameState.gameContext === undefined) {
+  if (playerView.activeVillain === undefined) {
     return <div>loading...</div>;
   }
 
   function handleKillVillain() {
-    socket.emit('vilain', villainName, (state: GameState) => {
-      console.log('kill villain callback', state);
+    socket.emit('kill villain', (playerView: PlayerView) => {
+      console.log('kill villain callback', playerView);
+      setPlayerView(playerView);
     });
   }
 
   return (
     <div>
-      <div>ID: {gameState.gameContext.currentPlayer}</div>
-      <input
-        type="text"
-        value={villainName}
-        onChange={e => setVillainName(e.target.value)}
-      />
+      <div>{playerView.activeVillain.name}</div>
       <button onClick={handleKillVillain}>Kill Villain</button>
     </div>
   );

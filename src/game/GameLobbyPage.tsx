@@ -3,9 +3,9 @@ import './../App.css';
 import {LoaderFunctionArgs, Params} from 'react-router-dom';
 import {isValidIpAddress} from '../utils';
 import Game from './Game';
-import {GameStateContextProvider, useSetGameState} from './GameStateContext';
 import {socket} from '../socket/socket';
-import {GameState} from './GameState';
+import {PlayerViewContextProvider, useSetPlayerView} from './PlayerViewContext';
+import {PlayerView} from './player_view';
 
 type GameLoaderData = {
   serverAddress: string | undefined;
@@ -22,7 +22,7 @@ export async function loader({
 }
 
 function GameLobbyPage() {
-  const setGameState = useSetGameState();
+  const setPlayerView = useSetPlayerView();
 
   useEffect(() => {
     socket.connect();
@@ -33,9 +33,9 @@ function GameLobbyPage() {
     function onDisconnect() {
       console.log('socket disconnected');
     }
-    function onSyncEvent(gameState: GameState) {
-      console.log('sync', gameState);
-      setGameState(gameState);
+    function onSyncEvent(playerView: PlayerView) {
+      console.log('sync', playerView);
+      setPlayerView(playerView);
     }
 
     socket.on('connect', onConnect);
@@ -56,10 +56,10 @@ function GameLobbyPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    socket.emit('join', playerName, (gameState: GameState | null) => {
-      if (gameState) {
-        console.log('join callback', gameState);
-        setGameState(gameState);
+    socket.emit('join', playerName, (playerView: PlayerView | null) => {
+      if (playerView) {
+        console.log('join callback', playerView);
+        setPlayerView(playerView);
         setApiResponse('Success');
       } else {
         setApiResponse('Error');
@@ -90,8 +90,8 @@ function GameLobbyPage() {
 
 export default function GameLobbyPageWithGameStateContext() {
   return (
-    <GameStateContextProvider>
+    <PlayerViewContextProvider>
       <GameLobbyPage />
-    </GameStateContextProvider>
+    </PlayerViewContextProvider>
   );
 }
