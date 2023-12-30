@@ -5,7 +5,7 @@ export interface Villain {
   health: number;
 }
 
-export interface VillainState {
+export interface VillainsState {
   deck: Stack<Villain>;
   active: Villain;
 }
@@ -19,7 +19,7 @@ const LUCIUS_MALFOY: Villain = {
   health: 10,
 };
 
-export const getInitialVillainState = (): VillainState => ({
+export const getInitialVillainsState = (): VillainsState => ({
   deck: new Stack([LUCIUS_MALFOY]),
   active: DRACO_MALFOY,
 });

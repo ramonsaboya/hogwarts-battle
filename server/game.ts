@@ -1,11 +1,7 @@
 import {Socket} from 'socket.io';
 import {Stack} from '../common/stack';
-import {
-  Card,
-  GameState,
-  createPlayerView,
-  getInitialGameState,
-} from './game_state';
+import {GameState, createPlayerView, getInitialGameState} from './game_state';
+import {Card} from './player/player_state';
 
 export type PlayerID = number;
 
@@ -73,6 +69,7 @@ export class Game {
       players: {
         ...this.state.players,
         [player.id]: {
+          hero: null,
           hand: [],
           deck: new Stack<Card>(),
           discardPile: [],

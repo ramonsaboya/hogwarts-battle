@@ -1,39 +1,15 @@
 import {PlayerView} from '../src/game/player_view';
-import {Stack} from '../common/stack';
-import {VillainState, getInitialVillainState} from './villain/villains_state';
-
-export type Hero = 'Harry' | 'Hermione' | 'Ron' | 'Neville';
-
-export type CardType = 'SPELL' | 'ITEM' | 'ALLY';
-
-export interface Card {
-  name: string;
-  description: string;
-  type: CardType;
-}
-
-export interface HeroCard extends Card {
-  hero: Hero;
-}
-
-export interface RegularCard extends Card {
-  cost: number;
-}
+import {VillainsState, getInitialVillainsState} from './villain/villains_state';
+import {PlayersState, getInitialPlayersState} from './player/player_state';
 
 export interface GameState {
-  villains: VillainState;
-  players: {
-    [playerID: number]: {
-      hand: Card[];
-      deck: Stack<Card>;
-      discardPile: Card[];
-    };
-  };
+  villains: VillainsState;
+  players: PlayersState;
 }
 
 export const getInitialGameState = (): GameState => ({
-  villains: getInitialVillainState(),
-  players: {},
+  villains: getInitialVillainsState(),
+  players: getInitialPlayersState(),
 });
 
 export function createPlayerView(
