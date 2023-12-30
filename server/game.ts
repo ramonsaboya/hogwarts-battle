@@ -70,7 +70,10 @@ export class Game {
         ...this.state.players,
         [player.id]: {
           hero: null,
-          hand: [],
+          hand: [
+            {name: 'test1', type: 'SPELL'},
+            {name: 'test2', type: 'ITEM'},
+          ],
           deck: new Stack<Card>(),
           discardPile: [],
         },

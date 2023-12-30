@@ -5,7 +5,8 @@ import {createServer} from 'http';
 import {createPlayerView} from './game_state';
 import {Game} from './game';
 import {PlayerView} from '../src/game/player_view';
-import {actions as villainActions} from './villain/villains_actions';
+import {actions as villainsActions} from './villain/villains_actions';
+import {actions as playerActions} from './player/player_actions';
 
 const PORT = 4030;
 
@@ -55,7 +56,8 @@ io.on('connection', socket => {
 });
 
 function registerListeners(playerID: number, socket: Socket) {
-  villainActions.killVillainAction(game, playerID, socket);
+  villainsActions.killVillainAction(game, playerID, socket);
+  playerActions.playCardAction(game, playerID, socket);
 }
 
 httpServer.listen(PORT, () => {

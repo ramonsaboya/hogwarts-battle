@@ -6,7 +6,6 @@ export type CardType = 'SPELL' | 'ITEM' | 'ALLY';
 
 export interface Card {
   name: string;
-  description: string;
   type: CardType;
 }
 

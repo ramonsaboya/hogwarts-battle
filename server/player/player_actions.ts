@@ -3,29 +3,29 @@ import {PlayerView} from '../../src/game/player_view';
 import {createPlayerView} from '../game_state';
 import {Game} from '../game';
 
-const killVillainAction = (game: Game, playerID: number, socket: Socket) => {
+const playCardAction = (game: Game, playerID: number, socket: Socket) => {
   socket.on(
-    'kill villain',
+    'play card',
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (args: any, callback: (playerView: PlayerView) => {}) => {
-      console.log('kill vilain action');
+    (args: {cardIndex: number}, callback: (playerView: PlayerView) => {}) => {
+      console.log('play card action');
 
       const state = game.getState();
+      const playerState = state.players[playerID];
 
-      const activeVillain = state.villains.active;
-      console.log('killing villain: ' + activeVillain.name);
-
-      const newDeck = state.villains.deck;
-      const newVillain = newDeck.pop();
-      if (!newVillain) {
-        throw new Error('No more villains');
-      }
+      const card = playerState.hand[args.cardIndex];
+      const newHand = playerState.hand.filter((_, i) => i !== args.cardIndex);
+      const newDiscardPile = [...playerState.discardPile, card];
 
       game.setState({
         ...state,
-        villains: {
-          deck: newDeck,
-          active: newVillain,
+        players: {
+          ...state.players,
+          [playerID]: {
+            ...playerState,
+            hand: newHand,
+            discardPile: newDiscardPile,
+          },
         },
       });
 
@@ -36,5 +36,5 @@ const killVillainAction = (game: Game, playerID: number, socket: Socket) => {
 };
 
 export const actions = {
-  killVillainAction,
+  playCardAction,
 };
