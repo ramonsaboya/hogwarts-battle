@@ -24,7 +24,7 @@ function Game() {
 
   return (
     <div>
-      <div>{gameState.currentPlayer}</div>
+      <div>ID: {gameState.currentPlayer}</div>
       <input
         type="text"
         value={villainName}
