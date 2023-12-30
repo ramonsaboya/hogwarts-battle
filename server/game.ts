@@ -1,6 +1,11 @@
 import {Socket} from 'socket.io';
 import {Stack} from '../common/stack';
-import {Card, GameState, getInitialGameState} from './game_state';
+import {
+  Card,
+  GameState,
+  createPlayerView,
+  getInitialGameState,
+} from './game_state';
 
 export type PlayerID = number;
 
@@ -98,5 +103,14 @@ export class Game {
 
   private isGameFull() {
     return this.players.length >= MAX_PLAYERS;
+  }
+
+  public broadcastPlayerViews(expectPlayerID: number) {
+    this.getPlayers()
+      .filter(player => player.id !== expectPlayerID)
+      .forEach(player => {
+        const playerView = createPlayerView(this.getState(), player.id);
+        this.getPlayerSocket(player.id).emit('sync', playerView);
+      });
   }
 }

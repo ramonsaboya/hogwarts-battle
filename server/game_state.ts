@@ -1,6 +1,6 @@
 import {PlayerView} from '../src/game/player_view';
 import {Stack} from '../common/stack';
-import {VillainState, getInitialVillainState} from './villains_state';
+import {VillainState, getInitialVillainState} from './villain/villains_state';
 
 export type Hero = 'Harry' | 'Hermione' | 'Ron' | 'Neville';
 

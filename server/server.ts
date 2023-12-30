@@ -5,6 +5,7 @@ import {createServer} from 'http';
 import {createPlayerView} from './game_state';
 import {Game} from './game';
 import {PlayerView} from '../src/game/player_view';
+import {actions as villainActions} from './villain/villains_actions';
 
 const PORT = 4030;
 
@@ -45,7 +46,7 @@ io.on('connection', socket => {
       registerListeners(player.id, socket);
 
       callback(createPlayerView(game.getState(), player.id));
-      broadcastPlayerViews(player.id);
+      game.broadcastPlayerViews(player.id);
 
       console.log('player joined: ' + player.name);
       socket.removeAllListeners('join');
@@ -54,48 +55,7 @@ io.on('connection', socket => {
 });
 
 function registerListeners(playerID: number, socket: Socket) {
-  socket.on(
-    'kill villain',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (args: any, callback: (playerView: PlayerView) => {}) => {
-      console.log('kill vilain action');
-
-      const state = game.getState();
-
-      const activeVillain = state.villains.active;
-      console.log('killing villain: ' + activeVillain.name);
-
-      const newDeck = state.villains.deck;
-      const newVillain = newDeck.pop();
-      if (!newVillain) {
-        throw new Error('No more villains');
-      }
-
-      game.setState({
-        ...state,
-        villains: {
-          deck: newDeck,
-          active: newVillain,
-        },
-      });
-
-      callback(createPlayerView(game.getState(), playerID));
-      broadcastPlayerViews(playerID);
-    }
-  );
-}
-
-function broadcastPlayerViews(expectPlayerID: number) {
-  const gameState = game.getState();
-  const players = game.getPlayers();
-
-  players
-    .filter(player => player.id !== expectPlayerID)
-    .forEach(player => {
-      console.log('broadcasting to player: ' + player.name);
-      const playerView = createPlayerView(gameState, player.id);
-      game.getPlayerSocket(player.id).emit('sync', playerView);
-    });
+  villainActions.killVillainAction(game, playerID, socket);
 }
 
 httpServer.listen(PORT, () => {

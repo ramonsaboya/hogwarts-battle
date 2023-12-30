@@ -1,4 +1,4 @@
-import {Stack} from '../common/stack';
+import {Stack} from '../../common/stack';
 
 export interface Villain {
   name: string;
