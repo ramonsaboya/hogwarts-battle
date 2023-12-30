@@ -1,40 +1,28 @@
-import {Socket} from 'socket.io';
 import {PlayerView} from '../../src/game/player_view';
-import {createPlayerView} from '../game_state';
-import {Game} from '../game';
+import {GameState} from '../game_state';
+import {ActionListener} from '../../src/socket/socket';
 
-const killVillainAction = (game: Game, playerID: number, socket: Socket) => {
-  socket.on(
-    'kill villain',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (args: any, callback: (playerView: PlayerView) => {}) => {
-      console.log('kill vilain action');
+export interface VillainsEvents {
+  killVillain: (args: {}, callback: (playerView: PlayerView) => void) => void;
+}
 
-      const state = game.getState();
-
-      const activeVillain = state.villains.active;
-      console.log('killing villain: ' + activeVillain.name);
-
-      const newDeck = state.villains.deck;
-      const newVillain = newDeck.pop();
-      if (!newVillain) {
-        throw new Error('No more villains');
-      }
-
-      game.setState({
-        ...state,
-        villains: {
-          deck: newDeck,
-          active: newVillain,
-        },
-      });
-
-      callback(createPlayerView(game.getState(), playerID));
-      game.broadcastPlayerViews(playerID);
+const killVillainAction: ActionListener = [
+  'killVillain',
+  (state: GameState): GameState => {
+    const newDeck = state.villains.deck;
+    const newVillain = newDeck.pop();
+    if (!newVillain) {
+      throw new Error('No more villains');
     }
-  );
-};
 
-export const actions = {
-  killVillainAction,
-};
+    return {
+      ...state,
+      villains: {
+        deck: newDeck,
+        active: newVillain,
+      },
+    };
+  },
+];
+
+export const actions: ActionListener[] = [killVillainAction];

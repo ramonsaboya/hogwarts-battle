@@ -1,40 +1,43 @@
-import {Socket} from 'socket.io';
 import {PlayerView} from '../../src/game/player_view';
-import {createPlayerView} from '../game_state';
-import {Game} from '../game';
+import {GameState} from '../game_state';
+import {PlayerID} from '../game';
+import {ActionListener} from '../../src/socket/socket';
 
-const playCardAction = (game: Game, playerID: number, socket: Socket) => {
-  socket.on(
-    'play card',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (args: {cardIndex: number}, callback: (playerView: PlayerView) => {}) => {
-      console.log('play card action');
+export interface PlayerEvents {
+  playCard: (
+    args: PlayCardActionArgs,
+    callback: (playerView: PlayerView) => void
+  ) => void;
+}
 
-      const state = game.getState();
-      const playerState = state.players[playerID];
+type PlayCardActionArgs = {
+  cardIndex: number;
+};
+const playCardAction: ActionListener = [
+  'playCard',
+  (
+    state: GameState,
+    args: PlayCardActionArgs,
+    playerID: PlayerID
+  ): GameState => {
+    const playerState = state.players[playerID];
 
-      const card = playerState.hand[args.cardIndex];
-      const newHand = playerState.hand.filter((_, i) => i !== args.cardIndex);
-      const newDiscardPile = [...playerState.discardPile, card];
+    const card = playerState.hand[args.cardIndex];
+    const newHand = playerState.hand.filter((_, i) => i !== args.cardIndex);
+    const newDiscardPile = [...playerState.discardPile, card];
 
-      game.setState({
-        ...state,
-        players: {
-          ...state.players,
-          [playerID]: {
-            ...playerState,
-            hand: newHand,
-            discardPile: newDiscardPile,
-          },
+    return {
+      ...state,
+      players: {
+        ...state.players,
+        [playerID]: {
+          ...playerState,
+          hand: newHand,
+          discardPile: newDiscardPile,
         },
-      });
+      },
+    };
+  },
+];
 
-      callback(createPlayerView(game.getState(), playerID));
-      game.broadcastPlayerViews(playerID);
-    }
-  );
-};
-
-export const actions = {
-  playCardAction,
-};
+export const actions: ActionListener[] = [playCardAction];
