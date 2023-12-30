@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useMemo, useState} from 'react';
-import {GameState} from './Game';
+import {GameState} from './GameState';
 
 type GameStateSetter = React.Dispatch<React.SetStateAction<GameState>>;
 interface GameStateManager {

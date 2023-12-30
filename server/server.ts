@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import {Server} from 'socket.io';
+import {Server, Socket} from 'socket.io';
 import {createServer} from 'http';
-import {GameState} from '../src/game/Game';
+import {GameState} from '../src/game/GameState';
 
 const PORT = 4030;
 
@@ -14,16 +14,16 @@ const io = new Server(httpServer, {
     methods: ['GET', 'POST'],
   },
 });
-
-const players: {id: number; name: string}[] = [];
 let nextPlayerID = 1;
 const maxPlayers = 4;
 let gameState: GameState = {
+  gameContext: {
+    players: [],
+    currentPlayer: 0,
+  },
   playerView: {
     activeVillains: ['malfoy', 'voldemort'],
   },
-  players: [],
-  currentPlayer: 1,
 };
 
 app.use(
@@ -33,42 +33,55 @@ app.use(
 );
 app.use(express.json());
 
-app.post('/join', (req, res) => {
-  const playerName: string = req.body.playerName;
+io.on('connection', socket => {
+  socket.join('outside');
 
-  const playerExists = players.some(player => player.name === playerName);
-  if (playerExists) {
-    return res.status(400).json({error: 'Player name already exists'});
-  }
+  socket.on(
+    'join',
+    (playerName: string, callback: (gameState: GameState | null) => {}) => {
+      console.log('join emiiited for ' + playerName);
 
-  if (players.length >= maxPlayers) {
-    return res.status(400).json({error: 'Room is full'});
-  }
+      const playerExists = gameState.gameContext.players.some(
+        player => player.name === playerName
+      );
+      if (playerExists) {
+        console.log('player already exists for ' + playerName);
+        callback(null);
+        return;
+      }
 
-  const playerID = nextPlayerID++;
-  players.push({id: playerID, name: playerName});
-  gameState = {
-    ...gameState,
-    players: [...gameState.players, playerID],
-  };
+      if (gameState.gameContext.players.length >= maxPlayers) {
+        console.log('room is full for ' + playerName);
+        callback(null);
+        return;
+      }
 
-  return res
-    .status(200)
-    .json({playerID: playerID, message: 'Player joined successfully'});
+      socket.leave('outside');
+
+      const playerID = nextPlayerID++;
+      registerListeners(playerID, socket);
+      gameState = {
+        ...gameState,
+        gameContext: {
+          ...gameState.gameContext,
+          players: [
+            ...gameState.gameContext.players,
+            {id: playerID, name: playerName},
+          ],
+        },
+      };
+
+      callback(gameState);
+      socket.broadcast.except('outside').emit('sync', gameState);
+
+      console.log('player joined: ' + playerName);
+      socket.removeAllListeners('join');
+    }
+  );
 });
 
-io.on('connection', socket => {
-  console.log('a user connected');
-
-  socket.on('message', msg => {
-    console.log('message: ' + msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-  socket.on('vilain', (vilain: string, callback) => {
+function registerListeners(playerID: number, socket: Socket) {
+  socket.on('vilain', (vilain: string) => {
     console.log('kill vilain: ' + vilain);
     gameState = {
       ...gameState,
@@ -79,14 +92,9 @@ io.on('connection', socket => {
         ),
       },
     };
-    callback(gameState);
+    io.except('outside').emit('sync', gameState);
   });
-
-  setInterval(() => {
-    console.log(gameState);
-    socket.emit('sync', gameState);
-  }, 5000);
-});
+}
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

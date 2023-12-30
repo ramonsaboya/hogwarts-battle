@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './../App.css';
-import {useLoaderData} from '../useLoaderData';
 import {LoaderFunctionArgs, Params} from 'react-router-dom';
 import {isValidIpAddress} from '../utils';
-import {getErrorMessage} from '../error_handling';
 import Game from './Game';
-import {GameStateContextProvider} from './GameStateContext';
+import {GameStateContextProvider, useSetGameState} from './GameStateContext';
+import {socket} from '../socket/socket';
+import {GameState} from './GameState';
 
 type GameLoaderData = {
   serverAddress: string | undefined;
@@ -21,40 +21,56 @@ export async function loader({
   return {serverAddress: params.serverAddress};
 }
 
-export default function GameLobbyPage() {
-  const {serverAddress} = useLoaderData<GameLoaderData>();
+function GameLobbyPage() {
+  const setGameState = useSetGameState();
+
+  useEffect(() => {
+    socket.connect();
+
+    function onConnect() {
+      console.log('socket connected');
+    }
+    function onDisconnect() {
+      console.log('socket disconnected');
+    }
+    function onSyncEvent(gameState: GameState) {
+      console.log('sync', gameState);
+      setGameState(gameState);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('sync', onSyncEvent);
+
+    return () => {
+      socket.off('sync', onSyncEvent);
+      socket.off('disconnect', onDisconnect);
+      socket.off('connect', onConnect);
+
+      socket.disconnect();
+    };
+  }, []);
 
   const [playerName, setPlayerName] = useState('');
   const [apiResponse, setApiResponse] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      console.log(playerName);
-      const response = await fetch(`http://${serverAddress}:4030/join`, {
-        method: 'POST',
-        body: JSON.stringify({playerName}),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const body = await response.json();
-      if (response.ok) {
-        setApiResponse(`Success! Player ID: ${body.playerID}`);
+    socket.emit('join', playerName, (gameState: GameState | null) => {
+      if (gameState) {
+        console.log('join callback', gameState);
+        setGameState(gameState);
+        setApiResponse('Success');
       } else {
-        setApiResponse(body.error);
+        setApiResponse('Error');
       }
-    } catch (error) {
-      setApiResponse(getErrorMessage(error));
-    }
+    });
   };
 
   return (
     <div>
       {apiResponse.startsWith('Success') ? (
-        <GameStateContextProvider>
-          <Game />
-        </GameStateContextProvider>
+        <Game />
       ) : (
         <>
           <form onSubmit={handleSubmit}>
@@ -69,5 +85,13 @@ export default function GameLobbyPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function GameLobbyPageWithGameStateContext() {
+  return (
+    <GameStateContextProvider>
+      <GameLobbyPage />
+    </GameStateContextProvider>
   );
 }
