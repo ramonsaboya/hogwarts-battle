@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      // Parse the URL path as a string, remove the leading '/'
+      var path = window.location.pathname.slice(1);
+
+      // Redirect to the index.html page with the path as a URL hash
+      window.location.replace('/index.html#/' + path);
+    </script>
+  </head>
+  <body></body>
+</html>
