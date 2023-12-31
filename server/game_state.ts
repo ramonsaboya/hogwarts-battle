@@ -1,6 +1,10 @@
-import {PlayerView} from '../src/game/player_view';
+import {PlayerView, PlayerViewOtherPlayer} from '../src/game/player_view';
 import {VillainsState, getInitialVillainsState} from './villain/villains_state';
-import {PlayersState, getInitialPlayersState} from './player/player_state';
+import {
+  PlayersState,
+  getInitialPlayersState,
+  getPlayerState,
+} from './player/player_state';
 import {
   DarkArtsEventsState,
   getInitialDarkArtsEventsState,
@@ -19,20 +23,37 @@ export const getInitialGameState = (): GameState => ({
 });
 
 export function createPlayerView(
-  gameState: GameState,
+  state: GameState,
   playerID: number
 ): PlayerView {
-  const playerState = gameState.players[playerID];
+  const playerState = getPlayerState(state.players, playerID);
+  if (!playerState) {
+    throw new Error('Player not found');
+  }
 
   return {
     player: {
+      hero: playerState.hero,
       hand: playerState.hand,
       discardPile: playerState.discardPile,
     },
+    otherPlayers: setupOtherPlayersView(state, playerID),
     darkArtsEvents: {
-      active: gameState.darkArtsEvents.active,
-      discardPile: gameState.darkArtsEvents.discardPile,
+      active: state.darkArtsEvents.active,
+      discardPile: state.darkArtsEvents.discardPile,
     },
-    activeVillain: gameState.villains.active,
+    activeVillain: state.villains.active,
   };
+}
+
+function setupOtherPlayersView(
+  gameState: GameState,
+  playerID: number
+): PlayerViewOtherPlayer[] {
+  return gameState.players
+    .filter(player => player.playerID !== playerID)
+    .map(player => ({
+      playerID: player.playerID,
+      hero: player.hero,
+    }));
 }

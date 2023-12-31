@@ -58,9 +58,10 @@ export class Game {
 
     this.state = {
       ...this.state,
-      players: {
+      players: [
         ...this.state.players,
-        [player.id]: {
+        {
+          playerID: player.id,
           hero: hero,
           hand: [
             {name: 'test1', type: 'SPELL'},
@@ -69,7 +70,7 @@ export class Game {
           deck: new Stack<Card>(),
           discardPile: [],
         },
-      },
+      ],
     };
 
     return player;

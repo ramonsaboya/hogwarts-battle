@@ -30,3 +30,7 @@ export function registerListeners(
     );
   });
 }
+
+export function serializePlayerView(playerView: PlayerView): string {
+  return JSON.stringify(playerView);
+}

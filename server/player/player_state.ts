@@ -1,4 +1,5 @@
 import {Stack} from '../../common/stack';
+import {PlayerID} from '../game';
 
 export type Hero = 'Harry' | 'Hermione' | 'Ron' | 'Neville';
 
@@ -18,14 +19,19 @@ export interface RegularCard extends Card {
 }
 
 export interface PlayerState {
-  hero: Hero | null;
+  playerID: PlayerID;
+  hero: Hero;
   hand: Card[];
   deck: Stack<Card>;
   discardPile: Card[];
 }
 
-export interface PlayersState {
-  [playerID: number]: PlayerState;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface PlayersState extends Array<PlayerState> {}
 
-export const getInitialPlayersState = (): PlayersState => ({});
+export const getPlayerState = (
+  playersState: PlayersState,
+  playerID: PlayerID
+): PlayerState | undefined => playersState.find(p => p.playerID === playerID);
+
+export const getInitialPlayersState = (): PlayersState => [];
