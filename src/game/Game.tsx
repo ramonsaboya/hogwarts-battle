@@ -2,6 +2,7 @@ import React from 'react';
 import {usePlayerView} from './PlayerViewContext';
 import {useAction} from '../socket/useAction';
 import Players from './Players';
+import GameContextDisplay from './GameContextDisplay';
 
 export default function Game() {
   const playerView = usePlayerView();
@@ -22,6 +23,7 @@ export default function Game() {
 
   return (
     <div>
+      <GameContextDisplay gameContext={playerView.gameContext} />
       <Players
         players={[gameStateView.player, ...gameStateView.otherPlayers]}
       />
