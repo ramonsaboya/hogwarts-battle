@@ -2,7 +2,7 @@ import {Server} from 'socket.io';
 import {createServer} from 'http';
 import {createPlayerView} from './game_state';
 import {Game} from './game';
-import {PlayerView} from '../src/game/player_view';
+import {PlayerView, SerializedPlayerView} from '../src/game/player_view';
 import {ClientToServerEvents, ServerToClientEvents} from '../src/socket/socket';
 import {registerListeners} from './actions';
 import {Hero} from './player/player_state';
@@ -35,7 +35,7 @@ io.on('connection', socket => {
     (
       playerName: string,
       hero: Hero,
-      callback: (gameState: PlayerView | null) => void
+      callback: (gameState: SerializedPlayerView | null) => void
     ) => {
       const [canJoin, reason] = game.canPlayerJoin(playerName);
       if (!canJoin) {

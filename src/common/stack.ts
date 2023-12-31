@@ -7,6 +7,10 @@ export class Stack<T> {
     }
   }
 
+  get getItems(): T[] {
+    return this.items;
+  }
+
   push(item: T): void {
     this.items.push(item);
   }

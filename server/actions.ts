@@ -1,5 +1,5 @@
 import {Socket} from 'socket.io';
-import {PlayerView} from '../src/game/player_view';
+import {PlayerView, SerializedPlayerView} from '../src/game/player_view';
 import {createPlayerView} from './game_state';
 import {Game} from './game';
 import {ClientToServerEvents, ServerToClientEvents} from '../src/socket/socket';
@@ -20,8 +20,11 @@ export function registerListeners(
   allActionListeners.forEach(([action, listener]) => {
     socket.on(
       action,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (args: any, callback: (playerView: PlayerView) => void): void => {
+      (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        args: any,
+        callback: (playerView: SerializedPlayerView) => void
+      ): void => {
         console.log(action + ' action');
 
         if (!game.isPlayerTurn(playerID)) {
@@ -40,7 +43,7 @@ export function registerListeners(
 
   socket.on(
     'endTurn',
-    (args: {}, callback: (playerView: PlayerView) => void): void => {
+    (args: {}, callback: (playerView: SerializedPlayerView) => void): void => {
       console.log('end turn action');
 
       if (!game.isPlayerTurn(playerID)) {

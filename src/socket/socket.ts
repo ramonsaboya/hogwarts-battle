@@ -1,5 +1,5 @@
 import {Socket, io} from 'socket.io-client';
-import {PlayerView} from '../game/player_view';
+import {SerializedPlayerView} from '../game/player_view';
 import {VillainsEvents} from '../../server/villain/villains_actions';
 import {PlayerEvents} from '../../server/player/player_actions';
 import {GameState} from '../../server/game_state';
@@ -19,7 +19,7 @@ export function startSocket(serverAddress: string): void {
 }
 
 export interface ServerToClientEvents {
-  sync: (playerView: PlayerView) => void;
+  sync: (playerView: SerializedPlayerView) => void;
 }
 
 export type ClientToServerEvents = JoinEvent &
@@ -31,11 +31,14 @@ type JoinEvent = {
   join: (
     playerName: string,
     hero: Hero,
-    callback: (playerView: PlayerView | null) => void
+    callback: (playerView: SerializedPlayerView | null) => void
   ) => void;
 };
 type GameEvents = {
-  endTurn: (args: {}, callback: (playerView: PlayerView) => void) => void;
+  endTurn: (
+    args: {},
+    callback: (playerView: SerializedPlayerView) => void
+  ) => void;
 };
 
 export type Action = Omit<ClientToServerEvents, 'join'>;

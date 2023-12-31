@@ -1,4 +1,8 @@
-import {PlayerView, PlayerViewPlayer} from '../src/game/player_view';
+import {
+  PlayerView,
+  PlayerViewPlayer,
+  SerializedPlayerView,
+} from '../src/game/player_view';
 import {VillainsState, getInitialVillainsState} from './villain/villains_state';
 import {
   PlayersState,
@@ -10,20 +14,30 @@ import {
   getInitialDarkArtsEventsState,
 } from './dark_arts_events/dark_arts_events_state';
 import {Game} from './game';
+import {
+  LocationsState,
+  getInitialLocationsState,
+  serializeLocationsState,
+} from './locations/locations_state';
 
 export interface GameState {
   players: PlayersState;
   villains: VillainsState;
   darkArtsEvents: DarkArtsEventsState;
+  locations: LocationsState;
 }
 
 export const getInitialGameState = (): GameState => ({
   players: getInitialPlayersState(),
   villains: getInitialVillainsState(),
   darkArtsEvents: getInitialDarkArtsEventsState(),
+  locations: getInitialLocationsState(),
 });
 
-export function createPlayerView(game: Game, playerID: number): PlayerView {
+export function createPlayerView(
+  game: Game,
+  playerID: number
+): SerializedPlayerView {
   const gameState = game.gameState;
 
   const playerState = getPlayerState(gameState.players, playerID);
@@ -49,6 +63,7 @@ export function createPlayerView(game: Game, playerID: number): PlayerView {
         discardPile: gameState.darkArtsEvents.discardPile,
       },
       activeVillain: gameState.villains.active,
+      locations: serializeLocationsState(gameState.locations),
     },
   };
 }

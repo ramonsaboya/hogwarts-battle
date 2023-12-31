@@ -5,7 +5,7 @@ import {isValidIpAddress} from '../utils';
 import Game from './Game';
 import {getSocket, startSocket} from '../socket/socket';
 import {PlayerViewContextProvider, useSetPlayerView} from './PlayerViewContext';
-import {PlayerView} from './player_view';
+import {SerializedPlayerView} from './player_view';
 import {Hero} from '../../server/player/player_state';
 
 type GameLoaderData = {
@@ -36,7 +36,7 @@ function GameLobbyPage() {
     function onDisconnect() {
       console.log('socket disconnected');
     }
-    function onSyncEvent(playerView: PlayerView) {
+    function onSyncEvent(playerView: SerializedPlayerView) {
       console.log('sync', playerView);
       setPlayerView(playerView);
     }
@@ -60,15 +60,20 @@ function GameLobbyPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    socket.emit('join', playerName, hero, (playerView: PlayerView | null) => {
-      if (playerView) {
-        console.log('join callback', playerView);
-        setPlayerView(playerView);
-        setApiResponse('Success');
-      } else {
-        setApiResponse('Error');
+    socket.emit(
+      'join',
+      playerName,
+      hero,
+      (playerView: SerializedPlayerView | null) => {
+        if (playerView) {
+          console.log('join callback', playerView);
+          setPlayerView(playerView);
+          setApiResponse('Success');
+        } else {
+          setApiResponse('Error');
+        }
       }
-    });
+    );
   };
 
   return (

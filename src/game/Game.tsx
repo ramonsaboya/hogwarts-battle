@@ -3,6 +3,7 @@ import {usePlayerView} from './PlayerViewContext';
 import {useAction} from '../socket/useAction';
 import Players from './Players';
 import GameContextDisplay from './GameContextDisplay';
+import LocationsDisplay from './LocationsDisplay';
 
 export default function Game() {
   const playerView = usePlayerView();
@@ -27,6 +28,7 @@ export default function Game() {
       <Players
         players={[gameStateView.player, ...gameStateView.otherPlayers]}
       />
+      {/* <LocationsDisplay locationsState={gameStateView.locations} /> */}
       <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>
       <div>Villain: {gameStateView.activeVillain.name}</div>
       <button onClick={() => runAction({action: 'killVillain', args: {}})}>

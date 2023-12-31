@@ -1,33 +1,38 @@
 import React, {createContext, useContext, useMemo, useState} from 'react';
-import {PlayerView} from './player_view';
+import {
+  PlayerView,
+  SerializedPlayerView,
+  deserializePlayerView,
+} from './player_view';
 
-type PlayerViewSetter = React.Dispatch<React.SetStateAction<PlayerView>>;
 interface PlayerViewManager {
-  PlayerView: PlayerView;
-  setPlayerView: PlayerViewSetter;
+  playerView: PlayerView;
+  setPlayerView: (playerView: SerializedPlayerView) => void;
 }
 
 type PlayerViewContextType = PlayerViewManager | null;
 const PlayerViewContext = createContext<PlayerViewContextType>(null);
 
 const usePlayerViewValue = () => {
-  const PlayerViewValue = useContext(PlayerViewContext);
+  const playerViewValue = useContext(PlayerViewContext);
 
-  if (PlayerViewValue === null) {
+  if (playerViewValue === null) {
     throw new Error(
       'usePlayerView has to be used within <PlayerViewContextProvider>'
     );
   }
 
-  return PlayerViewValue;
+  return playerViewValue;
 };
 
 export const usePlayerView = (): PlayerView => {
-  const {PlayerView} = usePlayerViewValue();
-  return PlayerView;
+  const {playerView} = usePlayerViewValue();
+  return playerView;
 };
 
-export const useSetPlayerView = (): PlayerViewSetter => {
+export const useSetPlayerView = (): ((
+  playerView: SerializedPlayerView
+) => void) => {
   const {setPlayerView} = usePlayerViewValue();
   return setPlayerView;
 };
@@ -37,14 +42,18 @@ export function PlayerViewContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [PlayerView, setPlayerView] = useState<PlayerView>({} as PlayerView);
+  const [playerView, setPlayerViewRaw] = useState<PlayerView>({} as PlayerView);
+
+  const setPlayerView = (value: SerializedPlayerView) => {
+    setPlayerViewRaw(deserializePlayerView(value));
+  };
 
   const value = useMemo<PlayerViewManager>(
     () => ({
-      PlayerView,
+      playerView,
       setPlayerView,
     }),
-    [PlayerView]
+    [playerView]
   );
   return (
     <PlayerViewContext.Provider value={value}>
