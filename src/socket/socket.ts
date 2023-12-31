@@ -6,12 +6,16 @@ import {GameState} from '../../server/game_state';
 import {PlayerID} from '../../server/game';
 import {Hero} from '../../server/player/player_state';
 
-export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  'http://localhost:4030',
-  {
+let socket: Socket<ServerToClientEvents, ClientToServerEvents> = {} as Socket;
+export const getSocket = (): Socket<
+  ServerToClientEvents,
+  ClientToServerEvents
+> => socket;
+export function startSocket(serverAddress: string): void {
+  socket = io(`http://${serverAddress}:4030/`, {
     autoConnect: false,
-  }
-);
+  });
+}
 
 export interface ServerToClientEvents {
   sync: (playerView: PlayerView) => void;

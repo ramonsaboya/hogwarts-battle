@@ -3,7 +3,7 @@ import './../App.css';
 import {LoaderFunctionArgs, Params} from 'react-router-dom';
 import {isValidIpAddress} from '../utils';
 import Game from './Game';
-import {socket} from '../socket/socket';
+import {getSocket, startSocket} from '../socket/socket';
 import {PlayerViewContextProvider, useSetPlayerView} from './PlayerViewContext';
 import {PlayerView} from './player_view';
 import {Hero} from '../../server/player/player_state';
@@ -19,11 +19,13 @@ export async function loader({
   if (!serverAddress || !isValidIpAddress(serverAddress)) {
     throw new Response('Not Found', {status: 404});
   }
+  startSocket(serverAddress);
   return {serverAddress: params.serverAddress};
 }
 
 function GameLobbyPage() {
   const setPlayerView = useSetPlayerView();
+  const socket = getSocket();
 
   useEffect(() => {
     socket.connect();

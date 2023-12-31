@@ -1,5 +1,3 @@
-import express from 'express';
-import cors from 'cors';
 import {Server} from 'socket.io';
 import {createServer} from 'http';
 import {createPlayerView} from './game_state';
@@ -11,21 +9,12 @@ import {Hero} from './player/player_state';
 
 const PORT = 4030;
 
-const app = express();
-const httpServer = createServer(app);
+const httpServer = createServer();
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'https://ramonsaboya.github.io'],
-    methods: ['GET', 'POST'],
+    origin: ['http://localhost:3000', 'http://hogwarts-battle.vitaes.io'],
   },
 });
-
-app.use(
-  cors({
-    origin: ['http://localhost:3000', 'https://ramonsaboya.github.io'],
-  })
-);
-app.use(express.json());
 
 const game = new Game();
 

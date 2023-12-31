@@ -1,5 +1,5 @@
 import {useCallback} from 'react';
-import {ActionEmitter, socket} from './socket';
+import {ActionEmitter, getSocket} from './socket';
 import {useSetPlayerView} from '../game/PlayerViewContext';
 import {PlayerView} from '../game/player_view';
 
@@ -10,7 +10,7 @@ export function useAction() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ({action, args}: ActionEmitter) => {
       console.log('runAction', action, args);
-      socket.emit(action, args, (playerView: PlayerView) => {
+      getSocket().emit(action, args, (playerView: PlayerView) => {
         console.log('action', playerView);
         setPlayerView(playerView);
       });

@@ -1,7 +1,7 @@
 # Use an official Node.js runtime as the base image
 FROM --platform=linux/amd64 node:14
 
-COPY package.json yarn.lock ./
+COPY package*.json ./
 
 # Install the dependencies
 RUN npm install
@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 
 # Expose the port that the server will listen on
-EXPOSE 4000
+EXPOSE 4030
 
 # Start the server
-CMD [ "node", "src/server.js" ]
+CMD [ "npm", "run", "serve" ]
