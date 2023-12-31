@@ -6,6 +6,7 @@ import {PlayerView} from '../src/game/player_view';
 import {ClientToServerEvents, ServerToClientEvents} from '../src/socket/socket';
 import {registerListeners} from './actions';
 import {Hero} from './player/player_state';
+import {InactivityMonitor} from './inactivity_monitor';
 
 const PORT = 4030;
 
@@ -15,10 +16,18 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
     origin: ['http://localhost:3000', 'http://hogwarts-battle.vitaes.io'],
   },
 });
+const inactivityMonitor = new InactivityMonitor(httpServer, 10);
 
 const game = new Game();
 
 io.on('connection', socket => {
+  inactivityMonitor.clearShutdownTimer();
+  socket.on('disconnect', () => {
+    if (io.engine.clientsCount === 0) {
+      inactivityMonitor.scheduleShutdown();
+    }
+  });
+
   socket.join('outside');
 
   socket.on(
@@ -51,4 +60,5 @@ io.on('connection', socket => {
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+  inactivityMonitor.scheduleShutdown();
 });
