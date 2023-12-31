@@ -22,15 +22,21 @@ export interface ServerToClientEvents {
   sync: (playerView: PlayerView) => void;
 }
 
-export type ClientToServerEvents = {
+export type ClientToServerEvents = JoinEvent &
+  GameEvents &
+  PlayerEvents &
+  VillainsEvents &
+  DarkArtsEventsEvents;
+type JoinEvent = {
   join: (
     playerName: string,
     hero: Hero,
     callback: (playerView: PlayerView | null) => void
   ) => void;
-} & PlayerEvents &
-  VillainsEvents &
-  DarkArtsEventsEvents;
+};
+type GameEvents = {
+  endTurn: (args: {}, callback: (playerView: PlayerView) => void) => void;
+};
 
 export type Action = Omit<ClientToServerEvents, 'join'>;
 export type ActionListener = {

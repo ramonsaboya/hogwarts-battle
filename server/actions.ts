@@ -17,7 +17,6 @@ export function registerListeners(
     ...playerActions,
     ...darkArtsEventsActions,
   ];
-
   allActionListeners.forEach(([action, listener]) => {
     socket.on(
       action,
@@ -25,15 +24,35 @@ export function registerListeners(
       (args: any, callback: (playerView: PlayerView) => void): void => {
         console.log(action + ' action');
 
-        const oldGameState = game.state;
-        const gameState = listener(oldGameState, args, playerID);
-        game.state = gameState;
+        if (!game.isPlayerTurn(playerID)) {
+          throw new Error('Not your turn');
+        }
 
-        callback(createPlayerView(game.state, playerID));
+        const oldGameState = game.gameState;
+        const gameState = listener(oldGameState, args, playerID);
+        game.gameState = gameState;
+
+        callback(createPlayerView(game, playerID));
         game.broadcastPlayerViews(playerID);
       }
     );
   });
+
+  socket.on(
+    'endTurn',
+    (args: {}, callback: (playerView: PlayerView) => void): void => {
+      console.log('end turn action');
+
+      if (!game.isPlayerTurn(playerID)) {
+        throw new Error('Not your turn');
+      }
+
+      game.endTurn();
+
+      callback(createPlayerView(game, playerID));
+      game.broadcastPlayerViews(playerID);
+    }
+  );
 }
 
 export function serializePlayerView(playerView: PlayerView): string {

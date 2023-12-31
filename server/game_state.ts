@@ -9,6 +9,7 @@ import {
   DarkArtsEventsState,
   getInitialDarkArtsEventsState,
 } from './dark_arts_events/dark_arts_events_state';
+import {Game} from './game';
 
 export interface GameState {
   players: PlayersState;
@@ -22,30 +23,32 @@ export const getInitialGameState = (): GameState => ({
   darkArtsEvents: getInitialDarkArtsEventsState(),
 });
 
-export function createPlayerView(
-  state: GameState,
-  playerID: number
-): PlayerView {
-  const playerState = getPlayerState(state.players, playerID);
+export function createPlayerView(game: Game, playerID: number): PlayerView {
+  const gameState = game.gameState;
+
+  const playerState = getPlayerState(gameState.players, playerID);
   if (!playerState) {
     throw new Error('Player not found');
   }
 
   return {
-    player: {
-      health: playerState.health,
-      influenceTokens: playerState.influenceTokens,
-      attackTokens: playerState.attackTokens,
-      hero: playerState.hero,
-      hand: playerState.hand,
-      discardPile: playerState.discardPile,
+    gameContext: game.getGameContext,
+    gameStateView: {
+      player: {
+        health: playerState.health,
+        influenceTokens: playerState.influenceTokens,
+        attackTokens: playerState.attackTokens,
+        hero: playerState.hero,
+        hand: playerState.hand,
+        discardPile: playerState.discardPile,
+      },
+      otherPlayers: setupOtherPlayersView(gameState, playerID),
+      darkArtsEvents: {
+        active: gameState.darkArtsEvents.active,
+        discardPile: gameState.darkArtsEvents.discardPile,
+      },
+      activeVillain: gameState.villains.active,
     },
-    otherPlayers: setupOtherPlayersView(state, playerID),
-    darkArtsEvents: {
-      active: state.darkArtsEvents.active,
-      discardPile: state.darkArtsEvents.discardPile,
-    },
-    activeVillain: state.villains.active,
   };
 }
 

@@ -49,7 +49,7 @@ io.on('connection', socket => {
       const player = game.addPlayer(playerName, hero, socket);
       registerListeners(game, player.id, socket);
 
-      callback(createPlayerView(game.state, player.id));
+      callback(createPlayerView(game, player.id));
       game.broadcastPlayerViews(player.id);
 
       console.log('player joined: ' + player.name);
