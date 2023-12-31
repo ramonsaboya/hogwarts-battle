@@ -1,0 +1,9 @@
+.Players {
+  display: flex;
+  flex-direction: row;
+}
+
+.Player {
+  display: flex;
+  flex-direction: column;
+}

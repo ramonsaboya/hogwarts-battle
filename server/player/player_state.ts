@@ -14,7 +14,7 @@ export interface HeroCard extends Card {
   hero: Hero;
 }
 
-export interface RegularCard extends Card {
+export interface HogwartsCard extends Card {
   cost: number;
 }
 
