@@ -5,6 +5,7 @@ import {PlayerEvents} from '../../server/player/player_actions';
 import {GameState} from '../../server/game_state';
 import {PlayerID} from '../../server/game';
 import {Hero} from '../../server/player/player_state';
+import {DarkArtsEventsEvents} from '../../server/dark_arts_events/dark_arts_events_actions';
 
 let socket: Socket<ServerToClientEvents, ClientToServerEvents> = {} as Socket;
 export const getSocket = (): Socket<
@@ -27,8 +28,9 @@ export type ClientToServerEvents = {
     hero: Hero,
     callback: (playerView: PlayerView | null) => void
   ) => void;
-} & VillainsEvents &
-  PlayerEvents;
+} & PlayerEvents &
+  VillainsEvents &
+  DarkArtsEventsEvents;
 
 export type Action = Omit<ClientToServerEvents, 'join'>;
 export type ActionListener = {

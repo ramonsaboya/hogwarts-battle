@@ -3,15 +3,20 @@ import {PlayerView} from '../src/game/player_view';
 import {createPlayerView} from './game_state';
 import {Game} from './game';
 import {ClientToServerEvents, ServerToClientEvents} from '../src/socket/socket';
-import {actions as villainsActions} from './villain/villains_actions';
 import {actions as playerActions} from './player/player_actions';
+import {actions as villainsActions} from './villain/villains_actions';
+import {actions as darkArtsEventsActions} from './dark_arts_events/dark_arts_events_actions';
 
 export function registerListeners(
   game: Game,
   playerID: number,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
-  const allActionListeners = [...villainsActions, ...playerActions];
+  const allActionListeners = [
+    ...villainsActions,
+    ...playerActions,
+    ...darkArtsEventsActions,
+  ];
 
   allActionListeners.forEach(([action, listener]) => {
     socket.on(

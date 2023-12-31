@@ -15,6 +15,10 @@ export default function Game() {
     runAction({action: 'playCard', args: {cardIndex: selectedCard}});
   };
 
+  const handleRevealDarkArtsCard = () => {
+    runAction({action: 'revealDarkArtsEvent', args: {}});
+  };
+
   if (playerView.activeVillain === undefined) {
     return <div>loading...</div>;
   }
@@ -23,7 +27,9 @@ export default function Game() {
 
   return (
     <div>
-      <div>{playerView.activeVillain.name}</div>
+      <div>Player health: {playerView.player.health}</div>
+      <div>Dark Arts Event: {playerView.darkArtsEvents.active?.name}</div>
+      <div>Villain: {playerView.activeVillain.name}</div>
       <button onClick={() => runAction({action: 'killVillain', args: {}})}>
         Kill Villain
       </button>
@@ -36,6 +42,7 @@ export default function Game() {
         ))}
       </select>
       <button onClick={handlePlayCard}>Play Card</button>
+      <button onClick={handleRevealDarkArtsCard}>Reveal Dark Arts Card</button>
     </div>
   );
 }
