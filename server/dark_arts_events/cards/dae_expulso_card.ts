@@ -1,4 +1,6 @@
+import {PlayerID} from '../../game';
 import {GameState} from '../../game_state';
+import {getPlayerState} from '../../player/player_state';
 import {DarkArtsEventsCard} from '../dark_arts_events_card';
 
 export class DarkArtsEventsExpulsoCard extends DarkArtsEventsCard {
@@ -6,8 +8,24 @@ export class DarkArtsEventsExpulsoCard extends DarkArtsEventsCard {
     super('Expulso', '');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  applyEffect(state: GameState): void {
-    throw new Error('Active hero loses 2 health');
+  applyEffect(state: GameState, playerID: PlayerID): GameState {
+    const playerState = getPlayerState(state.players, playerID);
+    if (!playerState) {
+      throw new Error('Player not found');
+    }
+
+    const newPlayerState = {
+      ...playerState,
+      health: playerState.health - 2,
+    };
+
+    const otherPlayers = state.players.filter(
+      player => player.playerID !== playerID
+    );
+
+    return {
+      ...state,
+      players: [...otherPlayers, newPlayerState],
+    };
   }
 }

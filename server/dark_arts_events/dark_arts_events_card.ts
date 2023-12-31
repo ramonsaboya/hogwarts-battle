@@ -1,3 +1,4 @@
+import {PlayerID} from '../game';
 import {GameState} from '../game_state';
 
 export abstract class DarkArtsEventsCard {
@@ -9,5 +10,5 @@ export abstract class DarkArtsEventsCard {
     this.description = description;
   }
 
-  abstract applyEffect(state: GameState): void;
+  abstract applyEffect(state: GameState, playerID: PlayerID): GameState;
 }
