@@ -33,6 +33,9 @@ export function createPlayerView(
 
   return {
     player: {
+      health: playerState.health,
+      influenceTokens: playerState.influenceTokens,
+      attackTokens: playerState.attackTokens,
       hero: playerState.hero,
       hand: playerState.hand,
       discardPile: playerState.discardPile,
@@ -55,5 +58,8 @@ function setupOtherPlayersView(
     .map(player => ({
       playerID: player.playerID,
       hero: player.hero,
+      health: player.health,
+      influenceTokens: player.influenceTokens,
+      attackTokens: player.attackTokens,
     }));
 }

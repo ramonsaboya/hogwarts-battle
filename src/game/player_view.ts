@@ -3,15 +3,20 @@ import {PlayerID} from '../../server/game';
 import {Card, Hero} from '../../server/player/player_state';
 import {Villain} from '../../server/villain/villains_state';
 
-export interface PlayerViewSelfPlayer {
+export interface PlayerViewBasePlayer {
   hero: Hero;
+  health: number;
+  influenceTokens: number;
+  attackTokens: number;
+}
+
+export interface PlayerViewSelfPlayer extends PlayerViewBasePlayer {
   hand: Card[];
   discardPile: Card[];
 }
 
-export interface PlayerViewOtherPlayer {
+export interface PlayerViewOtherPlayer extends PlayerViewBasePlayer {
   playerID: PlayerID;
-  hero: Hero;
 }
 
 export interface PlayerView {

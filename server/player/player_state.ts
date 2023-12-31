@@ -20,6 +20,9 @@ export interface RegularCard extends Card {
 
 export interface PlayerState {
   playerID: PlayerID;
+  health: number;
+  influenceTokens: number;
+  attackTokens: number;
   hero: Hero;
   hand: Card[];
   deck: Stack<Card>;

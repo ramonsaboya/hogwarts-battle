@@ -62,6 +62,9 @@ export class Game {
         ...this.state.players,
         {
           playerID: player.id,
+          health: 10,
+          influenceTokens: 0,
+          attackTokens: 0,
           hero: hero,
           hand: [
             {name: 'test1', type: 'SPELL'},
