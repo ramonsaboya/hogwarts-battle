@@ -23,7 +23,7 @@ export class InactivityMonitor {
         );
         this.httpServer.close();
       },
-      this.inactivityThresholdInMinutes * 10 * 1000
+      this.inactivityThresholdInMinutes * 60 * 1000
     );
   }
 
