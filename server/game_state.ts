@@ -1,15 +1,21 @@
 import {PlayerView} from '../src/game/player_view';
 import {VillainsState, getInitialVillainsState} from './villain/villains_state';
 import {PlayersState, getInitialPlayersState} from './player/player_state';
+import {
+  DarkArtsEventsState,
+  getInitialDarkArtsEventsState,
+} from './dark_arts_events/dark_arts_events_state';
 
 export interface GameState {
-  villains: VillainsState;
   players: PlayersState;
+  villains: VillainsState;
+  darkArtsEvents: DarkArtsEventsState;
 }
 
 export const getInitialGameState = (): GameState => ({
-  villains: getInitialVillainsState(),
   players: getInitialPlayersState(),
+  villains: getInitialVillainsState(),
+  darkArtsEvents: getInitialDarkArtsEventsState(),
 });
 
 export function createPlayerView(
@@ -19,10 +25,14 @@ export function createPlayerView(
   const playerState = gameState.players[playerID];
 
   return {
-    activeVillain: gameState.villains.active,
     player: {
       hand: playerState.hand,
       discardPile: playerState.discardPile,
     },
+    darkArtsEvents: {
+      active: gameState.darkArtsEvents.active,
+      discardPile: gameState.darkArtsEvents.discardPile,
+    },
+    activeVillain: gameState.villains.active,
   };
 }

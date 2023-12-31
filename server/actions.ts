@@ -20,16 +20,13 @@ export function registerListeners(
       (args: any, callback: (playerView: PlayerView) => void): void => {
         console.log(action + ' action');
 
-        const oldGameState = game.getState();
+        const oldGameState = game.state;
         const gameState = listener(oldGameState, args, playerID);
-        game.setState(gameState);
+        game.state = gameState;
 
-        callback(createPlayerView(game.getState(), playerID));
+        callback(createPlayerView(game.state, playerID));
         game.broadcastPlayerViews(playerID);
       }
     );
   });
-
-  // villainsActions.killVillainAction(game, playerID, socket);
-  // playerActions.playCardAction(game, playerID, socket);
 }

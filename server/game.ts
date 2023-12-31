@@ -15,12 +15,12 @@ export type UnableToJoinReason = 'GAME_FULL' | 'NAME_TAKEN';
 const MAX_PLAYERS = 4;
 
 export class Game {
-  private state: GameState;
+  state: GameState;
 
   private players: Player[];
   private playerSocketMap: Map<PlayerID, Socket>;
 
-  static nextPlayerID = 1;
+  private static nextPlayerID = 1;
 
   constructor() {
     this.state = getInitialGameState();
@@ -28,19 +28,11 @@ export class Game {
     this.playerSocketMap = new Map();
   }
 
-  public getState(): GameState {
-    return this.state;
-  }
-
-  public setState(state: GameState) {
-    this.state = state;
-  }
-
-  public getPlayers(): Player[] {
+  get getPlayers(): Player[] {
     return this.players;
   }
 
-  public getPlayerSocket(playerID: PlayerID): Socket {
+  getPlayerSocket(playerID: PlayerID): Socket {
     const socket = this.playerSocketMap.get(playerID);
     if (!socket) {
       throw new Error('Socket not found for player');
@@ -48,7 +40,7 @@ export class Game {
     return socket;
   }
 
-  public addPlayer(playerName: string, hero: Hero, socket: Socket): Player {
+  addPlayer(playerName: string, hero: Hero, socket: Socket): Player {
     if (this.isGameFull()) {
       throw new Error('Game is full');
     }
@@ -83,9 +75,7 @@ export class Game {
     return player;
   }
 
-  public canPlayerJoin(
-    playerName: string
-  ): [boolean, UnableToJoinReason | null] {
+  canPlayerJoin(playerName: string): [boolean, UnableToJoinReason | null] {
     if (this.isGameFull()) {
       return [false, 'GAME_FULL'];
     }
@@ -105,11 +95,11 @@ export class Game {
     return this.players.length >= MAX_PLAYERS;
   }
 
-  public broadcastPlayerViews(expectPlayerID: number) {
-    this.getPlayers()
+  broadcastPlayerViews(expectPlayerID: number) {
+    this.players
       .filter(player => player.id !== expectPlayerID)
       .forEach(player => {
-        const playerView = createPlayerView(this.getState(), player.id);
+        const playerView = createPlayerView(this.state, player.id);
         this.getPlayerSocket(player.id).emit('sync', playerView);
       });
   }
