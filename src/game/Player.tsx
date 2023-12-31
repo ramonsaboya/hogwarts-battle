@@ -1,15 +1,11 @@
 import React from 'react';
-import {
-  PlayerViewBasePlayer,
-  PlayerViewOtherPlayer,
-  PlayerViewSelfPlayer,
-} from './player_view';
+import {PlayerViewPlayer, PlayerViewSelfPlayer} from './player_view';
 import PlayerHand from './PlayerHand';
 import PlayerDiscardPile from './PlayerDiscardPile';
 import './Players.css';
 
 type Props = {
-  player: PlayerViewBasePlayer;
+  player: PlayerViewPlayer;
 };
 
 export default function Player({player}: Props) {
@@ -21,15 +17,10 @@ export default function Player({player}: Props) {
       <PlayerDiscardPile pile={player.discardPile} />
     </>
   ) : null;
-  const otherPlayer = isOtherPlayer(player) ? (
-    <>
-      <div>playerID: {player.playerID}</div>
-    </>
-  ) : null;
 
   return (
     <div className="Player">
-      {otherPlayer}
+      <div>playerID: {player.playerID}</div>
       <div>hero: {player.hero}</div>
       <div>health: {player.health}</div>
       <div>influence tokens: {player.influenceTokens}</div>
@@ -40,13 +31,7 @@ export default function Player({player}: Props) {
 }
 
 function isSelfPlayer(
-  player: PlayerViewBasePlayer
+  player: PlayerViewPlayer
 ): player is PlayerViewSelfPlayer {
   return (player as PlayerViewSelfPlayer).hand !== undefined;
-}
-
-function isOtherPlayer(
-  player: PlayerViewBasePlayer
-): player is PlayerViewOtherPlayer {
-  return (player as PlayerViewOtherPlayer).playerID !== undefined;
 }

@@ -4,25 +4,22 @@ import {GameContext} from '../../server/game_context';
 import {Card, Hero} from '../../server/player/player_state';
 import {Villain} from '../../server/villain/villains_state';
 
-export interface PlayerViewBasePlayer {
+export interface PlayerViewPlayer {
+  playerID: PlayerID;
   hero: Hero;
   health: number;
   influenceTokens: number;
   attackTokens: number;
 }
 
-export interface PlayerViewSelfPlayer extends PlayerViewBasePlayer {
+export interface PlayerViewSelfPlayer extends PlayerViewPlayer {
   hand: Card[];
   discardPile: Card[];
 }
 
-export interface PlayerViewOtherPlayer extends PlayerViewBasePlayer {
-  playerID: PlayerID;
-}
-
 export interface GameStateView {
   player: PlayerViewSelfPlayer;
-  otherPlayers: PlayerViewOtherPlayer[];
+  otherPlayers: PlayerViewPlayer[];
   darkArtsEvents: {
     active: DarkArtsEventsCard | null;
     discardPile: DarkArtsEventsCard[];

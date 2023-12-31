@@ -1,10 +1,10 @@
 import React from 'react';
-import {PlayerViewBasePlayer} from './player_view';
+import {PlayerViewPlayer} from './player_view';
 import Player from './Player';
 import './Players.css';
 
 type Props = {
-  players: PlayerViewBasePlayer[];
+  players: PlayerViewPlayer[];
 };
 
 export default function Players({players}: Props) {

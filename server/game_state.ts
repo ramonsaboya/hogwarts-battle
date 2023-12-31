@@ -1,4 +1,4 @@
-import {PlayerView, PlayerViewOtherPlayer} from '../src/game/player_view';
+import {PlayerView, PlayerViewPlayer} from '../src/game/player_view';
 import {VillainsState, getInitialVillainsState} from './villain/villains_state';
 import {
   PlayersState,
@@ -35,10 +35,11 @@ export function createPlayerView(game: Game, playerID: number): PlayerView {
     gameContext: game.getGameContext,
     gameStateView: {
       player: {
+        playerID: playerState.playerID,
+        hero: playerState.hero,
         health: playerState.health,
         influenceTokens: playerState.influenceTokens,
         attackTokens: playerState.attackTokens,
-        hero: playerState.hero,
         hand: playerState.hand,
         discardPile: playerState.discardPile,
       },
@@ -55,7 +56,7 @@ export function createPlayerView(game: Game, playerID: number): PlayerView {
 function setupOtherPlayersView(
   gameState: GameState,
   playerID: number
-): PlayerViewOtherPlayer[] {
+): PlayerViewPlayer[] {
   return gameState.players
     .filter(player => player.playerID !== playerID)
     .map(player => ({
