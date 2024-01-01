@@ -1,6 +1,6 @@
 import {GameState} from '../game_state';
 import {DarkArtsEventCardName, PlayerID} from '@hogwarts-battle/common';
-import {getInternalPlayer} from '../player/player_internal_state';
+import {getInternalPlayer} from '../player/players_internal_state';
 
 interface DarkArtsEventCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;

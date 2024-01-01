@@ -3,7 +3,7 @@ import {
   SerializedPlayersExternalState,
   deserializePlayersExternalState,
   serializePlayersExternalState,
-} from './player/player_external_state';
+} from './player/players_external_state';
 import {
   LocationsExternalState,
   SerializedLocationsExternalState,

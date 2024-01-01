@@ -1,4 +1,4 @@
-import {Hero} from './player_external_state';
+import {Hero} from './players_external_state';
 
 export type PlayerCardType = 'SPELL' | 'ITEM' | 'ALLY';
 

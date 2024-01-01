@@ -1,9 +1,11 @@
+import {PlayerID} from '@hogwarts-battle/common';
 import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
+import {getVillainCardReward} from './villain_cards_config';
 
 const killVillainAction: ActionListener = [
   'killVillain',
-  (state: GameState): GameState => {
+  (state: GameState, args: {}, playerID: PlayerID): GameState => {
     const newDeck = state.villains.deck;
     const newVillain = newDeck.pop();
     if (!newVillain) {
@@ -14,6 +16,11 @@ const killVillainAction: ActionListener = [
       ...state.villains.discardPile,
       state.villains.activeVillain,
     ];
+
+    state = getVillainCardReward(state.villains.activeVillain.name)(
+      state,
+      playerID
+    );
 
     return {
       ...state,

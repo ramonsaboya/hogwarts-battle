@@ -3,7 +3,7 @@ export * from './dark_arts_events/dark_arts_events_external_state';
 export * from './locations/location_cards';
 export * from './locations/locations_external_state';
 export * from './player/player_cards';
-export * from './player/player_external_state';
+export * from './player/players_external_state';
 export * from './villains/villain_cards';
 export * from './villains/villains_external_state';
 export * from './game_context';

@@ -3,7 +3,7 @@ import {
   convertAndSerializePlayersState,
   getInitialPlayersState,
   getInternalPlayer,
-} from './player/player_internal_state';
+} from './player/players_internal_state';
 import {
   LocationsInternalState,
   convertAndSerializeLocationsState,

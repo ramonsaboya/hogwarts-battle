@@ -2,15 +2,15 @@ import {
   SerializedVillainsExternalState,
   Stack,
   VILLAIN_CARDS,
-  Villain,
+  VillainCard,
   serializeVillainsExternalState,
   shuffle,
 } from '@hogwarts-battle/common';
 
 export interface VillainsInternalState {
-  deck: Stack<Villain>;
-  activeVillain: Villain;
-  discardPile: Villain[];
+  deck: Stack<VillainCard>;
+  activeVillain: VillainCard;
+  discardPile: VillainCard[];
 }
 
 export function getInitialVillainsState(): VillainsInternalState {
