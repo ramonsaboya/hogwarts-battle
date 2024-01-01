@@ -1,10 +1,10 @@
 import {Card, Hero} from './player_state';
 import {
-  LocationsState,
-  SerializedLocationsState,
+  LocationsExternalState,
+  SerializedLocationsExternalState,
   deserializeLocationsState,
   serializeLocationsState,
-} from './locations_state';
+} from './locations/locations_external_state';
 import {
   SerializedVillainsState,
   VillainsState,
@@ -42,14 +42,14 @@ export interface GameStateView {
   otherPlayers: PlayerViewPlayer[];
   darkArtsEvents: DarkArtsEventsExternalState;
   villains: VillainsState;
-  locations: LocationsState;
+  locations: LocationsExternalState;
 }
 interface SerializedGameStateView {
   player: PlayerViewSelfPlayer;
   otherPlayers: PlayerViewPlayer[];
   darkArtsEvents: SerializedDarkArtsEventsExternalState;
   villains: SerializedVillainsState;
-  locations: SerializedLocationsState;
+  locations: SerializedLocationsExternalState;
 }
 
 export interface SerializedPlayerView {

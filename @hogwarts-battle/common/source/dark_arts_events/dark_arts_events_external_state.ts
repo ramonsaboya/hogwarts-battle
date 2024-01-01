@@ -1,5 +1,5 @@
 import {PlayerView} from '../player_view';
-import {DarkArtsEventCard} from './dark_arts_events_card';
+import {DarkArtsEventCard} from './dark_arts_event_cards';
 
 export interface DarkArtsEventsEvents {
   revealDarkArtsEvent: (

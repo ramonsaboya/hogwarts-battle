@@ -1,9 +1,9 @@
 import React from 'react';
 import './GameContextDisplay.css';
-import {LocationsState} from '@hogwarts-battle/common';
+import {LocationsExternalState} from '@hogwarts-battle/common';
 
 type Props = {
-  locationsState: LocationsState;
+  locationsState: LocationsExternalState;
 };
 
 export default function LocationsDisplay({locationsState}: Props) {

@@ -1,5 +1,8 @@
 import {getInitialPlayersState} from './player/player_state';
-import {getInitialLocationsState} from './locations/locations_state';
+import {
+  LocationsInternalState,
+  getInitialLocationsState,
+} from './locations/locations_internal_state';
 import {
   DarkArtsEventsInternalState,
   getInitialDarkArtsEventsState,
@@ -7,7 +10,6 @@ import {
 import {getInitialVillainsState} from './villain/villains_state';
 import {Game} from './game';
 import {
-  LocationsState,
   PlayerViewPlayer,
   PlayersState,
   SerializedPlayerView,
@@ -21,7 +23,7 @@ export interface GameState {
   players: PlayersState;
   villains: VillainsState;
   darkArtsEvents: DarkArtsEventsInternalState;
-  locations: LocationsState;
+  locations: LocationsInternalState;
 }
 
 export const getInitialGameState = (): GameState => ({
