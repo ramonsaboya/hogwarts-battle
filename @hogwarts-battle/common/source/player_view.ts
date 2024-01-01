@@ -5,12 +5,6 @@ import {
   deserializeLocationsExternalState,
   serializeLocationsExternalState,
 } from './locations/locations_external_state';
-import {
-  SerializedVillainsState,
-  VillainsState,
-  deserializeVillainsState,
-  serializeVillainsState,
-} from './villains_state';
 import {GameContext} from './game_context';
 import {
   DarkArtsEventsExternalState,
@@ -18,6 +12,12 @@ import {
   deserializeDarkArtsEventsExternalState,
   serializeDarkArtsEventsExternalState,
 } from './dark_arts_events/dark_arts_events_external_state';
+import {
+  SerializedVillainsExternalState,
+  VillainsExternalState,
+  deserializeVillainsExternalState,
+  serializeVillainsExternalState,
+} from './villains/villains_external_state';
 
 export type PlayerID = number;
 
@@ -43,14 +43,14 @@ export interface GameStateView {
   player: PlayerViewSelfPlayer;
   otherPlayers: PlayerViewPlayer[];
   darkArtsEvents: DarkArtsEventsExternalState;
-  villains: VillainsState;
+  villains: VillainsExternalState;
   locations: LocationsExternalState;
 }
 interface SerializedGameStateView {
   player: PlayerViewSelfPlayer;
   otherPlayers: PlayerViewPlayer[];
   darkArtsEvents: SerializedDarkArtsEventsExternalState;
-  villains: SerializedVillainsState;
+  villains: SerializedVillainsExternalState;
   locations: SerializedLocationsExternalState;
 }
 
@@ -69,7 +69,7 @@ export const serializePlayerView: (
     darkArtsEvents: serializeDarkArtsEventsExternalState(
       playerView.gameStateView.darkArtsEvents
     ),
-    villains: serializeVillainsState(playerView.gameStateView.villains),
+    villains: serializeVillainsExternalState(playerView.gameStateView.villains),
     locations: serializeLocationsExternalState(
       playerView.gameStateView.locations
     ),
@@ -86,7 +86,7 @@ export const deserializePlayerView: (
     darkArtsEvents: deserializeDarkArtsEventsExternalState(
       serializedPlayerView.gameStateView.darkArtsEvents
     ),
-    villains: deserializeVillainsState(
+    villains: deserializeVillainsExternalState(
       serializedPlayerView.gameStateView.villains
     ),
     locations: deserializeLocationsExternalState(

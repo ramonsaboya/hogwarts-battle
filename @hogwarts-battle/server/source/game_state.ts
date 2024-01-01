@@ -7,22 +7,24 @@ import {
   DarkArtsEventsInternalState,
   getInitialDarkArtsEventsState,
 } from './dark_arts_events/dark_arts_events_internal_state';
-import {getInitialVillainsState} from './villain/villains_state';
+import {
+  VillainsInternalState,
+  getInitialVillainsState,
+} from './villain/villains_internal_state';
 import {Game} from './game';
 import {
   PlayerViewPlayer,
   PlayersState,
   SerializedPlayerView,
-  VillainsState,
   getPlayerState,
   serializeDarkArtsEventsExternalState,
   serializeLocationsExternalState,
-  serializeVillainsState,
+  serializeVillainsExternalState,
 } from '@hogwarts-battle/common';
 
 export interface GameState {
   players: PlayersState;
-  villains: VillainsState;
+  villains: VillainsInternalState;
   darkArtsEvents: DarkArtsEventsInternalState;
   locations: LocationsInternalState;
 }
@@ -61,7 +63,7 @@ export function createPlayerView(
       darkArtsEvents: serializeDarkArtsEventsExternalState(
         gameState.darkArtsEvents
       ),
-      villains: serializeVillainsState(gameState.villains),
+      villains: serializeVillainsExternalState(gameState.villains),
       locations: serializeLocationsExternalState(gameState.locations),
     },
   };

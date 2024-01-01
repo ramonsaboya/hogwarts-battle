@@ -9,6 +9,7 @@ export interface DarkArtsEventsEvents {
 }
 
 export interface DarkArtsEventsExternalState {
+  deckSize: number;
   active: DarkArtsEventCard | null;
   discardPile: DarkArtsEventCard[];
 }

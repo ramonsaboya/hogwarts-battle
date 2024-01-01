@@ -3,6 +3,7 @@ import {
   DARK_ARTS_EVENT_CARDS,
   DarkArtsEventCard,
   Stack,
+  shuffle,
 } from '@hogwarts-battle/common';
 
 export interface DarkArtsEventsInternalState {
@@ -29,11 +30,3 @@ export const getInitialDarkArtsEventsState =
       discardPile: [],
     };
   };
-
-const shuffle = <T>(array: T[]) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};

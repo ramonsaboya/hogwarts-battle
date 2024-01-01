@@ -1,7 +1,7 @@
 import {DarkArtsEventsEvents} from './dark_arts_events/dark_arts_events_external_state';
 import {Hero, PlayerEvents} from './player_state';
 import {SerializedPlayerView} from './player_view';
-import {VillainsEvents} from './villains_state';
+import {VillainsEvents} from './villains/villains_external_state';
 
 export interface ServerToClientEvents {
   sync: (playerView: SerializedPlayerView) => void;
