@@ -2,6 +2,7 @@ import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
 import {PlayCardActionArgs, PlayerID} from '@hogwarts-battle/common';
 import {getInternalPlayer} from './players_internal_state';
+import {getPlayerCardEffect} from './players_cards_config';
 
 const playCardAction: ActionListener = [
   'playCard',
@@ -10,14 +11,20 @@ const playCardAction: ActionListener = [
     args: PlayCardActionArgs,
     playerID: PlayerID
   ): GameState => {
-    const playerState = getInternalPlayer(state.players, playerID);
+    let playerState = getInternalPlayer(state.players, playerID);
     if (!playerState) {
       throw new Error('Player not found');
     }
 
-    const card = playerState.hand[args.cardIndex];
+    const cardInstance = playerState.hand[args.cardIndex];
+    state = getPlayerCardEffect(cardInstance.card.name)(state, playerID);
+    playerState = getInternalPlayer(state.players, playerID);
+    if (!playerState) {
+      throw new Error('Player not found');
+    }
+
     const newHand = playerState.hand.filter((_, i) => i !== args.cardIndex);
-    const newDiscardPile = [...playerState.discardPile, card];
+    const newDiscardPile = [...playerState.discardPile, cardInstance];
     const newPlayerState = {
       ...playerState,
       hand: newHand,
