@@ -3,7 +3,7 @@ import {
   ServerToClientEvents,
   ClientToServerEvents,
   Action,
-} from '@hogwarts-battle/common/source/socket';
+} from '@hogwarts-battle/common';
 
 let socket: Socket<ServerToClientEvents, ClientToServerEvents> = {} as Socket;
 export const getSocket = (): Socket<

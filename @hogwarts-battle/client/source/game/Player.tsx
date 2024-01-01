@@ -2,10 +2,7 @@ import React from 'react';
 import PlayerHand from './PlayerHand';
 import PlayerDiscardPile from './PlayerDiscardPile';
 import './Players.css';
-import {
-  PlayerViewPlayer,
-  PlayerViewSelfPlayer,
-} from '@hogwarts-battle/common/source/player_view';
+import {PlayerViewPlayer, PlayerViewSelfPlayer} from '@hogwarts-battle/common';
 
 type Props = {
   player: PlayerViewPlayer;

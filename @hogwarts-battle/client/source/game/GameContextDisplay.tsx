@@ -1,6 +1,6 @@
 import React from 'react';
 import './GameContextDisplay.css';
-import {GameContext} from '@hogwarts-battle/common/source/game_context';
+import {GameContext} from '@hogwarts-battle/common';
 
 type Props = {
   gameContext: GameContext;

@@ -1,9 +1,9 @@
+import React, {createContext, useContext, useMemo, useState} from 'react';
 import {
   PlayerView,
   SerializedPlayerView,
   deserializePlayerView,
-} from '@hogwarts-battle/common/source/player_view';
-import React, {createContext, useContext, useMemo, useState} from 'react';
+} from '@hogwarts-battle/common';
 
 interface PlayerViewManager {
   playerView: PlayerView;

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PlayerCard from './PlayerCard';
 import {useAction} from '../socket/useAction';
-import {Card} from '@hogwarts-battle/common/source/player_state';
+import {Card} from '@hogwarts-battle/common';
 
 type Props = {
   hand: Card[];

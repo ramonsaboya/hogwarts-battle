@@ -5,8 +5,7 @@ import {isValidIpAddress} from '../utils';
 import Game from './Game';
 import {getSocket, startSocket} from '../socket/socket';
 import {PlayerViewContextProvider, useSetPlayerView} from './PlayerViewContext';
-import {Hero} from '@hogwarts-battle/common/source/player_state';
-import {SerializedPlayerView} from '@hogwarts-battle/common/source/player_view';
+import {Hero, SerializedPlayerView} from '@hogwarts-battle/common';
 
 type GameLoaderData = {
   serverAddress: string | undefined;

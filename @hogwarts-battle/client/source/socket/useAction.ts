@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import {ActionEmitter, getSocket} from './socket';
 import {useSetPlayerView} from '../game/PlayerViewContext';
-import {SerializedPlayerView} from '@hogwarts-battle/common/source/player_view';
+import {SerializedPlayerView} from '@hogwarts-battle/common';
 
 export function useAction() {
   const setPlayerView = useSetPlayerView();

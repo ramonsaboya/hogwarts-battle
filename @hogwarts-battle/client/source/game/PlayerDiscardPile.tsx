@@ -1,6 +1,6 @@
 import React from 'react';
 import PlayerCard from './PlayerCard';
-import {Card} from '@hogwarts-battle/common/source/player_state';
+import {Card} from '@hogwarts-battle/common';
 
 type Props = {
   pile: Card[];

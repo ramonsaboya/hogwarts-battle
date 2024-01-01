@@ -1,9 +1,5 @@
-import {
-  Card,
-  HeroCard,
-  HogwartsCard,
-} from '@hogwarts-battle/common/source/player_state';
 import React from 'react';
+import {Card, HeroCard, HogwartsCard} from '@hogwarts-battle/common';
 
 type Props = {
   card: Card;

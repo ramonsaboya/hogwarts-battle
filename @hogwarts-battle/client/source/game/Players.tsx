@@ -1,7 +1,7 @@
 import React from 'react';
 import Player from './Player';
 import './Players.css';
-import {PlayerViewPlayer} from '@hogwarts-battle/common/source/player_view';
+import {PlayerViewPlayer} from '@hogwarts-battle/common';
 
 type Props = {
   players: PlayerViewPlayer[];
