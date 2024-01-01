@@ -1,13 +1,8 @@
 import {Socket} from 'socket.io';
 import {GameState, createPlayerView, getInitialGameState} from './game_state';
 import {HERO_TURN_ORDER} from './game_context';
-import {
-  PlayerCard,
-  GameContext,
-  Hero,
-  PlayerID,
-  Stack,
-} from '@hogwarts-battle/common';
+import {GameContext, Hero, PlayerID} from '@hogwarts-battle/common';
+import {getInitialPlayerState} from './player/players_internal_state';
 
 interface Player {
   id: PlayerID;
@@ -71,19 +66,7 @@ export class Game {
       ...this.gameState,
       players: [
         ...this.gameState.players,
-        {
-          playerID: player.id,
-          health: 10,
-          influenceTokens: 0,
-          attackTokens: 0,
-          hero: hero,
-          hand: [
-            {name: 'test1', type: 'SPELL'},
-            {name: 'test2', type: 'ITEM'},
-          ],
-          deck: new Stack<PlayerCard>(),
-          discardPile: [],
-        },
+        getInitialPlayerState(player.id, hero),
       ],
     };
 

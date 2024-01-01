@@ -19,7 +19,7 @@ export const getVillainCardReward = (
 ): VillainCardConsequence => VILLAIN_CARDS_CONFIG[cardName].reward;
 
 const VILLAIN_CARDS_CONFIG: Record<VillainCardName, VillainCardConfig> = {
-  'Crabbe & Goyle': {
+  [VillainCardName.CRABBE_AND_GOYLE]: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
@@ -29,7 +29,7 @@ const VILLAIN_CARDS_CONFIG: Record<VillainCardName, VillainCardConfig> = {
       return gameState;
     },
   },
-  'Draco Malfoy': {
+  [VillainCardName.DRACO_MALFOY]: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
@@ -39,7 +39,7 @@ const VILLAIN_CARDS_CONFIG: Record<VillainCardName, VillainCardConfig> = {
       return gameState;
     },
   },
-  'Quirinus Quirrell': {
+  [VillainCardName.QUIRINUS_QUIRRELL]: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;

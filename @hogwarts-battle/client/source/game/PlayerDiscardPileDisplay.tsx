@@ -1,16 +1,16 @@
 import React from 'react';
 import PlayerCardDisplay from './PlayerCardDisplay';
-import {PlayerCard} from '@hogwarts-battle/common';
+import {PlayerCardInstance} from '@hogwarts-battle/common';
 
 type Props = {
-  pile: PlayerCard[];
+  pile: PlayerCardInstance[];
 };
 
 export default function PlayerDiscardPileDisplay({pile}: Props) {
   return (
     <>
-      {pile.map(card => (
-        <PlayerCardDisplay key={card.name} card={card} />
+      {pile.map(cardInstance => (
+        <PlayerCardDisplay key={cardInstance.id} cardInstance={cardInstance} />
       ))}
     </>
   );

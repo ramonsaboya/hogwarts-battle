@@ -1,5 +1,5 @@
 import {PlayerID, PlayerView} from '../player_view';
-import {PlayerCard} from './player_cards';
+import {PlayerCardInstance} from './player_cards';
 
 export interface PlayCardActionArgs {
   cardIndex: number;
@@ -11,7 +11,12 @@ export interface PlayerEvents {
   ) => void;
 }
 
-export type Hero = 'Harry' | 'Hermione' | 'Ron' | 'Neville';
+export enum Hero {
+  HARRY = 'Harry',
+  HERMIONE = 'Hermione',
+  RON = 'Ron',
+  NEVILLE = 'Neville',
+}
 
 export interface ExternalPlayer {
   playerID: PlayerID;
@@ -22,8 +27,8 @@ export interface ExternalPlayer {
 }
 
 export interface SelfExternalPlayer extends ExternalPlayer {
-  hand: PlayerCard[];
-  discardPile: PlayerCard[];
+  hand: PlayerCardInstance[];
+  discardPile: PlayerCardInstance[];
 }
 
 export interface PlayersExternalState {

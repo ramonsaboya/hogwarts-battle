@@ -54,7 +54,7 @@ function GameLobbyPage() {
   }, []);
 
   const [playerName, setPlayerName] = useState('');
-  const [hero, setHero] = useState<Hero>('Harry');
+  const [hero, setHero] = useState<Hero>(Hero.HARRY);
   const [apiResponse, setApiResponse] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {

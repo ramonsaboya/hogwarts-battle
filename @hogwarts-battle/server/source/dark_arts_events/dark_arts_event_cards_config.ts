@@ -1,6 +1,6 @@
 import {GameState} from '../game_state';
-import {DarkArtsEventCardName, PlayerID} from '@hogwarts-battle/common';
 import {getInternalPlayer} from '../player/players_internal_state';
+import {DarkArtsEventCardName, PlayerID} from '@hogwarts-battle/common';
 
 interface DarkArtsEventCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
@@ -23,7 +23,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   DarkArtsEventCardName,
   DarkArtsEventCardConfig
 > = {
-  Expulso: {
+  [DarkArtsEventCardName.EXPULSO]: {
     amount: 3,
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getInternalPlayer(gameState.players, playerID);
@@ -46,21 +46,21 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
       };
     },
   },
-  Flipendo: {
+  [DarkArtsEventCardName.FLIPENDO]: {
     amount: 2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
-  'He Who Must Not Be Named': {
+  [DarkArtsEventCardName.HE_WHO_MUST_NOT_BE_NAMED]: {
     amount: 2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
-  Petrification: {
+  [DarkArtsEventCardName.PETRIFICATION]: {
     amount: 3,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
