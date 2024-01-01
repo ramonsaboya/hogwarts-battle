@@ -9,6 +9,7 @@ import {
   SerializedPlayerView,
   getPlayerState,
   serializeLocationsState,
+  serializeVillainsState,
 } from '@hogwarts-battle/common';
 
 export const getInitialGameState = (): GameState => ({
@@ -46,7 +47,7 @@ export function createPlayerView(
         active: gameState.darkArtsEvents.active,
         discardPile: gameState.darkArtsEvents.discardPile,
       },
-      activeVillain: gameState.villains.active,
+      villains: serializeVillainsState(gameState.villains),
       locations: serializeLocationsState(gameState.locations),
     },
   };

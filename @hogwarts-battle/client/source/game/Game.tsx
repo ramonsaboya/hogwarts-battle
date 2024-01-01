@@ -18,7 +18,7 @@ export default function Game() {
     runAction({action: 'endTurn', args: {}});
   };
 
-  if (gameStateView.activeVillain === undefined) {
+  if (gameStateView.villains === undefined) {
     return <div>loading...</div>;
   }
 
@@ -30,7 +30,7 @@ export default function Game() {
       />
       <LocationsDisplay locationsState={gameStateView.locations} />
       <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>
-      <div>Villain: {gameStateView.activeVillain.name}</div>
+      <div>Villain: {gameStateView.villains.active.name}</div>
       <button onClick={() => runAction({action: 'killVillain', args: {}})}>
         Kill Villain
       </button>

@@ -6,7 +6,12 @@ import {
   deserializeLocationsState,
   serializeLocationsState,
 } from './locations_state';
-import {Villain} from './villains_state';
+import {
+  SerializedVillainsState,
+  VillainsState,
+  deserializeVillainsState,
+  serializeVillainsState,
+} from './villains_state';
 import {GameContext} from './game_context';
 
 export type PlayerID = number;
@@ -24,6 +29,11 @@ export interface PlayerViewSelfPlayer extends PlayerViewPlayer {
   discardPile: Card[];
 }
 
+export interface PlayerView {
+  gameContext: GameContext;
+  gameStateView: GameStateView;
+}
+
 export interface GameStateView {
   player: PlayerViewSelfPlayer;
   otherPlayers: PlayerViewPlayer[];
@@ -31,13 +41,8 @@ export interface GameStateView {
     active: DarkArtsEventsCard | null;
     discardPile: DarkArtsEventsCard[];
   };
-  activeVillain: Villain;
+  villains: VillainsState;
   locations: LocationsState;
-}
-
-export interface PlayerView {
-  gameContext: GameContext;
-  gameStateView: GameStateView;
 }
 interface SerializedGameStateView {
   player: PlayerViewSelfPlayer;
@@ -46,7 +51,7 @@ interface SerializedGameStateView {
     active: DarkArtsEventsCard | null;
     discardPile: DarkArtsEventsCard[];
   };
-  activeVillain: Villain;
+  villains: SerializedVillainsState;
   locations: SerializedLocationsState;
 }
 
@@ -63,7 +68,7 @@ export const serializePlayerView: (
     player: playerView.gameStateView.player,
     otherPlayers: playerView.gameStateView.otherPlayers,
     darkArtsEvents: playerView.gameStateView.darkArtsEvents,
-    activeVillain: playerView.gameStateView.activeVillain,
+    villains: serializeVillainsState(playerView.gameStateView.villains),
     locations: serializeLocationsState(playerView.gameStateView.locations),
   },
 });
@@ -76,7 +81,9 @@ export const deserializePlayerView: (
     player: serializedPlayerView.gameStateView.player,
     otherPlayers: serializedPlayerView.gameStateView.otherPlayers,
     darkArtsEvents: serializedPlayerView.gameStateView.darkArtsEvents,
-    activeVillain: serializedPlayerView.gameStateView.activeVillain,
+    villains: deserializeVillainsState(
+      serializedPlayerView.gameStateView.villains
+    ),
     locations: deserializeLocationsState(
       serializedPlayerView.gameStateView.locations
     ),

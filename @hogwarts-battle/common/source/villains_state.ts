@@ -15,11 +15,21 @@ export interface VillainsState {
   active: Villain;
 }
 
-const DRACO_MALFOY: Villain = {
-  name: 'Draco Malfoy',
-  health: 5,
-};
-const LUCIUS_MALFOY: Villain = {
-  name: 'Lucius Malfoy',
-  health: 10,
-};
+export interface SerializedVillainsState {
+  deck: Villain[];
+  active: Villain;
+}
+
+export const serializeVillainsState: (
+  villainsState: VillainsState
+) => SerializedVillainsState = villainsState => ({
+  deck: villainsState.deck.getItems,
+  active: villainsState.active,
+});
+
+export const deserializeVillainsState: (
+  serializedVillainsState: SerializedVillainsState
+) => VillainsState = serializedVillainsState => ({
+  deck: new Stack(serializedVillainsState.deck),
+  active: serializedVillainsState.active,
+});
