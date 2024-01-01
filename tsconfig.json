@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-      "@hogwarts-battle/common": ["./projects/@hogwarts-battle/common/source"]
+      "@hogwarts-battle/common": ["./@hogwarts-battle/common/source"]
     }
   },
   "extends": "./tsconfig.base.json"

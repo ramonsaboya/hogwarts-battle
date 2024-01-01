@@ -6,15 +6,15 @@ COPY package.json ./
 COPY package-lock.json ./
  
 # Copy the server and common package.json
-COPY projects/@hogwarts-battle/server/package.json ./projects/@hogwarts-battle/server/package.json
-COPY projects/@hogwarts-battle/common/package.json ./projects/@hogwarts-battle/common/package.json
+COPY @hogwarts-battle/server/package.json ./@hogwarts-battle/server/package.json
+COPY @hogwarts-battle/common/package.json ./@hogwarts-battle/common/package.json
 
 # Install the dependencies
 RUN npm install
  
 # Copy app source
-COPY projects/@hogwarts-battle/server/ ./projects/@hogwarts-battle/server/
-COPY projects/@hogwarts-battle/common/ ./projects/@hogwarts-battle/common/
+COPY @hogwarts-battle/server/ ./@hogwarts-battle/server/
+COPY @hogwarts-battle/common/ ./@hogwarts-battle/common/
 COPY tsconfig*.json ./
 
 # Build the app

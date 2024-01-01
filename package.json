@@ -21,15 +21,15 @@
     "clean:common": "npm run clean -w @hogwarts-battle/common",
     "clean:server": "npm run clean -w @hogwarts-battle/server",
     "deploy:client": "npm run build:common && npm run build:client && npm run -w @hogwarts-battle/client deploy",
-    "deploy:server": "npm run build:common && npm run build:server && docker build --tag ramonsaboya/hogwarts-battle:hogwarts-battle-server -f projects/@hogwarts-battle/server/Dockerfile . && docker push ramonsaboya/hogwarts-battle:hogwarts-battle-server",
-    "format:check": "prettier --list-different './projects/@hogwarts-battle/{client,common,server}/**/*.{js,ts,tsx}' './**/*.json'",
-    "format:fix": "prettier --write './projects/@hogwarts-battle/{client,common,server}/**/*.{js,ts,tsx}' './**/*.json'",
-    "start:dev": "concurrently --kill-others \"npm run build:common:watch\" \"npm run start:dev:server\" \"npm run start:dev:client\"",
+    "deploy:server": "npm run build:common && npm run build:server && docker build --tag ramonsaboya/hogwarts-battle:hogwarts-battle-server -f @hogwarts-battle/server/Dockerfile . && docker push ramonsaboya/hogwarts-battle:hogwarts-battle-server",
+    "format:check": "prettier --list-different './@hogwarts-battle/{client,common,server}/**/*.{js,ts,tsx}' './**/*.json'",
+    "format:fix": "prettier --write './@hogwarts-battle/{client,common,server}/**/*.{js,ts,tsx}' './**/*.json'",
+    "start:dev": "concurrently --kill-others --handle-input \"npm:start:dev:server\" \"npm:build:common:watch\" \"npm:start:dev:client\"",
     "start:dev:client": "npm run start:dev -w @hogwarts-battle/client",
     "start:dev:server": "npm run start:dev -w @hogwarts-battle/server",
     "start:server": "npm run start -w @hogwarts-battle/server"
   },
   "workspaces": [
-    "./projects/@hogwarts-battle/*"
+    "./@hogwarts-battle/*"
   ]
 }

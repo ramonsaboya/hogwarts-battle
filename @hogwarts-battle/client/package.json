@@ -26,7 +26,7 @@
   "scripts": {
     "build": "npm run clean && webpack --config webpack/production.config.js",
     "build:check": "tsc -p ./tsconfig.client.json --noEmit",
-    "clean": "rm -rf distribution && rf -rf node_modules",
+    "clean": "rm -rf distribution && rm -rf node_modules",
     "deploy": "gh-pages --cname hogwarts-battle.vitaes.io -d distribution && rm -rf node_modules",
     "start:dev": "webpack serve --config webpack/development.config.js"
   }
