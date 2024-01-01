@@ -1,7 +1,7 @@
 import React from 'react';
 import {usePlayerView} from './PlayerViewContext';
 import {useAction} from '../socket/useAction';
-import Players from './Players';
+import PlayersDisplay from './PlayersDisplay';
 import GameContextDisplay from './GameContextDisplay';
 import LocationsDisplay from './LocationsDisplay';
 
@@ -25,8 +25,11 @@ export default function Game() {
   return (
     <div>
       <GameContextDisplay gameContext={playerView.gameContext} />
-      <Players
-        players={[gameStateView.player, ...gameStateView.otherPlayers]}
+      <PlayersDisplay
+        players={[
+          gameStateView.players.selfPlayer,
+          ...gameStateView.players.otherPlayers,
+        ]}
       />
       <LocationsDisplay locationsState={gameStateView.locations} />
       <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>

@@ -1,11 +1,11 @@
 import React from 'react';
-import {Card, HeroCard, HogwartsCard} from '@hogwarts-battle/common';
+import {PlayerCard, HeroCard, HogwartsCard} from '@hogwarts-battle/common';
 
 type Props = {
-  card: Card;
+  card: PlayerCard;
 };
 
-export default function PlayerHand({card}: Props) {
+export default function PlayerCardDisplay({card}: Props) {
   const heroCard = isHeroCard(card) ? (
     <>
       <div>hero: {card.hero}</div>
@@ -27,10 +27,10 @@ export default function PlayerHand({card}: Props) {
   );
 }
 
-function isHeroCard(card: Card): card is HeroCard {
+function isHeroCard(card: PlayerCard): card is HeroCard {
   return (card as HeroCard).hero !== undefined;
 }
 
-function isHogwartsCard(card: Card): card is HogwartsCard {
+function isHogwartsCard(card: PlayerCard): card is HogwartsCard {
   return (card as HogwartsCard).cost !== undefined;
 }

@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import PlayerCard from './PlayerCard';
+import PlayerCardDisplay from './PlayerCardDisplay';
 import {useAction} from '../socket/useAction';
-import {Card} from '@hogwarts-battle/common';
+import {PlayerCard} from '@hogwarts-battle/common';
 
 type Props = {
-  hand: Card[];
+  hand: PlayerCard[];
 };
 
-export default function PlayerHand({hand}: Props) {
+export default function PlayerHandDisplay({hand}: Props) {
   const runAction = useAction();
   const [selectedCard, setSelectedCard] = useState(-1);
 
@@ -22,7 +22,7 @@ export default function PlayerHand({hand}: Props) {
   return (
     <>
       {hand.map(card => (
-        <PlayerCard key={card.name} card={card} />
+        <PlayerCardDisplay key={card.name} card={card} />
       ))}
 
       <select value={selectedCard} onChange={handleCardSelection}>

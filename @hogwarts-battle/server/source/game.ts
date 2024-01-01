@@ -2,7 +2,7 @@ import {Socket} from 'socket.io';
 import {GameState, createPlayerView, getInitialGameState} from './game_state';
 import {HERO_TURN_ORDER} from './game_context';
 import {
-  Card,
+  PlayerCard,
   GameContext,
   Hero,
   PlayerID,
@@ -81,7 +81,7 @@ export class Game {
             {name: 'test1', type: 'SPELL'},
             {name: 'test2', type: 'ITEM'},
           ],
-          deck: new Stack<Card>(),
+          deck: new Stack<PlayerCard>(),
           discardPile: [],
         },
       ],

@@ -1,4 +1,9 @@
-import {Card, Hero} from './player_state';
+import {
+  PlayersExternalState,
+  SerializedPlayersExternalState,
+  deserializePlayersExternalState,
+  serializePlayersExternalState,
+} from './player/player_external_state';
 import {
   LocationsExternalState,
   SerializedLocationsExternalState,
@@ -21,34 +26,19 @@ import {
 
 export type PlayerID = number;
 
-export interface PlayerViewPlayer {
-  playerID: PlayerID;
-  hero: Hero;
-  health: number;
-  influenceTokens: number;
-  attackTokens: number;
-}
-
-export interface PlayerViewSelfPlayer extends PlayerViewPlayer {
-  hand: Card[];
-  discardPile: Card[];
-}
-
 export interface PlayerView {
   gameContext: GameContext;
   gameStateView: GameStateView;
 }
 
 export interface GameStateView {
-  player: PlayerViewSelfPlayer;
-  otherPlayers: PlayerViewPlayer[];
+  players: PlayersExternalState;
   darkArtsEvents: DarkArtsEventsExternalState;
   villains: VillainsExternalState;
   locations: LocationsExternalState;
 }
 interface SerializedGameStateView {
-  player: PlayerViewSelfPlayer;
-  otherPlayers: PlayerViewPlayer[];
+  players: SerializedPlayersExternalState;
   darkArtsEvents: SerializedDarkArtsEventsExternalState;
   villains: SerializedVillainsExternalState;
   locations: SerializedLocationsExternalState;
@@ -64,8 +54,7 @@ export const serializePlayerView: (
 ) => SerializedPlayerView = playerView => ({
   gameContext: playerView.gameContext,
   gameStateView: {
-    player: playerView.gameStateView.player,
-    otherPlayers: playerView.gameStateView.otherPlayers,
+    players: serializePlayersExternalState(playerView.gameStateView.players),
     darkArtsEvents: serializeDarkArtsEventsExternalState(
       playerView.gameStateView.darkArtsEvents
     ),
@@ -81,8 +70,9 @@ export const deserializePlayerView: (
 ) => PlayerView = serializedPlayerView => ({
   gameContext: serializedPlayerView.gameContext,
   gameStateView: {
-    player: serializedPlayerView.gameStateView.player,
-    otherPlayers: serializedPlayerView.gameStateView.otherPlayers,
+    players: deserializePlayersExternalState(
+      serializedPlayerView.gameStateView.players
+    ),
     darkArtsEvents: deserializeDarkArtsEventsExternalState(
       serializedPlayerView.gameStateView.darkArtsEvents
     ),

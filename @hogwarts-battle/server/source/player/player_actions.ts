@@ -1,10 +1,7 @@
 import {ActionListener} from '../actions';
-import {
-  PlayCardActionArgs,
-  PlayerID,
-  getPlayerState,
-} from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
+import {PlayCardActionArgs, PlayerID} from '@hogwarts-battle/common';
+import {getInternalPlayer} from './player_internal_state';
 
 const playCardAction: ActionListener = [
   'playCard',
@@ -13,7 +10,7 @@ const playCardAction: ActionListener = [
     args: PlayCardActionArgs,
     playerID: PlayerID
   ): GameState => {
-    const playerState = getPlayerState(state.players, playerID);
+    const playerState = getInternalPlayer(state.players, playerID);
     if (!playerState) {
       throw new Error('Player not found');
     }

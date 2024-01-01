@@ -1,4 +1,9 @@
-import {getInitialPlayersState} from './player/player_state';
+import {
+  PlayersInternalState,
+  convertAndSerializePlayersState,
+  getInitialPlayersState,
+  getInternalPlayer,
+} from './player/player_internal_state';
 import {
   LocationsInternalState,
   convertAndSerializeLocationsState,
@@ -15,15 +20,10 @@ import {
   getInitialVillainsState,
 } from './villain/villains_internal_state';
 import {Game} from './game';
-import {
-  PlayerViewPlayer,
-  PlayersState,
-  SerializedPlayerView,
-  getPlayerState,
-} from '@hogwarts-battle/common';
+import {SerializedPlayerView} from '@hogwarts-battle/common';
 
 export interface GameState {
-  players: PlayersState;
+  players: PlayersInternalState;
   villains: VillainsInternalState;
   darkArtsEvents: DarkArtsEventsInternalState;
   locations: LocationsInternalState;
@@ -42,7 +42,7 @@ export function createPlayerView(
 ): SerializedPlayerView {
   const gameState = game.gameState;
 
-  const playerState = getPlayerState(gameState.players, playerID);
+  const playerState = getInternalPlayer(gameState.players, playerID);
   if (!playerState) {
     throw new Error('Player not found');
   }
@@ -50,16 +50,7 @@ export function createPlayerView(
   return {
     gameContext: game.getGameContext,
     gameStateView: {
-      player: {
-        playerID: playerState.playerID,
-        hero: playerState.hero,
-        health: playerState.health,
-        influenceTokens: playerState.influenceTokens,
-        attackTokens: playerState.attackTokens,
-        hand: playerState.hand,
-        discardPile: playerState.discardPile,
-      },
-      otherPlayers: setupOtherPlayersView(gameState, playerID),
+      players: convertAndSerializePlayersState(gameState.players, playerID),
       darkArtsEvents: convertAndSerializeDarkArtsEventsState(
         gameState.darkArtsEvents
       ),
@@ -67,19 +58,4 @@ export function createPlayerView(
       locations: convertAndSerializeLocationsState(gameState.locations),
     },
   };
-}
-
-function setupOtherPlayersView(
-  gameState: GameState,
-  playerID: number
-): PlayerViewPlayer[] {
-  return gameState.players
-    .filter(player => player.playerID !== playerID)
-    .map(player => ({
-      playerID: player.playerID,
-      hero: player.hero,
-      health: player.health,
-      influenceTokens: player.influenceTokens,
-      attackTokens: player.attackTokens,
-    }));
 }

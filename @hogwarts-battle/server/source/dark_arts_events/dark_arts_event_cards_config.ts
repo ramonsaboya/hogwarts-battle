@@ -1,9 +1,6 @@
 import {GameState} from '../game_state';
-import {
-  DarkArtsEventCardName,
-  PlayerID,
-  getPlayerState,
-} from '@hogwarts-battle/common';
+import {DarkArtsEventCardName, PlayerID} from '@hogwarts-battle/common';
+import {getInternalPlayer} from '../player/player_internal_state';
 
 interface DarkArtsEventCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
@@ -29,7 +26,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   Expulso: {
     amount: 3,
     effect: (gameState: GameState, playerID: PlayerID) => {
-      const playerState = getPlayerState(gameState.players, playerID);
+      const playerState = getInternalPlayer(gameState.players, playerID);
       if (!playerState) {
         throw new Error('Player not found');
       }
