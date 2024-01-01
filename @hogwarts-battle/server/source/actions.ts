@@ -1,12 +1,11 @@
 import {Socket} from 'socket.io';
-import {createPlayerView} from './game_state';
+import {GameState, createPlayerView} from './game_state';
 import {Game} from './game';
 import {actions as playerActions} from './player/player_actions';
 import {actions as villainsActions} from './villain/villains_actions';
 import {actions as darkArtsEventsActions} from './dark_arts_events/dark_arts_events_actions';
 import {
   Action,
-  GameState,
   PlayerID,
   ClientToServerEvents,
   ServerToClientEvents,

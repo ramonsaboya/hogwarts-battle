@@ -1,5 +1,7 @@
 import {ActionListener} from '../actions';
-import {GameState, PlayerID} from '@hogwarts-battle/common';
+import {PlayerID} from '@hogwarts-battle/common';
+import {GameState} from '../game_state';
+import {getDarkArtsEventCardEffect} from './dark_arts_event_cards_config';
 
 const revealDarkArtsEventAction: ActionListener = [
   'revealDarkArtsEvent',
@@ -7,8 +9,8 @@ const revealDarkArtsEventAction: ActionListener = [
     const activeDarkArtsEvent = state.darkArtsEvents.active;
 
     const newDeck = state.darkArtsEvents.deck;
-    const newDarkArtsEvent = newDeck.pop();
-    if (!newDarkArtsEvent) {
+    const newDarkArtsEventCard = newDeck.pop();
+    if (!newDarkArtsEventCard) {
       throw new Error('No more dark arts events');
     }
     const newDiscardPile = [
@@ -16,13 +18,16 @@ const revealDarkArtsEventAction: ActionListener = [
       ...(activeDarkArtsEvent ? [activeDarkArtsEvent] : []),
     ];
 
-    state = newDarkArtsEvent.applyEffect(state, playerID);
+    state = getDarkArtsEventCardEffect(newDarkArtsEventCard.name)(
+      state,
+      playerID
+    );
 
     return {
       ...state,
       darkArtsEvents: {
         deck: newDeck,
-        active: newDarkArtsEvent,
+        active: newDarkArtsEventCard,
         discardPile: newDiscardPile,
       },
     };

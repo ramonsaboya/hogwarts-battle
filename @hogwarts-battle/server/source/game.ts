@@ -1,10 +1,9 @@
 import {Socket} from 'socket.io';
-import {createPlayerView, getInitialGameState} from './game_state';
+import {GameState, createPlayerView, getInitialGameState} from './game_state';
 import {HERO_TURN_ORDER} from './game_context';
 import {
   Card,
   GameContext,
-  GameState,
   Hero,
   PlayerID,
   Stack,

@@ -1,16 +1,28 @@
 import {getInitialPlayersState} from './player/player_state';
 import {getInitialLocationsState} from './locations/locations_state';
-import {getInitialDarkArtsEventsState} from './dark_arts_events/dark_arts_events_state';
+import {
+  DarkArtsEventsInternalState,
+  getInitialDarkArtsEventsState,
+} from './dark_arts_events/dark_arts_events_internal_state';
 import {getInitialVillainsState} from './villain/villains_state';
 import {Game} from './game';
 import {
-  GameState,
+  LocationsState,
   PlayerViewPlayer,
+  PlayersState,
   SerializedPlayerView,
+  VillainsState,
   getPlayerState,
   serializeLocationsState,
   serializeVillainsState,
 } from '@hogwarts-battle/common';
+
+export interface GameState {
+  players: PlayersState;
+  villains: VillainsState;
+  darkArtsEvents: DarkArtsEventsInternalState;
+  locations: LocationsState;
+}
 
 export const getInitialGameState = (): GameState => ({
   players: getInitialPlayersState(),

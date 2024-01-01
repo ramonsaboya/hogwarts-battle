@@ -1,4 +1,4 @@
-import {DarkArtsEventsEvents} from './dark_arts_events/dark_arts_events_state';
+import {DarkArtsEventsEvents} from './dark_arts_events/dark_arts_events_external_state';
 import {Hero, PlayerEvents} from './player_state';
 import {SerializedPlayerView} from './player_view';
 import {VillainsEvents} from './villains_state';

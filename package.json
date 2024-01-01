@@ -11,6 +11,7 @@
     "build": "npm run build -w @hogwarts-battle/common && npm run build -w @hogwarts-battle/client && npm run build -w @hogwarts-battle/server",
     "build:client": "npm run build -w @hogwarts-battle/client",
     "build:client:check": "npm run build:check -w @hogwarts-battle/client",
+    "build:check": "npm run build:check -ws",
     "build:common": "npm run build -w @hogwarts-battle/common",
     "build:common:check": "npm run build:check -w @hogwarts-battle/common",
     "build:common:watch": "npm run build:watch -w @hogwarts-battle/common",

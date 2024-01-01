@@ -1,10 +1,10 @@
 import {ActionListener} from '../actions';
 import {
-  GameState,
   PlayCardActionArgs,
   PlayerID,
   getPlayerState,
 } from '@hogwarts-battle/common';
+import {GameState} from '../game_state';
 
 const playCardAction: ActionListener = [
   'playCard',

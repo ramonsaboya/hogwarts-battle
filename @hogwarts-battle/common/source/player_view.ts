@@ -1,4 +1,3 @@
-import {DarkArtsEventsCard} from './dark_arts_events/dark_arts_events_card';
 import {Card, Hero} from './player_state';
 import {
   LocationsState,
@@ -13,6 +12,10 @@ import {
   serializeVillainsState,
 } from './villains_state';
 import {GameContext} from './game_context';
+import {
+  DarkArtsEventsExternalState,
+  SerializedDarkArtsEventsExternalState,
+} from './dark_arts_events/dark_arts_events_external_state';
 
 export type PlayerID = number;
 
@@ -37,20 +40,14 @@ export interface PlayerView {
 export interface GameStateView {
   player: PlayerViewSelfPlayer;
   otherPlayers: PlayerViewPlayer[];
-  darkArtsEvents: {
-    active: DarkArtsEventsCard | null;
-    discardPile: DarkArtsEventsCard[];
-  };
+  darkArtsEvents: DarkArtsEventsExternalState;
   villains: VillainsState;
   locations: LocationsState;
 }
 interface SerializedGameStateView {
   player: PlayerViewSelfPlayer;
   otherPlayers: PlayerViewPlayer[];
-  darkArtsEvents: {
-    active: DarkArtsEventsCard | null;
-    discardPile: DarkArtsEventsCard[];
-  };
+  darkArtsEvents: SerializedDarkArtsEventsExternalState;
   villains: SerializedVillainsState;
   locations: SerializedLocationsState;
 }

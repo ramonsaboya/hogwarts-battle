@@ -1,5 +1,5 @@
 import {ActionListener} from '../actions';
-import {GameState} from '@hogwarts-battle/common';
+import {GameState} from '../game_state';
 
 const killVillainAction: ActionListener = [
   'killVillain',
