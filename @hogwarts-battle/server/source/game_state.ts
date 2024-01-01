@@ -1,14 +1,17 @@
 import {getInitialPlayersState} from './player/player_state';
 import {
   LocationsInternalState,
+  convertAndSerializeLocationsState,
   getInitialLocationsState,
 } from './locations/locations_internal_state';
 import {
   DarkArtsEventsInternalState,
+  convertAndSerializeDarkArtsEventsState,
   getInitialDarkArtsEventsState,
 } from './dark_arts_events/dark_arts_events_internal_state';
 import {
   VillainsInternalState,
+  convertAndSerializeVillainsState,
   getInitialVillainsState,
 } from './villain/villains_internal_state';
 import {Game} from './game';
@@ -17,9 +20,6 @@ import {
   PlayersState,
   SerializedPlayerView,
   getPlayerState,
-  serializeDarkArtsEventsExternalState,
-  serializeLocationsExternalState,
-  serializeVillainsExternalState,
 } from '@hogwarts-battle/common';
 
 export interface GameState {
@@ -60,11 +60,11 @@ export function createPlayerView(
         discardPile: playerState.discardPile,
       },
       otherPlayers: setupOtherPlayersView(gameState, playerID),
-      darkArtsEvents: serializeDarkArtsEventsExternalState(
+      darkArtsEvents: convertAndSerializeDarkArtsEventsState(
         gameState.darkArtsEvents
       ),
-      villains: serializeVillainsExternalState(gameState.villains),
-      locations: serializeLocationsExternalState(gameState.locations),
+      villains: convertAndSerializeVillainsState(gameState.villains),
+      locations: convertAndSerializeLocationsState(gameState.locations),
     },
   };
 }

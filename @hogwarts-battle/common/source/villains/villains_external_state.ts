@@ -7,7 +7,7 @@ export interface VillainsEvents {
 
 export interface VillainsExternalState {
   deckSize: number;
-  active: Villain;
+  activeVillain: Villain;
   discardPile: Villain[];
 }
 

@@ -10,11 +10,17 @@ const killVillainAction: ActionListener = [
       throw new Error('No more villains');
     }
 
+    const newDiscardPile = [
+      ...state.villains.discardPile,
+      state.villains.activeVillain,
+    ];
+
     return {
       ...state,
       villains: {
         deck: newDeck,
-        active: newVillain,
+        activeVillain: newVillain,
+        discardPile: newDiscardPile,
       },
     };
   },

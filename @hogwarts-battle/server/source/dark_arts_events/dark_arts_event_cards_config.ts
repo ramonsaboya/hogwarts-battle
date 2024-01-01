@@ -27,7 +27,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   DarkArtsEventCardConfig
 > = {
   Expulso: {
-    amount: 2,
+    amount: 3,
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getPlayerState(gameState.players, playerID);
       if (!playerState) {
