@@ -1,0 +1,11 @@
+{
+  "main": "distribution/index.js",
+  "name": "@hogwarts-battle/common",
+  "scripts": {
+    "build": "npm run clean && tsc -p ./tsconfig.common.json",
+    "build:check": "tsc -p ./tsconfig.common.json --noEmit",
+    "build:watch": "tsc -p ./tsconfig.common.json --watch",
+    "clean": "rm -rf distribution"
+  },
+  "types": "distribution/index.d.ts"
+}

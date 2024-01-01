@@ -1,7 +1,4 @@
-.vscode
-
 distribution/
 node_modules/
-
-.DS_Store
-.env*
+public/
+package-lock.json
