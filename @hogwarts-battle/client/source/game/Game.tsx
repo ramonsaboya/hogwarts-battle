@@ -28,7 +28,7 @@ export default function Game() {
       <Players
         players={[gameStateView.player, ...gameStateView.otherPlayers]}
       />
-      {/* <LocationsDisplay locationsState={gameStateView.locations} /> */}
+      <LocationsDisplay locationsState={gameStateView.locations} />
       <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>
       <div>Villain: {gameStateView.activeVillain.name}</div>
       <button onClick={() => runAction({action: 'killVillain', args: {}})}>

@@ -7,7 +7,6 @@ type Props = {
 };
 
 export default function LocationsDisplay({locationsState}: Props) {
-  console.log('locationsState', locationsState.deck);
   const maybeLocation = locationsState.deck.peek();
   if (maybeLocation === undefined) {
     return <div>error</div>;
