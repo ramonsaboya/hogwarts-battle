@@ -11,14 +11,14 @@ export interface SerializedLocationsExternalState {
   initialLocationCount: number;
 }
 
-export const serializeLocationsState = (
+export const serializeLocationsExternalState = (
   state: LocationsExternalState
 ): SerializedLocationsExternalState => ({
   deck: state.deck.getItems,
   initialLocationCount: state.initialLocationCount,
 });
 
-export const deserializeLocationsState = (
+export const deserializeLocationsExternalState = (
   state: SerializedLocationsExternalState
 ): LocationsExternalState => ({
   deck: new Stack(state.deck),
