@@ -1,5 +1,6 @@
 import {DarkArtsEventsEvents} from './dark_arts_events/dark_arts_events_external_state';
-import {Hero, PlayerEvents} from './player/players_external_state';
+import {Hero, PlayersEvents} from './player/players_external_state';
+import {PlayerCardsEvents} from './player_cards/player_cards_external_state';
 import {SerializedPlayerView} from './player_view';
 import {VillainsEvents} from './villains/villains_external_state';
 
@@ -9,7 +10,8 @@ export interface ServerToClientEvents {
 
 export type ClientToServerEvents = JoinEvent &
   GameEvents &
-  PlayerEvents &
+  PlayersEvents &
+  PlayerCardsEvents &
   VillainsEvents &
   DarkArtsEventsEvents;
 type JoinEvent = {

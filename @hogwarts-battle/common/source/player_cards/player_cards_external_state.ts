@@ -1,4 +1,15 @@
+import {PlayerView} from '../player_view';
 import {PlayerCardInstance} from './player_cards';
+
+export interface AcquireCardActionArgs {
+  cardIndex: number;
+}
+export interface PlayerCardsEvents {
+  acquireCard: (
+    args: AcquireCardActionArgs,
+    callback: (playerView: PlayerView) => void
+  ) => void;
+}
 
 export interface PlayerCardsExternalState {
   availableCards: PlayerCardInstance[];

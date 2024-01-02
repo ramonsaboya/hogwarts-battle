@@ -4,7 +4,7 @@ import {PlayerCardInstance} from '../player_cards/player_cards';
 export interface PlayCardActionArgs {
   cardIndex: number;
 }
-export interface PlayerEvents {
+export interface PlayersEvents {
   playCard: (
     args: PlayCardActionArgs,
     callback: (playerView: PlayerView) => void

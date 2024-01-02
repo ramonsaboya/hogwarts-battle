@@ -2,6 +2,7 @@ import {Socket} from 'socket.io';
 import {GameState, createPlayerView} from './game_state';
 import {Game} from './game';
 import {actions as playersActions} from './player/players_actions';
+import {actions as playerCardsActions} from './player_cards/player_cards_actions';
 import {actions as villainsActions} from './villain/villains_actions';
 import {actions as darkArtsEventsActions} from './dark_arts_events/dark_arts_events_actions';
 import {
@@ -32,6 +33,7 @@ export function registerListeners(
   const allActionListeners = [
     ...villainsActions,
     ...playersActions,
+    ...playerCardsActions,
     ...darkArtsEventsActions,
   ];
   allActionListeners.forEach(([action, listener]) => {
