@@ -1,8 +1,18 @@
 import {Socket} from 'socket.io';
 import {GameState, createPlayerView, getInitialGameState} from './game_state';
 import {HERO_TURN_ORDER} from './game_context';
-import {GameContext, Hero, PlayerID} from '@hogwarts-battle/common';
-import {getInitialPlayerState} from './player/players_internal_state';
+import {
+  GameContext,
+  Hero,
+  PlayerID,
+  Stack,
+  shuffle,
+} from '@hogwarts-battle/common';
+import {
+  InternalPlayer,
+  getInitialPlayerState,
+  getInternalPlayer,
+} from './player/players_internal_state';
 
 interface Player {
   id: PlayerID;
@@ -129,6 +139,7 @@ export class Game {
   }
 
   endTurn() {
+    const currentPlayerID = this.gameContext.currentPlayer;
     const nextTurnPlayer =
       this.gameContext.playerTurnOrder[
         (this.gameContext.playerTurnOrder.indexOf(
@@ -138,10 +149,59 @@ export class Game {
           this.gameContext.playerTurnOrder.length
       ];
 
+    const currentPlayerState = getInternalPlayer(
+      this.gameState.players,
+      currentPlayerID
+    );
+    if (!currentPlayerState) {
+      throw new Error('Player not found');
+    }
+    const otherPlayers = this.gameState.players.filter(
+      player => player.playerID !== currentPlayerID
+    );
+
     this.gameContext = {
       ...this.gameContext,
       turn: this.gameContext.turn + 1,
       currentPlayer: nextTurnPlayer,
     };
+    this.gameState = {
+      ...this.gameState,
+      players: [
+        ...otherPlayers,
+        {
+          ...currentPlayerState,
+          ...drawNewHand(currentPlayerState),
+          influenceTokens: 0,
+          attackTokens: 0,
+        },
+      ],
+    };
   }
+}
+
+const HAND_SIZE = 5;
+
+function drawNewHand(player: InternalPlayer): InternalPlayer {
+  const currentHand = player.hand;
+  const newDiscardPile = [...player.discardPile, ...currentHand];
+
+  const deckSize = player.deck.length();
+  if (deckSize >= HAND_SIZE) {
+    return {
+      ...player,
+      hand: player.deck.draw(HAND_SIZE),
+      discardPile: newDiscardPile,
+    };
+  }
+
+  const firstDrawnCards = player.deck.draw(deckSize);
+  const newDeck = new Stack(shuffle(newDiscardPile));
+  const secondDrawnCards = newDeck.draw(HAND_SIZE - firstDrawnCards.length);
+  return {
+    ...player,
+    hand: [...firstDrawnCards, ...secondDrawnCards],
+    deck: newDeck,
+    discardPile: [],
+  };
 }

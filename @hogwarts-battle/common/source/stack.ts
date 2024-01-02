@@ -19,6 +19,15 @@ export class Stack<T> {
     return this.items.pop();
   }
 
+  draw(amount: number): T[] {
+    const drawnCards: T[] = [];
+    while (amount > 0) {
+      drawnCards.push(this.pop()!);
+      amount--;
+    }
+    return drawnCards;
+  }
+
   peek(): T | undefined {
     return this.items[this.items.length - 1];
   }
