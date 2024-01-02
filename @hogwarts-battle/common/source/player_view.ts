@@ -23,6 +23,11 @@ import {
   deserializeVillainsExternalState,
   serializeVillainsExternalState,
 } from './villains/villains_external_state';
+import {
+  PlayerCardsExternalState,
+  deserializePlayerCardsExternalState,
+  serializePlayerCardsExternalState,
+} from './player_cards/player_cards_external_state';
 
 export type PlayerID = number;
 
@@ -33,12 +38,14 @@ export interface PlayerView {
 
 export interface GameStateView {
   players: PlayersExternalState;
+  playerCards: PlayerCardsExternalState;
   darkArtsEvents: DarkArtsEventsExternalState;
   villains: VillainsExternalState;
   locations: LocationsExternalState;
 }
 interface SerializedGameStateView {
   players: SerializedPlayersExternalState;
+  playerCards: PlayerCardsExternalState;
   darkArtsEvents: SerializedDarkArtsEventsExternalState;
   villains: SerializedVillainsExternalState;
   locations: SerializedLocationsExternalState;
@@ -55,6 +62,9 @@ export const serializePlayerView: (
   gameContext: playerView.gameContext,
   gameStateView: {
     players: serializePlayersExternalState(playerView.gameStateView.players),
+    playerCards: serializePlayerCardsExternalState(
+      playerView.gameStateView.playerCards
+    ),
     darkArtsEvents: serializeDarkArtsEventsExternalState(
       playerView.gameStateView.darkArtsEvents
     ),
@@ -72,6 +82,9 @@ export const deserializePlayerView: (
   gameStateView: {
     players: deserializePlayersExternalState(
       serializedPlayerView.gameStateView.players
+    ),
+    playerCards: deserializePlayerCardsExternalState(
+      serializedPlayerView.gameStateView.playerCards
     ),
     darkArtsEvents: deserializeDarkArtsEventsExternalState(
       serializedPlayerView.gameStateView.darkArtsEvents

@@ -1,5 +1,5 @@
 import {PlayerID, PlayerView} from '../player_view';
-import {PlayerCardInstance} from './player_cards';
+import {PlayerCardInstance} from '../player_cards/player_cards';
 
 export interface PlayCardActionArgs {
   cardIndex: number;

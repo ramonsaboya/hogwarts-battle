@@ -4,6 +4,7 @@ import {useAction} from '../socket/useAction';
 import PlayersDisplay from './PlayersDisplay';
 import GameContextDisplay from './GameContextDisplay';
 import LocationsDisplay from './LocationsDisplay';
+import CardShop from './CardShop';
 
 export default function Game() {
   const playerView = usePlayerView();
@@ -32,6 +33,7 @@ export default function Game() {
         ]}
       />
       <LocationsDisplay locationsState={gameStateView.locations} />
+      <CardShop playerCardsState={gameStateView.playerCards} />
       <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>
       <div>Villain: {gameStateView.villains.activeVillain.name}</div>
       <button onClick={() => runAction({action: 'killVillain', args: {}})}>

@@ -2,7 +2,7 @@ import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
 import {PlayCardActionArgs, PlayerID} from '@hogwarts-battle/common';
 import {getInternalPlayer} from './players_internal_state';
-import {getPlayerCardEffect} from './players_cards_config';
+import {getPlayerCardEffect} from '../player_cards/player_cards_config';
 
 const playCardAction: ActionListener = [
   'playCard',
