@@ -13,10 +13,12 @@ export interface PlayerCard {
 }
 
 export interface PlayerHeroCard extends PlayerCard {
+  name: PlayerHeroCardName;
   hero: Hero;
 }
 
 export interface PlayerHogwartsCard extends PlayerCard {
+  name: PlayerHogwartsCardName;
   cost: number;
 }
 

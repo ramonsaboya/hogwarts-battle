@@ -10,7 +10,11 @@ interface PlayerCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
 }
 
-interface PlayerCardConfig {
+interface PlayerHeroCardConfig {
+  effect: PlayerCardEffect;
+}
+interface PlayerHogwartsCardConfig {
+  amount: number;
   effect: PlayerCardEffect;
 }
 
@@ -29,7 +33,16 @@ export function getPlayerCardEffect(
   }
 }
 
-const PLAYER_HERO_CARDS_CONFIG: Record<PlayerHeroCardName, PlayerCardConfig> = {
+export function getPlayerHogwartsCardAmount(
+  cardName: PlayerHogwartsCardName
+): number {
+  return PLAYER_HOGWARTS_CARDS_CONFIG[cardName].amount;
+}
+
+const PLAYER_HERO_CARDS_CONFIG: Record<
+  PlayerHeroCardName,
+  PlayerHeroCardConfig
+> = {
   [PlayerHeroCardName.ALOHOHOMORA]: {
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getInternalPlayer(gameState.players, playerID);
@@ -129,9 +142,10 @@ const PLAYER_HERO_CARDS_CONFIG: Record<PlayerHeroCardName, PlayerCardConfig> = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   PlayerHogwartsCardName,
-  PlayerCardConfig
+  PlayerHogwartsCardConfig
 > = {
   [PlayerHogwartsCardName.ALBUS_DUMBLEDORE]: {
+    amount: 1,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getInternalPlayer(gameState.players, playerID);
@@ -154,66 +168,77 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
   },
   [PlayerHogwartsCardName.DESCENDO]: {
+    amount: 2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.ESSENCE_OF_DITTANY]: {
+    amount: 4,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.GOLDEN_SNITCH]: {
+    amount: 1,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.INCENDIO]: {
+    amount: 4,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.LUMOS]: {
+    amount: 2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.OLIVER_WOOD]: {
+    amount: 1,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.QUIDDITCH_GEAR]: {
+    amount: 4,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.REPARO]: {
+    amount: 6,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.RUBEUS_HAGRID]: {
+    amount: 1,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.SORTING_HAT]: {
+    amount: 1,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
     },
   },
   [PlayerHogwartsCardName.WINGARDIUM_LEVIOSA]: {
+    amount: 3,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;

@@ -2,11 +2,13 @@ import {v4 as uuidv4} from 'uuid';
 import {
   PLAYER_HOGWARTS_CARDS,
   PlayerCardInstance,
+  PlayerHogwartsCard,
   SerializedPlayerCardsExternalState,
   Stack,
   serializePlayerCardsExternalState,
   shuffle,
 } from '@hogwarts-battle/common';
+import {getPlayerHogwartsCardAmount} from './player_cards_config';
 
 export interface PlayerCardsInternalState {
   availableCards: PlayerCardInstance[];
@@ -15,7 +17,18 @@ export interface PlayerCardsInternalState {
 
 export function getInitialPlayerCardsState(): PlayerCardsInternalState {
   const deck = shuffle(
-    PLAYER_HOGWARTS_CARDS.map(card => ({id: uuidv4(), card}))
+    PLAYER_HOGWARTS_CARDS.reduce(
+      (acc: PlayerCardInstance[], card: PlayerHogwartsCard) => [
+        ...acc,
+        ...new Array(getPlayerHogwartsCardAmount(card.name))
+          .fill(null)
+          .map(() => ({
+            id: uuidv4(),
+            card,
+          })),
+      ],
+      [] as PlayerCardInstance[]
+    )
   );
 
   return {

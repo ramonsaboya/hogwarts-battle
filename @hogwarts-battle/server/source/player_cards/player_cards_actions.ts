@@ -1,7 +1,11 @@
 import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
 import {getInternalPlayer} from '../player/players_internal_state';
-import {AcquireCardActionArgs, PlayerID} from '@hogwarts-battle/common';
+import {
+  AcquireCardActionArgs,
+  PlayerHogwartsCard,
+  PlayerID,
+} from '@hogwarts-battle/common';
 
 const acquireCardAction: ActionListener = [
   'acquireCard',
@@ -16,10 +20,17 @@ const acquireCardAction: ActionListener = [
     }
 
     const cardInstance = state.playerCards.availableCards[args.cardIndex];
+    const card = cardInstance.card as PlayerHogwartsCard;
+    const cost = card.cost;
+
+    if (playerState.influenceTokens < cost) {
+      return state;
+    }
 
     const newDiscardPile = [...playerState.discardPile, cardInstance];
     const newPlayerState = {
       ...playerState,
+      influenceTokens: playerState.influenceTokens - cost,
       discardPile: newDiscardPile,
     };
 
