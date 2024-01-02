@@ -35,7 +35,7 @@ export default function CardShop({playerCardsState}: Props) {
           </option>
         ))}
       </select>
-      <button onClick={handlePlayCard}>Acquire Card</button>
+      <button onClick={handlePlayCard}>Acquire a Card</button>
     </>
   );
 }
