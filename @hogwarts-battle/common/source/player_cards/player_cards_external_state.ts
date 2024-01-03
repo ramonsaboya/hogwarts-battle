@@ -2,7 +2,7 @@ import {PlayerView} from '../player_view';
 import {PlayerCardInstance} from './player_cards';
 
 export interface AcquireCardActionArgs {
-  cardIndex: number;
+  cardInstance: PlayerCardInstance;
 }
 export interface PlayerCardsEvents {
   acquireCard: (

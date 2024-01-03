@@ -1,6 +1,12 @@
 import {GameState} from '../game_state';
 import {getInternalPlayer} from '../player/players_internal_state';
 import {DarkArtsEventCardName, PlayerID} from '@hogwarts-battle/common';
+import {
+  DrawCardMutation,
+  DrawCardMutationInput,
+  Middleware,
+  MiddlewareNext,
+} from '../state_mutations/state_mutation_manager';
 
 interface DarkArtsEventCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
@@ -61,10 +67,23 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
     },
   },
   [DarkArtsEventCardName.PETRIFICATION]: {
-    amount: 3,
+    amount: 10,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      DrawCardMutation.get().use(
+        'petrification',
+        (gameState: GameState, input: DrawCardMutationInput) => {
+          return [gameState, input];
+        }
+      );
+
+      return {
+        ...gameState,
+        players: gameState.players.map(player => ({
+          ...player,
+          health: player.health - 1,
+        })),
+      };
     },
   },
 };

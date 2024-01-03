@@ -3,6 +3,7 @@ import {
   ExternalPlayer,
   Hero,
   PLAYER_HERO_CARDS,
+  PLAYER_HOGWARTS_CARDS,
   PlayerCardInstance,
   PlayerHeroCard,
   PlayerHeroCardName,
@@ -54,6 +55,7 @@ export function getInitialPlayerState(
       [] as PlayerCardInstance[]
     )
   );
+  startingDeck[0] = {id: uuidv4(), card: PLAYER_HOGWARTS_CARDS[0]};
 
   return {
     playerID: playerID,

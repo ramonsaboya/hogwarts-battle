@@ -18,7 +18,10 @@ export default function CardShop({playerCardsState}: Props) {
   };
 
   const handlePlayCard = () => {
-    runAction({action: 'acquireCard', args: {cardIndex: selectedCard}});
+    runAction({
+      action: 'acquireCard',
+      args: {cardInstance: cards[selectedCard]},
+    });
   };
 
   return (

@@ -5,6 +5,7 @@ import {
 } from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {getInternalPlayer} from '../player/players_internal_state';
+import {DrawCardMutation} from '../state_mutations/state_mutation_manager';
 
 interface PlayerCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
@@ -52,7 +53,7 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
 
       const affectedPlayerState = {
         ...playerState,
-        influenceTokens: playerState.influenceTokens + 1,
+        influenceTokens: playerState.influenceTokens + 10,
       };
 
       const otherPlayers = gameState.players.filter(
@@ -145,7 +146,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   PlayerHogwartsCardConfig
 > = {
   [PlayerHogwartsCardName.ALBUS_DUMBLEDORE]: {
-    amount: 1,
+    amount: 15,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getInternalPlayer(gameState.players, playerID);
@@ -153,12 +154,18 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
         throw new Error('Player not found');
       }
 
+      gameState.players.forEach(player => {
+        gameState = DrawCardMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+      });
+
       const newPlayers = gameState.players.map(player => ({
         ...player,
         influenceTokens: player.influenceTokens + 1,
         attackTokens: player.attackTokens + 1,
         health: Math.min(10, player.health + 1),
-        hand: [...player.hand, player.deck.pop()!],
       }));
 
       return {
