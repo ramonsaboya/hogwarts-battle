@@ -4,26 +4,31 @@ import {DarkArtsEventCardName, PlayerID} from '@hogwarts-battle/common';
 import {
   DrawCardMutation,
   DrawCardMutationInput,
-  Middleware,
-  MiddlewareNext,
 } from '../state_mutations/state_mutation_manager';
-
-interface DarkArtsEventCardEffect {
-  (gameState: GameState, playerID: PlayerID): GameState;
-}
 
 interface DarkArtsEventCardConfig {
   amount: number;
+  cleanup: DarkArtsEventCardCleanup;
   effect: DarkArtsEventCardEffect;
 }
+interface DarkArtsEventCardEffect {
+  (gameState: GameState, playerID: PlayerID): GameState;
+}
+interface DarkArtsEventCardCleanup {
+  (): void;
+}
+
+export const getDarkArtsEventCardAmount = (
+  cardName: DarkArtsEventCardName
+): number => DARK_ARTS_EVENT_CARDS_CONFIG[cardName].amount;
 
 export const getDarkArtsEventCardEffect = (
   cardName: DarkArtsEventCardName
 ): DarkArtsEventCardEffect => DARK_ARTS_EVENT_CARDS_CONFIG[cardName].effect;
 
-export const getDarkArtsEventCardAmount = (
+export const getDarkArtsEventCardCleanup = (
   cardName: DarkArtsEventCardName
-): number => DARK_ARTS_EVENT_CARDS_CONFIG[cardName].amount;
+): DarkArtsEventCardCleanup => DARK_ARTS_EVENT_CARDS_CONFIG[cardName].cleanup;
 
 const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   DarkArtsEventCardName,
@@ -31,6 +36,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
 > = {
   [DarkArtsEventCardName.EXPULSO]: {
     amount: 3,
+    cleanup: () => {},
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getInternalPlayer(gameState.players, playerID);
       if (!playerState) {
@@ -54,6 +60,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   },
   [DarkArtsEventCardName.FLIPENDO]: {
     amount: 2,
+    cleanup: () => {},
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
@@ -61,6 +68,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   },
   [DarkArtsEventCardName.HE_WHO_MUST_NOT_BE_NAMED]: {
     amount: 2,
+    cleanup: () => {},
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return gameState;
@@ -68,10 +76,11 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   },
   [DarkArtsEventCardName.PETRIFICATION]: {
     amount: 10,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    effect: (gameState: GameState, playerID: PlayerID) => {
+    cleanup: () =>
+      DrawCardMutation.get().remove(DarkArtsEventCardName.PETRIFICATION),
+    effect: (gameState: GameState) => {
       DrawCardMutation.get().use(
-        'petrification',
+        DarkArtsEventCardName.PETRIFICATION,
         (gameState: GameState, input: DrawCardMutationInput) => {
           return [gameState, input];
         }

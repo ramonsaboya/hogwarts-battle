@@ -28,6 +28,10 @@ abstract class StateMutation<T extends StateMutationInput> {
     this.middlewares.set(name, fn);
   }
 
+  remove(name: string): void {
+    this.middlewares.delete(name);
+  }
+
   execute(gameState: GameState, input: T): GameState {
     const middlewares = [
       ...this.middlewares.values(),

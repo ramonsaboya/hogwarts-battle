@@ -13,6 +13,7 @@ import {
   getInitialPlayerState,
   getInternalPlayer,
 } from './player/players_internal_state';
+import {getDarkArtsEventCardCleanup} from './dark_arts_events/dark_arts_event_cards_config';
 
 interface Player {
   id: PlayerID;
@@ -159,6 +160,8 @@ export class Game {
     const otherPlayers = this.gameState.players.filter(
       player => player.playerID !== currentPlayerID
     );
+    const darkArtsEvent = this.gameState.darkArtsEvents.active!;
+    getDarkArtsEventCardCleanup(darkArtsEvent.name)();
 
     this.gameContext = {
       ...this.gameContext,
