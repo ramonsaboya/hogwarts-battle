@@ -2,6 +2,7 @@ import {
   PlayerCardInstance,
   PlayerHogwartsCard,
   PlayerID,
+  PlayerInput,
   Stack,
   shuffle,
 } from '@hogwarts-battle/common';
@@ -332,6 +333,40 @@ export class AddAttackTokenMutation extends StateMutation<AddAttackTokenMutation
           return {
             ...player,
             attackTokens: player.attackTokens + amount,
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
+
+export interface RequirePlayerInputMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  playerInput: PlayerInput;
+}
+export class RequirePlayerInputMutation extends StateMutation<RequirePlayerInputMutationInput> {
+  private static instance: RequirePlayerInputMutation;
+  static get(): RequirePlayerInputMutation {
+    if (!RequirePlayerInputMutation.instance) {
+      RequirePlayerInputMutation.instance = new RequirePlayerInputMutation();
+    }
+    return RequirePlayerInputMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: RequirePlayerInputMutationInput
+  ): GameState {
+    const {playerID, playerInput} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            requiredPlayerInput: playerInput,
           };
         }
         return player;

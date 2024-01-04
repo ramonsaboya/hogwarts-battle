@@ -7,6 +7,7 @@ import {
 import {
   DrawCardMutation,
   DrawCardMutationInput,
+  RequirePlayerInputMutation,
   SubtractHeartMutation,
 } from '../state_mutations/state_mutation_manager';
 
@@ -56,19 +57,12 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
         playerID,
         amount: 1,
       });
+      gameState = RequirePlayerInputMutation.get().execute(gameState, {
+        playerID,
+        playerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD},
+      });
 
-      return {
-        ...gameState,
-        players: gameState.players.map(player => {
-          if (player.playerID === playerID) {
-            return {
-              ...player,
-              requiredPlayerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD},
-            };
-          }
-          return player;
-        }),
-      };
+      return gameState;
     },
   },
   [DarkArtsEventCardName.HE_WHO_MUST_NOT_BE_NAMED]: {
