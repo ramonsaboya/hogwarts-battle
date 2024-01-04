@@ -374,3 +374,65 @@ export class RequirePlayerInputMutation extends StateMutation<RequirePlayerInput
     };
   }
 }
+
+export interface AddVillainControlTokenMutationInput
+  extends StateMutationInput {
+  playerID: PlayerID;
+  amount: number;
+}
+export class AddVillainControlTokenMutation extends StateMutation<AddVillainControlTokenMutationInput> {
+  private static instance: AddVillainControlTokenMutation;
+  static get(): AddVillainControlTokenMutation {
+    if (!AddVillainControlTokenMutation.instance) {
+      AddVillainControlTokenMutation.instance =
+        new AddVillainControlTokenMutation();
+    }
+    return AddVillainControlTokenMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: AddVillainControlTokenMutationInput
+  ): GameState {
+    const {amount} = input;
+
+    return {
+      ...gameState,
+      locations: {
+        ...gameState.locations,
+        villainControlTokens: gameState.locations.villainControlTokens + amount,
+      },
+    };
+  }
+}
+
+export interface SubtractVillainControlTokenMutationInput
+  extends StateMutationInput {
+  playerID: PlayerID;
+  amount: number;
+}
+export class SubtractVillainControlTokenMutation extends StateMutation<SubtractVillainControlTokenMutationInput> {
+  private static instance: SubtractVillainControlTokenMutation;
+  static get(): SubtractVillainControlTokenMutation {
+    if (!SubtractVillainControlTokenMutation.instance) {
+      SubtractVillainControlTokenMutation.instance =
+        new SubtractVillainControlTokenMutation();
+    }
+    return SubtractVillainControlTokenMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: SubtractVillainControlTokenMutationInput
+  ): GameState {
+    const {amount} = input;
+
+    return {
+      ...gameState,
+      locations: {
+        ...gameState.locations,
+        villainControlTokens: gameState.locations.villainControlTokens - amount,
+      },
+    };
+  }
+}

@@ -67,6 +67,14 @@ function GameLobbyPage() {
         if (playerView) {
           console.log('join callback', playerView);
           setPlayerView(playerView);
+          if (playerView.gameStateView.players.otherPlayers.length > 0) {
+            socket.emit('startGame', {}, (playerView: SerializedPlayerView) => {
+              if (playerView) {
+                console.log('startGame callback', playerView);
+                setPlayerView(playerView);
+              }
+            });
+          }
           setApiResponse('Success');
         } else {
           setApiResponse('Error');

@@ -14,6 +14,7 @@ import {
   getInternalPlayer,
 } from './player/players_internal_state';
 import {getDarkArtsEventCardCleanup} from './dark_arts_events/dark_arts_event_cards_config';
+import {onVillainReveal} from './villain/villain_cards_config';
 
 interface Player {
   id: PlayerID;
@@ -81,10 +82,6 @@ export class Game {
       ],
     };
 
-    if (this.players.length === 2) {
-      this.startGame();
-    }
-
     return player;
   }
 
@@ -133,6 +130,11 @@ export class Game {
       currentPlayer: playerTurnOrder[0],
       playerTurnOrder: playerTurnOrder,
     };
+
+    onVillainReveal(this.gameState.villains.activeVillain.name)(
+      this.gameState,
+      this.gameContext.currentPlayer
+    );
   }
 
   isPlayerTurn(playerID: number) {

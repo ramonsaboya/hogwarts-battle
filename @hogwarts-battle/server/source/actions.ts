@@ -75,6 +75,18 @@ export function registerListeners(
       game.broadcastPlayerViews(playerID);
     }
   );
+
+  socket.on(
+    'startGame',
+    (args: {}, callback: (playerView: SerializedPlayerView) => void): void => {
+      console.log('start game action');
+
+      game.startGame();
+
+      callback(createPlayerView(game, playerID));
+      game.broadcastPlayerViews(playerID);
+    }
+  );
 }
 
 export function serializePlayerView(playerView: PlayerView): string {

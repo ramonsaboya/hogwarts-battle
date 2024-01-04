@@ -14,6 +14,7 @@ export function getInitialLocationsState(): LocationsExternalState {
   return {
     deck: new Stack(locations.reverse()),
     initialLocationCount: locations.length,
+    villainControlTokens: 0,
   };
 }
 

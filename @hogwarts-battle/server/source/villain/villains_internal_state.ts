@@ -15,6 +15,7 @@ export interface VillainsInternalState {
 
 export function getInitialVillainsState(): VillainsInternalState {
   const cards = shuffle(VILLAIN_CARDS);
+
   return {
     deck: new Stack(cards.slice(1)),
     activeVillain: cards[0],

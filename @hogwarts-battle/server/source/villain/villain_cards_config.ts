@@ -1,11 +1,14 @@
 import {GameState} from '../game_state';
 import {PlayerID, VillainCardName} from '@hogwarts-battle/common';
 import {
+  AddVillainControlTokenMutation,
+  AddVillainControlTokenMutationInput,
   DiscardCardMutation,
   DiscardCardMutationInput,
   DrawCardMutation,
   MiddlewareNext,
   SubtractHeartMutation,
+  SubtractVillainControlTokenMutation,
 } from '../state_mutations/state_mutation_manager';
 
 interface VillainCardEvent {
@@ -63,16 +66,34 @@ const VILLAIN_CARDS_CONFIG: Record<VillainCardName, VillainCardConfig> = {
     },
   },
   [VillainCardName.DRACO_MALFOY]: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onReveal: (gameState: GameState, playerID: PlayerID) => {
+    onReveal: (gameState: GameState) => {
+      AddVillainControlTokenMutation.get().use(
+        VillainCardName.DRACO_MALFOY,
+        (
+          gameState: GameState,
+          input: AddVillainControlTokenMutationInput,
+          next: MiddlewareNext<AddVillainControlTokenMutationInput>
+        ) => {
+          gameState = SubtractHeartMutation.get().execute(gameState, {
+            playerID: input.playerID,
+            amount: 2,
+          });
+          return next(gameState, input);
+        }
+      );
+
       return gameState;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onTurn: (gameState: GameState, playerID: PlayerID) => {
+    onTurn: (gameState: GameState) => {
       return gameState;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onDefeat: (gameState: GameState, playerID: PlayerID) => {
+      AddVillainControlTokenMutation.get().remove(VillainCardName.DRACO_MALFOY);
+
+      gameState = SubtractVillainControlTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
       return gameState;
     },
   },

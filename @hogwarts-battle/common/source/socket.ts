@@ -26,5 +26,9 @@ type GameEvents = {
     args: {},
     callback: (playerView: SerializedPlayerView) => void
   ) => void;
+  startGame: (
+    args: {},
+    callback: (playerView: SerializedPlayerView) => void
+  ) => void;
 };
 export type Action = Omit<ClientToServerEvents, 'join'>;
