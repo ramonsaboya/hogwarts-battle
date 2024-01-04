@@ -5,11 +5,13 @@ import {
   AddInfluenceTokenMutation,
   DrawCardMutation,
   RequireChooseEffectPlayerInputMutation,
+  RequireChooseHeroHealPlayerInputMutation,
 } from '../state_mutations/state_mutation_manager';
 import {
   PlayerHeroCardName,
   PlayerHogwartsCardName,
   PlayerID,
+  PlayerInputType,
 } from '@hogwarts-battle/common';
 
 interface PlayerCardEffect {
@@ -94,7 +96,35 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
   [PlayerHeroCardName.MANDRAKE]: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
+        playerID,
+        options: [
+          {
+            text: '1 attack token',
+            effect: (gameState: GameState, playerID: PlayerID) => {
+              return AddAttackTokenMutation.get().execute(gameState, {
+                playerID,
+                amount: 1,
+              });
+            },
+          },
+          {
+            text: 'any one Hero gains 2 hearts',
+            effect: (gameState: GameState) => {
+              return RequireChooseHeroHealPlayerInputMutation.get().execute(
+                gameState,
+                {
+                  playerID,
+                  playerInput: {
+                    type: PlayerInputType.CHOOSE_ONE_HERO_FOR_HEAL,
+                    amount: 2,
+                  },
+                }
+              );
+            },
+          },
+        ],
+      });
     },
   },
   [PlayerHeroCardName.PIGWIDGEON]: {

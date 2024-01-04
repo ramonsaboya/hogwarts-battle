@@ -1,5 +1,6 @@
 import {
   ChooseCardPlayerInput,
+  ChooseHeroHealPlayerInput,
   PlayerCardInstance,
   PlayerHogwartsCard,
   PlayerID,
@@ -418,6 +419,42 @@ export class RequireChooseEffectPlayerInputMutation extends StateMutation<Requir
               options: options.map(option => option.text),
             },
             playerInputCallbacks: options.map(option => option.effect),
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
+
+export interface RequireChooseHeroHealPlayerInputMutationInput
+  extends StateMutationInput {
+  playerID: PlayerID;
+  playerInput: ChooseHeroHealPlayerInput;
+}
+export class RequireChooseHeroHealPlayerInputMutation extends StateMutation<RequireChooseHeroHealPlayerInputMutationInput> {
+  private static instance: RequireChooseHeroHealPlayerInputMutation;
+  static get(): RequireChooseHeroHealPlayerInputMutation {
+    if (!RequireChooseHeroHealPlayerInputMutation.instance) {
+      RequireChooseHeroHealPlayerInputMutation.instance =
+        new RequireChooseHeroHealPlayerInputMutation();
+    }
+    return RequireChooseHeroHealPlayerInputMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: RequireChooseHeroHealPlayerInputMutationInput
+  ): GameState {
+    const {playerID, playerInput} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            requiredPlayerInput: playerInput,
           };
         }
         return player;

@@ -3,13 +3,15 @@ import GameContextDisplay from './GameContextDisplay';
 import ChooseDiscardCardPlayerInput from './ChooseDiscardCardPlayerInput';
 import {PlayerInputType, PlayerView} from '@hogwarts-battle/common';
 import ChooseCardEffectPlayerInput from './ChooseCardEffectPlayerInput';
+import ChooseHeroHealPlayerInput from './ChooseHeroHealPlayerInput';
 
 type Props = {
   playerView: PlayerView;
 };
 
 export default function RequiredPlayerInputDisplay({playerView}: Props) {
-  const selfPlayer = playerView.gameStateView.players.selfPlayer;
+  const playersState = playerView.gameStateView.players;
+  const selfPlayer = playersState.selfPlayer;
   const requiredPlayerInput = selfPlayer.requiredPlayerInput;
 
   return (
@@ -24,8 +26,8 @@ export default function RequiredPlayerInputDisplay({playerView}: Props) {
             return <ChooseDiscardCardPlayerInput playerState={selfPlayer} />;
           case PlayerInputType.CHOOSE_PLAYER_CARD_EFFECT:
             return <ChooseCardEffectPlayerInput playerState={selfPlayer} />;
-          default:
-            return <div>Unknown required player input</div>;
+          case PlayerInputType.CHOOSE_ONE_HERO_FOR_HEAL:
+            return <ChooseHeroHealPlayerInput playersState={playersState} />;
         }
       })()}
     </div>

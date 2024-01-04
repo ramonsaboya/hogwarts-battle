@@ -11,6 +11,10 @@ export interface ChooseDiscardCardArgs {
 export interface ChooseCardEffectArgs {
   option: 'first' | 'second';
 }
+export interface ChooseHeroHealArgs {
+  playerID: PlayerID;
+  amount: number;
+}
 export interface PlayersEvents {
   playCard: (
     args: PlayCardActionArgs,
@@ -22,6 +26,10 @@ export interface PlayersEvents {
   ) => void;
   chooseCardEffect: (
     args: ChooseCardEffectArgs,
+    callback: (playerView: PlayerView) => void
+  ) => void;
+  chooseHeroHeal: (
+    args: ChooseHeroHealArgs,
     callback: (playerView: PlayerView) => void
   ) => void;
 }

@@ -17,6 +17,7 @@ export interface ChooseCardPlayerInput extends PlayerInput {
   type: PlayerInputType.CHOOSE_DISCARD_CARD;
 }
 
-export interface ChooseHeroPlayerInput extends PlayerInput {
+export interface ChooseHeroHealPlayerInput extends PlayerInput {
   type: PlayerInputType.CHOOSE_ONE_HERO_FOR_HEAL;
+  amount: number;
 }

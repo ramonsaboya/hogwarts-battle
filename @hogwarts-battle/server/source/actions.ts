@@ -41,6 +41,7 @@ export const ALLOWED_ACTIONS_PER_TURN_PHASE: Record<
     'acquireCard',
     'chooseDiscardCard',
     'chooseCardEffect',
+    'chooseHeroHeal',
     'endTurn',
   ],
 };
