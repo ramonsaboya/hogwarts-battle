@@ -21,7 +21,10 @@ export default function LocationsDisplay({locationsState}: Props) {
         Location: {location.name} ({location.order} of {locationCount})
       </div>
       <div>Dark Arts Events per turn: {location.darkArtsEventsPerTurn}</div>
-      <div>Villain control: 0/{location.requiredVillainControl}</div>
+      <div>
+        Villain control: {locationsState.villainControlTokens}/
+        {location.requiredVillainControl}
+      </div>
     </div>
   );
 }

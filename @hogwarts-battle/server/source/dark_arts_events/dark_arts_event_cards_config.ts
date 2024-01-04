@@ -5,6 +5,7 @@ import {
   PlayerInputType,
 } from '@hogwarts-battle/common';
 import {
+  AddVillainControlTokenMutation,
   DrawCardMutation,
   DrawCardMutationInput,
   RequirePlayerInputMutation,
@@ -70,7 +71,10 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
     cleanup: () => {},
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return AddVillainControlTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [DarkArtsEventCardName.PETRIFICATION]: {
