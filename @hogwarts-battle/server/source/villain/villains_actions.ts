@@ -1,7 +1,7 @@
 import {PlayerID} from '@hogwarts-battle/common';
 import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
-import {getVillainCardReward} from './villain_cards_config';
+import {onVillainReveal} from './villain_cards_config';
 
 const killVillainAction: ActionListener = [
   'killVillain',
@@ -17,10 +17,7 @@ const killVillainAction: ActionListener = [
       state.villains.activeVillain,
     ];
 
-    state = getVillainCardReward(state.villains.activeVillain.name)(
-      state,
-      playerID
-    );
+    state = onVillainReveal(newVillain.name)(state, playerID);
 
     return {
       ...state,
