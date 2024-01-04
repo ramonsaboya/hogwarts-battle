@@ -14,7 +14,7 @@ import {
   getInternalPlayer,
 } from './player/players_internal_state';
 import {getDarkArtsEventCardCleanup} from './dark_arts_events/dark_arts_event_cards_config';
-import {onVillainReveal} from './villain/villain_cards_config';
+import {onVillainReveal, onVillainTurn} from './villain/villain_cards_config';
 
 interface Player {
   id: PlayerID;
@@ -131,7 +131,10 @@ export class Game {
       playerTurnOrder: playerTurnOrder,
     };
 
-    onVillainReveal(this.gameState.villains.activeVillain.name)(
+    this.gameState = onVillainReveal(
+      this.gameState.villains.activeVillain.name
+    )(this.gameState, this.gameContext.currentPlayer);
+    this.gameState = onVillainTurn(this.gameState.villains.activeVillain.name)(
       this.gameState,
       this.gameContext.currentPlayer
     );
@@ -182,6 +185,12 @@ export class Game {
         },
       ],
     };
+
+    // TODO: this should only happen after the Dark Arts event has been revelead and executed
+    onVillainTurn(this.gameState.villains.activeVillain.name)(
+      this.gameState,
+      nextTurnPlayer
+    );
   }
 }
 

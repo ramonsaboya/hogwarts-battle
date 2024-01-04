@@ -1,6 +1,8 @@
 import {GameState} from '../game_state';
 import {PlayerID, VillainCardName} from '@hogwarts-battle/common';
 import {
+  AddHeartMutation,
+  AddInfluenceTokenMutation,
   AddVillainControlTokenMutation,
   AddVillainControlTokenMutationInput,
   DiscardCardMutation,
@@ -98,16 +100,26 @@ const VILLAIN_CARDS_CONFIG: Record<VillainCardName, VillainCardConfig> = {
     },
   },
   [VillainCardName.QUIRINUS_QUIRRELL]: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onReveal: (gameState: GameState, playerID: PlayerID) => {
+    onReveal: (gameState: GameState) => {
       return gameState;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onTurn: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return SubtractHeartMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDefeat: (gameState: GameState, playerID: PlayerID) => {
+    onDefeat: (gameState: GameState) => {
+      gameState.players.forEach(player => {
+        gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+        gameState = AddHeartMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+      });
       return gameState;
     },
   },
