@@ -203,3 +203,37 @@ export class DrawCardMutation extends StateMutation<DrawCardMutationInput> {
     };
   }
 }
+
+export interface AddHeartMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  amount: number;
+}
+export class AddHeartMutation extends StateMutation<AddHeartMutationInput> {
+  private static instance: AddHeartMutation;
+  static get(): AddHeartMutation {
+    if (!AddHeartMutation.instance) {
+      AddHeartMutation.instance = new AddHeartMutation();
+    }
+    return AddHeartMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: AddHeartMutationInput
+  ): GameState {
+    const {playerID, amount} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            health: Math.min(10, player.health + amount),
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}

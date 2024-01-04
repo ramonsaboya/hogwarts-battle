@@ -5,7 +5,10 @@ import {
 } from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {getInternalPlayer} from '../player/players_internal_state';
-import {DrawCardMutation} from '../state_mutations/state_mutation_manager';
+import {
+  AddHeartMutation,
+  DrawCardMutation,
+} from '../state_mutations/state_mutation_manager';
 
 interface PlayerCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
@@ -160,12 +163,15 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
           amount: 1,
         });
       });
+      gameState = AddHeartMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
 
       const newPlayers = gameState.players.map(player => ({
         ...player,
         influenceTokens: player.influenceTokens + 1,
         attackTokens: player.attackTokens + 1,
-        health: Math.min(10, player.health + 1),
       }));
 
       return {
