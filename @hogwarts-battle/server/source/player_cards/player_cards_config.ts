@@ -70,31 +70,8 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.CROOCKSHANKS]: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
-        playerID,
-        options: [
-          {
-            text: '1 attack token',
-            effect: (gameState: GameState, playerID: PlayerID) => {
-              return AddAttackTokenMutation.get().execute(gameState, {
-                playerID,
-                amount: 1,
-              });
-            },
-          },
-          {
-            text: '1 heart',
-            effect: (gameState: GameState) => {
-              return AddHeartMutation.get().execute(gameState, {
-                playerID,
-                amount: 1,
-              });
-            },
-          },
-        ],
-      });
+      return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
   },
   [PlayerHeroCardName.FIREBOLT]: {
@@ -104,9 +81,8 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.HEDWIG]: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
   },
   [PlayerHeroCardName.INVISIBILITY_CLOAK]: {
@@ -122,9 +98,8 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.PIGWIDGEON]: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
   },
   [PlayerHeroCardName.REMEMBRALL]: {
@@ -146,9 +121,8 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.TREVOR]: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
   },
 };
@@ -266,3 +240,30 @@ const PLAYER_HOGWARTS_CARD_NAMES_VALUES_AS_STRING: string[] = Object.values(
 );
 const PLAYER_HERO_CARD_NAMES_VALUES_AS_STRING: string[] =
   Object.values(PlayerHeroCardName);
+
+function getBaseAllyHeroCardEffect(): PlayerCardEffect {
+  return (gameState: GameState, playerID: PlayerID) =>
+    RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
+      playerID,
+      options: [
+        {
+          text: '1 attack token',
+          effect: (gameState: GameState, playerID: PlayerID) => {
+            return AddAttackTokenMutation.get().execute(gameState, {
+              playerID,
+              amount: 1,
+            });
+          },
+        },
+        {
+          text: '1 heart',
+          effect: (gameState: GameState) => {
+            return AddHeartMutation.get().execute(gameState, {
+              playerID,
+              amount: 1,
+            });
+          },
+        },
+      ],
+    });
+}
