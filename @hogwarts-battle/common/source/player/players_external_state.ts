@@ -1,6 +1,6 @@
 import {PlayerID, PlayerView} from '../player_view';
 import {PlayerCardInstance} from '../player_cards/player_cards';
-import {PlayerInput} from '../player_input/player_input';
+import {PlayerInput} from './player_input';
 
 export interface PlayCardActionArgs {
   cardInstance: PlayerCardInstance;
