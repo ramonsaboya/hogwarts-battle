@@ -271,3 +271,37 @@ export class AddInfluenceTokenMutation extends StateMutation<AddInfluenceTokenMu
     };
   }
 }
+
+export interface AddAttackTokenMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  amount: number;
+}
+export class AddAttackTokenMutation extends StateMutation<AddAttackTokenMutationInput> {
+  private static instance: AddAttackTokenMutation;
+  static get(): AddAttackTokenMutation {
+    if (!AddAttackTokenMutation.instance) {
+      AddAttackTokenMutation.instance = new AddAttackTokenMutation();
+    }
+    return AddAttackTokenMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: AddAttackTokenMutationInput
+  ): GameState {
+    const {playerID, amount} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            attackTokens: player.attackTokens + amount,
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}

@@ -6,6 +6,7 @@ import {
 import {GameState} from '../game_state';
 import {getInternalPlayer} from '../player/players_internal_state';
 import {
+  AddAttackTokenMutation,
   AddHeartMutation,
   AddInfluenceTokenMutation,
   DrawCardMutation,
@@ -158,16 +159,12 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
         playerID,
         amount: 1,
       });
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
 
-      const newPlayers = gameState.players.map(player => ({
-        ...player,
-        attackTokens: player.attackTokens + 1,
-      }));
-
-      return {
-        ...gameState,
-        players: newPlayers,
-      };
+      return gameState;
     },
   },
   [PlayerHogwartsCardName.DESCENDO]: {
