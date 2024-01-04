@@ -1,7 +1,7 @@
 import {PlayerID} from '@hogwarts-battle/common';
 import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
-import {onVillainReveal} from './villain_cards_config';
+import {onVillainDefeat, onVillainReveal} from './villain_cards_config';
 
 const killVillainAction: ActionListener = [
   'killVillain',
@@ -12,12 +12,12 @@ const killVillainAction: ActionListener = [
       throw new Error('No more villains');
     }
 
-    const newDiscardPile = [
-      ...state.villains.discardPile,
-      state.villains.activeVillain,
-    ];
+    const oldVillain = state.villains.activeVillain;
 
+    state = onVillainDefeat(oldVillain.name)(state, playerID);
     state = onVillainReveal(newVillain.name)(state, playerID);
+
+    const newDiscardPile = [...state.villains.discardPile, oldVillain];
 
     return {
       ...state,
