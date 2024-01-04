@@ -238,6 +238,40 @@ export class AddHeartMutation extends StateMutation<AddHeartMutationInput> {
   }
 }
 
+export interface SubtractHeartMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  amount: number;
+}
+export class SubtractHeartMutation extends StateMutation<SubtractHeartMutationInput> {
+  private static instance: SubtractHeartMutation;
+  static get(): SubtractHeartMutation {
+    if (!SubtractHeartMutation.instance) {
+      SubtractHeartMutation.instance = new SubtractHeartMutation();
+    }
+    return SubtractHeartMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: SubtractHeartMutationInput
+  ): GameState {
+    const {playerID, amount} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            health: Math.max(0, player.health - amount),
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
+
 export interface AddInfluenceTokenMutationInput extends StateMutationInput {
   playerID: PlayerID;
   amount: number;

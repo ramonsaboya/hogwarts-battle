@@ -8,6 +8,7 @@ import {
 import {
   DrawCardMutation,
   DrawCardMutationInput,
+  SubtractHeartMutation,
 } from '../state_mutations/state_mutation_manager';
 
 interface DarkArtsEventCardConfig {
@@ -42,30 +43,21 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
     amount: 3,
     cleanup: () => {},
     effect: (gameState: GameState, playerID: PlayerID) => {
-      const playerState = getInternalPlayer(gameState.players, playerID);
-      if (!playerState) {
-        throw new Error('Player not found');
-      }
-
-      const affectedPlayerState = {
-        ...playerState,
-        health: playerState.health - 2,
-      };
-
-      const otherPlayers = gameState.players.filter(
-        player => player.playerID !== playerID
-      );
-
-      return {
-        ...gameState,
-        players: [...otherPlayers, affectedPlayerState],
-      };
+      return SubtractHeartMutation.get().execute(gameState, {
+        playerID,
+        amount: 2,
+      });
     },
   },
   [DarkArtsEventCardName.FLIPENDO]: {
     amount: 2,
     cleanup: () => {},
     effect: (gameState: GameState, playerID: PlayerID) => {
+      gameState = SubtractHeartMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
+
       return {
         ...gameState,
         players: gameState.players.map(player => {
@@ -73,7 +65,6 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
             return {
               ...player,
               requiredPlayerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD},
-              health: player.health - 1,
             };
           }
           return player;
@@ -101,13 +92,14 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
         }
       );
 
-      return {
-        ...gameState,
-        players: gameState.players.map(player => ({
-          ...player,
-          health: player.health - 1,
-        })),
-      };
+      gameState.players.forEach(player => {
+        gameState = SubtractHeartMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+      });
+
+      return gameState;
     },
   },
 };

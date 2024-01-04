@@ -131,37 +131,30 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   PlayerHogwartsCardName,
   PlayerHogwartsCardConfig
 > = {
   [PlayerHogwartsCardName.ALBUS_DUMBLEDORE]: {
     amount: 1,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    effect: (gameState: GameState, playerID: PlayerID) => {
-      const playerState = getInternalPlayer(gameState.players, playerID);
-      if (!playerState) {
-        throw new Error('Player not found');
-      }
-
+    effect: (gameState: GameState) => {
       gameState.players.forEach(player => {
         gameState = DrawCardMutation.get().execute(gameState, {
           playerID: player.playerID,
           amount: 1,
         });
-      });
-      gameState = AddHeartMutation.get().execute(gameState, {
-        playerID,
-        amount: 1,
-      });
-      gameState = AddInfluenceTokenMutation.get().execute(gameState, {
-        playerID,
-        amount: 1,
-      });
-      gameState = AddAttackTokenMutation.get().execute(gameState, {
-        playerID,
-        amount: 1,
+        gameState = AddHeartMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+        gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+        gameState = AddAttackTokenMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
       });
 
       return gameState;
