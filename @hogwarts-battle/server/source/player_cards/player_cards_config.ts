@@ -7,6 +7,7 @@ import {GameState} from '../game_state';
 import {getInternalPlayer} from '../player/players_internal_state';
 import {
   AddHeartMutation,
+  AddInfluenceTokenMutation,
   DrawCardMutation,
 } from '../state_mutations/state_mutation_manager';
 
@@ -49,24 +50,10 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
 > = {
   [PlayerHeroCardName.ALOHOHOMORA]: {
     effect: (gameState: GameState, playerID: PlayerID) => {
-      const playerState = getInternalPlayer(gameState.players, playerID);
-      if (!playerState) {
-        throw new Error('Player not found');
-      }
-
-      const affectedPlayerState = {
-        ...playerState,
-        influenceTokens: playerState.influenceTokens + 1,
-      };
-
-      const otherPlayers = gameState.players.filter(
-        player => player.playerID !== playerID
-      );
-
-      return {
-        ...gameState,
-        players: [...otherPlayers, affectedPlayerState],
-      };
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHeroCardName.BERTIE_BOTTS_EVERY_FLAVOUR_BEANS]: {
@@ -167,10 +154,13 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
         playerID,
         amount: 1,
       });
+      gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
 
       const newPlayers = gameState.players.map(player => ({
         ...player,
-        influenceTokens: player.influenceTokens + 1,
         attackTokens: player.attackTokens + 1,
       }));
 

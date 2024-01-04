@@ -237,3 +237,37 @@ export class AddHeartMutation extends StateMutation<AddHeartMutationInput> {
     };
   }
 }
+
+export interface AddInfluenceTokenMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  amount: number;
+}
+export class AddInfluenceTokenMutation extends StateMutation<AddInfluenceTokenMutationInput> {
+  private static instance: AddInfluenceTokenMutation;
+  static get(): AddInfluenceTokenMutation {
+    if (!AddInfluenceTokenMutation.instance) {
+      AddInfluenceTokenMutation.instance = new AddInfluenceTokenMutation();
+    }
+    return AddInfluenceTokenMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: AddInfluenceTokenMutationInput
+  ): GameState {
+    const {playerID, amount} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            influenceTokens: player.influenceTokens + amount,
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
