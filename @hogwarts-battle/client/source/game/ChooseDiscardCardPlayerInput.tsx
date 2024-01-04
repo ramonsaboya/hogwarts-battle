@@ -1,26 +1,30 @@
 import React, {useState} from 'react';
-import PlayerCardDisplay from './PlayerCardDisplay';
 import {useAction} from '../socket/useAction';
-import {PlayerCardInstance} from '@hogwarts-battle/common';
+import PlayerCardDisplay from './PlayerCardDisplay';
+import {SelfExternalPlayer} from '@hogwarts-battle/common';
 
 type Props = {
-  hand: PlayerCardInstance[];
+  playerState: SelfExternalPlayer;
 };
 
-export default function PlayerHandDisplay({hand}: Props) {
+export default function ChooseDiscardCardPlayerInput({playerState}: Props) {
   const runAction = useAction();
   const [selectedCard, setSelectedCard] = useState(-1);
+  const hand = playerState.hand;
 
   const handleCardSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCard(parseInt(event.target.value));
   };
 
   const handlePlayCard = () => {
-    runAction({action: 'playCard', args: {cardInstance: hand[selectedCard]}});
+    runAction({
+      action: 'chooseDiscardCard',
+      args: {cardInstance: hand[selectedCard]},
+    });
   };
 
   return (
-    <>
+    <div>
       {hand.map(cardInstance => (
         <PlayerCardDisplay key={cardInstance.id} cardInstance={cardInstance} />
       ))}
@@ -33,7 +37,7 @@ export default function PlayerHandDisplay({hand}: Props) {
           </option>
         ))}
       </select>
-      <button onClick={handlePlayCard}>Play Card</button>
-    </>
+      <button onClick={handlePlayCard}>Discard Card</button>
+    </div>
   );
 }

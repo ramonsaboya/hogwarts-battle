@@ -1,12 +1,20 @@
 import {PlayerID, PlayerView} from '../player_view';
 import {PlayerCardInstance} from '../player_cards/player_cards';
+import {PlayerInput} from '../player_input/player_input';
 
 export interface PlayCardActionArgs {
-  cardIndex: number;
+  cardInstance: PlayerCardInstance;
+}
+export interface ChooseDiscardCardArgs {
+  cardInstance: PlayerCardInstance;
 }
 export interface PlayersEvents {
   playCard: (
     args: PlayCardActionArgs,
+    callback: (playerView: PlayerView) => void
+  ) => void;
+  chooseDiscardCard: (
+    args: ChooseDiscardCardArgs,
     callback: (playerView: PlayerView) => void
   ) => void;
 }
@@ -19,6 +27,7 @@ export enum Hero {
 }
 
 export interface ExternalPlayer {
+  requiredPlayerInput: PlayerInput | null;
   playerID: PlayerID;
   hero: Hero;
   health: number;

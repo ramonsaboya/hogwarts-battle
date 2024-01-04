@@ -8,6 +8,7 @@ import {
   PlayerHeroCard,
   PlayerHeroCardName,
   PlayerID,
+  PlayerInput,
   SelfExternalPlayer,
   SerializedPlayersExternalState,
   Stack,
@@ -19,10 +20,11 @@ const STARTING_ALOHOMORA_CARDS = 7;
 
 export interface InternalPlayer {
   playerID: PlayerID;
+  hero: Hero;
+  requiredPlayerInput: PlayerInput | null;
   health: number;
   influenceTokens: number;
   attackTokens: number;
-  hero: Hero;
   hand: PlayerCardInstance[];
   deck: Stack<PlayerCardInstance>;
   discardPile: PlayerCardInstance[];
@@ -55,14 +57,14 @@ export function getInitialPlayerState(
       [] as PlayerCardInstance[]
     )
   );
-  startingDeck[0] = {id: uuidv4(), card: PLAYER_HOGWARTS_CARDS[0]};
 
   return {
     playerID: playerID,
+    hero: hero,
+    requiredPlayerInput: null,
     health: 10,
     influenceTokens: 0,
     attackTokens: 0,
-    hero: hero,
     hand: startingDeck.slice(0, 5),
     deck: new Stack<PlayerCardInstance>(startingDeck.slice(5)),
     discardPile: [],
@@ -81,6 +83,7 @@ export function convertAndSerializePlayersState(
   const selfExternalPlayer: SelfExternalPlayer = {
     playerID: selfInternalPlayer.playerID,
     hero: selfInternalPlayer.hero,
+    requiredPlayerInput: selfInternalPlayer.requiredPlayerInput,
     health: selfInternalPlayer.health,
     influenceTokens: selfInternalPlayer.influenceTokens,
     attackTokens: selfInternalPlayer.attackTokens,
@@ -92,6 +95,7 @@ export function convertAndSerializePlayersState(
     .map(player => ({
       playerID: player.playerID,
       hero: player.hero,
+      requiredPlayerInput: selfInternalPlayer.requiredPlayerInput,
       health: player.health,
       influenceTokens: player.influenceTokens,
       attackTokens: player.attackTokens,

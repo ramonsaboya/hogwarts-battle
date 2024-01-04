@@ -106,6 +106,41 @@ export class AcquireCardMutation extends StateMutation<AcquireCardMutationInput>
   }
 }
 
+export interface DiscardCardMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  cardInstance: PlayerCardInstance;
+}
+export class DiscardCardMutation extends StateMutation<DiscardCardMutationInput> {
+  private static instance: DiscardCardMutation;
+  static get(): DiscardCardMutation {
+    if (!DiscardCardMutation.instance) {
+      DiscardCardMutation.instance = new DiscardCardMutation();
+    }
+    return DiscardCardMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: DiscardCardMutationInput
+  ): GameState {
+    const {playerID, cardInstance} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            hand: player.hand.filter(card => card.id !== cardInstance.id),
+            discardPile: [...player.discardPile, cardInstance],
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
+
 export interface DrawCardMutationInput extends StateMutationInput {
   playerID: PlayerID;
   amount: number;

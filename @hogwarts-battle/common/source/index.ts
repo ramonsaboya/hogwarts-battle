@@ -5,6 +5,7 @@ export * from './locations/locations_external_state';
 export * from './player_cards/player_cards';
 export * from './player/players_external_state';
 export * from './player_cards/player_cards_external_state';
+export * from './player_input/player_input';
 export * from './villains/villain_cards';
 export * from './villains/villains_external_state';
 export * from './game_context';

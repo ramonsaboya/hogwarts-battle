@@ -5,6 +5,7 @@ import PlayersDisplay from './PlayersDisplay';
 import GameContextDisplay from './GameContextDisplay';
 import LocationsDisplay from './LocationsDisplay';
 import CardShop from './CardShop';
+import RequiredPlayerInputDisplay from './RequiredPlayerInputDisplay';
 
 export default function Game() {
   const playerView = usePlayerView();
@@ -21,6 +22,10 @@ export default function Game() {
 
   if (gameStateView.villains === undefined) {
     return <div>loading...</div>;
+  }
+
+  if (gameStateView.players.selfPlayer.requiredPlayerInput !== null) {
+    return <RequiredPlayerInputDisplay playerView={playerView} />;
   }
 
   return (
