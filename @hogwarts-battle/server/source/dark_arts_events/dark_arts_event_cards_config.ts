@@ -8,7 +8,7 @@ import {
   AddVillainControlTokenMutation,
   DrawCardMutation,
   DrawCardMutationInput,
-  RequirePlayerInputMutation,
+  RequireChooseCardPlayerInputMutation,
   SubtractHeartMutation,
 } from '../state_mutations/state_mutation_manager';
 
@@ -58,10 +58,13 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
         playerID,
         amount: 1,
       });
-      gameState = RequirePlayerInputMutation.get().execute(gameState, {
-        playerID,
-        playerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD},
-      });
+      gameState = RequireChooseCardPlayerInputMutation.get().execute(
+        gameState,
+        {
+          playerID,
+          playerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD},
+        }
+      );
 
       return gameState;
     },

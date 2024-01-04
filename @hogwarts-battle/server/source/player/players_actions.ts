@@ -1,6 +1,7 @@
 import {ActionListener} from '../actions';
 import {GameState} from '../game_state';
 import {
+  ChooseCardEffectArgs,
   ChooseDiscardCardArgs,
   PlayCardActionArgs,
   PlayerID,
@@ -88,7 +89,45 @@ const chooseDiscardCardAction: ActionListener = [
   },
 ];
 
+const chooseCardEffectAction: ActionListener = [
+  'chooseCardEffect',
+  (
+    gameState: GameState,
+    args: ChooseCardEffectArgs,
+    playerID: PlayerID
+  ): GameState => {
+    const playerState = getInternalPlayer(gameState.players, playerID);
+    if (!playerState) {
+      throw new Error('Player not found');
+    }
+
+    if (!playerState.requiredPlayerInput) {
+      throw new Error('Player input not found');
+    }
+
+    const idx = args.option === 'first' ? 0 : 1;
+    gameState = gameState.players
+      .find(player => player.playerID === playerID)!
+      .playerInputCallbacks![idx](gameState, playerID);
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            requiredPlayerInput: null,
+            playerInputCallbacks: null,
+          };
+        }
+        return player;
+      }),
+    };
+  },
+];
+
 export const actions: ActionListener[] = [
   playCardAction,
   chooseDiscardCardAction,
+  chooseCardEffectAction,
 ];

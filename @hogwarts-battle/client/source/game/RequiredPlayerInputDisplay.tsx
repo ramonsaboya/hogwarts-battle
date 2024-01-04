@@ -2,6 +2,7 @@ import React from 'react';
 import GameContextDisplay from './GameContextDisplay';
 import ChooseDiscardCardPlayerInput from './ChooseDiscardCardPlayerInput';
 import {PlayerInputType, PlayerView} from '@hogwarts-battle/common';
+import ChooseCardEffectPlayerInput from './ChooseCardEffectPlayerInput';
 
 type Props = {
   playerView: PlayerView;
@@ -21,6 +22,8 @@ export default function RequiredPlayerInputDisplay({playerView}: Props) {
         switch (requiredPlayerInput?.type) {
           case PlayerInputType.CHOOSE_DISCARD_CARD:
             return <ChooseDiscardCardPlayerInput playerState={selfPlayer} />;
+          case PlayerInputType.CHOOSE_PLAYER_CARD_EFFECT:
+            return <ChooseCardEffectPlayerInput playerState={selfPlayer} />;
           default:
             return <div>Unknown required player input</div>;
         }

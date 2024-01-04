@@ -1,8 +1,10 @@
 import {
+  ChooseCardPlayerInput,
   PlayerCardInstance,
   PlayerHogwartsCard,
   PlayerID,
   PlayerInput,
+  PlayerInputType,
   Stack,
   TurnPhase,
   shuffle,
@@ -342,22 +344,24 @@ export class AddAttackTokenMutation extends StateMutation<AddAttackTokenMutation
   }
 }
 
-export interface RequirePlayerInputMutationInput extends StateMutationInput {
+export interface RequireChooseCardPlayerInputMutationInput
+  extends StateMutationInput {
   playerID: PlayerID;
-  playerInput: PlayerInput;
+  playerInput: ChooseCardPlayerInput;
 }
-export class RequirePlayerInputMutation extends StateMutation<RequirePlayerInputMutationInput> {
-  private static instance: RequirePlayerInputMutation;
-  static get(): RequirePlayerInputMutation {
-    if (!RequirePlayerInputMutation.instance) {
-      RequirePlayerInputMutation.instance = new RequirePlayerInputMutation();
+export class RequireChooseCardPlayerInputMutation extends StateMutation<RequireChooseCardPlayerInputMutationInput> {
+  private static instance: RequireChooseCardPlayerInputMutation;
+  static get(): RequireChooseCardPlayerInputMutation {
+    if (!RequireChooseCardPlayerInputMutation.instance) {
+      RequireChooseCardPlayerInputMutation.instance =
+        new RequireChooseCardPlayerInputMutation();
     }
-    return RequirePlayerInputMutation.instance;
+    return RequireChooseCardPlayerInputMutation.instance;
   }
 
   protected finalMiddleware(
     gameState: GameState,
-    input: RequirePlayerInputMutationInput
+    input: RequireChooseCardPlayerInputMutationInput
   ): GameState {
     const {playerID, playerInput} = input;
 
@@ -368,6 +372,53 @@ export class RequirePlayerInputMutation extends StateMutation<RequirePlayerInput
           return {
             ...player,
             requiredPlayerInput: playerInput,
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
+
+export interface ChooseCardEffectPlayerInputCallback {
+  (gameState: GameState, playerID: PlayerID): GameState;
+}
+interface ChooseCardEffectPlayerInputOption {
+  text: string;
+  effect: ChooseCardEffectPlayerInputCallback;
+}
+export interface RequireChooseEffectPlayerInputMutationInput
+  extends StateMutationInput {
+  playerID: PlayerID;
+  options: ChooseCardEffectPlayerInputOption[];
+}
+export class RequireChooseEffectPlayerInputMutation extends StateMutation<RequireChooseEffectPlayerInputMutationInput> {
+  private static instance: RequireChooseEffectPlayerInputMutation;
+  static get(): RequireChooseEffectPlayerInputMutation {
+    if (!RequireChooseEffectPlayerInputMutation.instance) {
+      RequireChooseEffectPlayerInputMutation.instance =
+        new RequireChooseEffectPlayerInputMutation();
+    }
+    return RequireChooseEffectPlayerInputMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: RequireChooseEffectPlayerInputMutationInput
+  ): GameState {
+    const {playerID, options} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            requiredPlayerInput: {
+              type: PlayerInputType.CHOOSE_PLAYER_CARD_EFFECT,
+              options: options.map(option => option.text),
+            },
+            playerInputCallbacks: options.map(option => option.effect),
           };
         }
         return player;

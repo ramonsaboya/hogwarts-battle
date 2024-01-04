@@ -1,15 +1,16 @@
-import {
-  PlayerHeroCardName,
-  PlayerHogwartsCardName,
-  PlayerID,
-} from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {
   AddAttackTokenMutation,
   AddHeartMutation,
   AddInfluenceTokenMutation,
   DrawCardMutation,
+  RequireChooseEffectPlayerInputMutation,
 } from '../state_mutations/state_mutation_manager';
+import {
+  PlayerHeroCardName,
+  PlayerHogwartsCardName,
+  PlayerID,
+} from '@hogwarts-battle/common';
 
 interface PlayerCardEffect {
   (gameState: GameState, playerID: PlayerID): GameState;
@@ -71,7 +72,29 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
   [PlayerHeroCardName.CROOCKSHANKS]: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
+        playerID,
+        options: [
+          {
+            text: '1 attack token',
+            effect: (gameState: GameState, playerID: PlayerID) => {
+              return AddAttackTokenMutation.get().execute(gameState, {
+                playerID,
+                amount: 1,
+              });
+            },
+          },
+          {
+            text: '1 heart',
+            effect: (gameState: GameState) => {
+              return AddHeartMutation.get().execute(gameState, {
+                playerID,
+                amount: 1,
+              });
+            },
+          },
+        ],
+      });
     },
   },
   [PlayerHeroCardName.FIREBOLT]: {

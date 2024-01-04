@@ -1,9 +1,9 @@
 import {v4 as uuidv4} from 'uuid';
+import {ChooseCardEffectPlayerInputCallback} from '../state_mutations/state_mutation_manager';
 import {
   ExternalPlayer,
   Hero,
   PLAYER_HERO_CARDS,
-  PLAYER_HOGWARTS_CARDS,
   PlayerCardInstance,
   PlayerHeroCard,
   PlayerHeroCardName,
@@ -22,6 +22,7 @@ export interface InternalPlayer {
   playerID: PlayerID;
   hero: Hero;
   requiredPlayerInput: PlayerInput | null;
+  playerInputCallbacks: ChooseCardEffectPlayerInputCallback[] | null;
   health: number;
   influenceTokens: number;
   attackTokens: number;
@@ -62,6 +63,7 @@ export function getInitialPlayerState(
     playerID: playerID,
     hero: hero,
     requiredPlayerInput: null,
+    playerInputCallbacks: null,
     health: 10,
     influenceTokens: 0,
     attackTokens: 0,

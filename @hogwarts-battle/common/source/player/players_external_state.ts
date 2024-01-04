@@ -8,6 +8,9 @@ export interface PlayCardActionArgs {
 export interface ChooseDiscardCardArgs {
   cardInstance: PlayerCardInstance;
 }
+export interface ChooseCardEffectArgs {
+  option: 'first' | 'second';
+}
 export interface PlayersEvents {
   playCard: (
     args: PlayCardActionArgs,
@@ -15,6 +18,10 @@ export interface PlayersEvents {
   ) => void;
   chooseDiscardCard: (
     args: ChooseDiscardCardArgs,
+    callback: (playerView: PlayerView) => void
+  ) => void;
+  chooseCardEffect: (
+    args: ChooseCardEffectArgs,
     callback: (playerView: PlayerView) => void
   ) => void;
 }
