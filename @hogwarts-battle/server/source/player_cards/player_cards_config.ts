@@ -4,7 +4,6 @@ import {
   PlayerID,
 } from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
-import {getInternalPlayer} from '../player/players_internal_state';
 import {
   AddAttackTokenMutation,
   AddHeartMutation,

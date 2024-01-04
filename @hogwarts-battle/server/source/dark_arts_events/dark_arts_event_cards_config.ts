@@ -1,5 +1,4 @@
 import {GameState} from '../game_state';
-import {getInternalPlayer} from '../player/players_internal_state';
 import {
   DarkArtsEventCardName,
   PlayerID,
