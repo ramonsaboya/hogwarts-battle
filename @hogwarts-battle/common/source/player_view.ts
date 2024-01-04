@@ -31,12 +31,19 @@ import {
 
 export type PlayerID = number;
 
+export enum TurnPhase {
+  DARK_ARTS_EVENT_REVEAL = 'DARK_ARTS_EVENT_REVEAL',
+  VILLAIN_EFFECTS = 'VILLAIN_EFFECTS',
+  PLAYER_ACTIONS = 'PLAYER_ACTIONS',
+}
+
 export interface PlayerView {
   gameContext: GameContext;
   gameStateView: GameStateView;
 }
 
 export interface GameStateView {
+  turnPhase: TurnPhase;
   players: PlayersExternalState;
   playerCards: PlayerCardsExternalState;
   darkArtsEvents: DarkArtsEventsExternalState;
@@ -44,6 +51,7 @@ export interface GameStateView {
   locations: LocationsExternalState;
 }
 interface SerializedGameStateView {
+  turnPhase: TurnPhase;
   players: SerializedPlayersExternalState;
   playerCards: PlayerCardsExternalState;
   darkArtsEvents: SerializedDarkArtsEventsExternalState;
@@ -61,6 +69,7 @@ export const serializePlayerView: (
 ) => SerializedPlayerView = playerView => ({
   gameContext: playerView.gameContext,
   gameStateView: {
+    turnPhase: playerView.gameStateView.turnPhase,
     players: serializePlayersExternalState(playerView.gameStateView.players),
     playerCards: serializePlayerCardsExternalState(
       playerView.gameStateView.playerCards
@@ -80,6 +89,7 @@ export const deserializePlayerView: (
 ) => PlayerView = serializedPlayerView => ({
   gameContext: serializedPlayerView.gameContext,
   gameStateView: {
+    turnPhase: serializedPlayerView.gameStateView.turnPhase,
     players: deserializePlayersExternalState(
       serializedPlayerView.gameStateView.players
     ),

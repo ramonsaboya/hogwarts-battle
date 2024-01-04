@@ -9,11 +9,10 @@ export interface ServerToClientEvents {
 }
 
 export type ClientToServerEvents = JoinEvent &
+  StartGameEvent &
   GameEvents &
-  PlayersEvents &
-  PlayerCardsEvents &
-  VillainsEvents &
-  DarkArtsEventsEvents;
+  StateActions;
+
 type JoinEvent = {
   join: (
     playerName: string,
@@ -21,14 +20,22 @@ type JoinEvent = {
     callback: (playerView: SerializedPlayerView | null) => void
   ) => void;
 };
-type GameEvents = {
-  endTurn: (
-    args: {},
-    callback: (playerView: SerializedPlayerView) => void
-  ) => void;
+type StartGameEvent = {
   startGame: (
     args: {},
     callback: (playerView: SerializedPlayerView) => void
   ) => void;
 };
-export type Action = Omit<ClientToServerEvents, 'join'>;
+
+type GameEvents = {
+  endTurn: (
+    args: {},
+    callback: (playerView: SerializedPlayerView) => void
+  ) => void;
+};
+type StateActions = PlayersEvents &
+  PlayerCardsEvents &
+  VillainsEvents &
+  DarkArtsEventsEvents;
+
+export type Action = Omit<Omit<ClientToServerEvents, 'join'>, 'startGame'>;

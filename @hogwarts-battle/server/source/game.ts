@@ -6,6 +6,7 @@ import {
   Hero,
   PlayerID,
   Stack,
+  TurnPhase,
   shuffle,
 } from '@hogwarts-battle/common';
 import {
@@ -15,6 +16,11 @@ import {
 } from './player/players_internal_state';
 import {getDarkArtsEventCardCleanup} from './dark_arts_events/dark_arts_event_cards_config';
 import {onVillainReveal, onVillainTurn} from './villain/villain_cards_config';
+import {
+  ChangeTurnPhaseMutation,
+  ChangeTurnPhaseMutationInput,
+  MiddlewareNext,
+} from './state_mutations/state_mutation_manager';
 
 interface Player {
   id: PlayerID;
@@ -134,9 +140,27 @@ export class Game {
     this.gameState = onVillainReveal(
       this.gameState.villains.activeVillain.name
     )(this.gameState, this.gameContext.currentPlayer);
-    this.gameState = onVillainTurn(this.gameState.villains.activeVillain.name)(
-      this.gameState,
-      this.gameContext.currentPlayer
+
+    ChangeTurnPhaseMutation.get().use(
+      'GAME',
+      (
+        gameState: GameState,
+        input: ChangeTurnPhaseMutationInput,
+        next: MiddlewareNext<ChangeTurnPhaseMutationInput>
+      ) => {
+        const {turnPhase} = input;
+
+        if (turnPhase === TurnPhase.VILLAIN_EFFECTS) {
+          gameState = onVillainTurn(gameState.villains.activeVillain.name)(
+            gameState,
+            this.gameContext.currentPlayer
+          );
+
+          return next(gameState, {turnPhase: TurnPhase.PLAYER_ACTIONS});
+        }
+
+        return next(gameState, input);
+      }
     );
   }
 
@@ -175,6 +199,7 @@ export class Game {
     };
     this.gameState = {
       ...this.gameState,
+      turnPhase: TurnPhase.DARK_ARTS_EVENT_REVEAL,
       players: [
         ...otherPlayers,
         {
@@ -185,12 +210,6 @@ export class Game {
         },
       ],
     };
-
-    // TODO: this should only happen after the Dark Arts event has been revelead and executed
-    onVillainTurn(this.gameState.villains.activeVillain.name)(
-      this.gameState,
-      nextTurnPlayer
-    );
   }
 }
 

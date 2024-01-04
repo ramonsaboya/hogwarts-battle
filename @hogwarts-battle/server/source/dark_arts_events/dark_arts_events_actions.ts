@@ -1,30 +1,35 @@
 import {ActionListener} from '../actions';
-import {PlayerID} from '@hogwarts-battle/common';
+import {PlayerID, TurnPhase} from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {getDarkArtsEventCardEffect} from './dark_arts_event_cards_config';
+import {ChangeTurnPhaseMutation} from '../state_mutations/state_mutation_manager';
 
 const revealDarkArtsEventAction: ActionListener = [
   'revealDarkArtsEvent',
-  (state: GameState, args: {}, playerID: PlayerID): GameState => {
-    const activeDarkArtsEvent = state.darkArtsEvents.active;
+  (gameState: GameState, args: {}, playerID: PlayerID): GameState => {
+    const activeDarkArtsEvent = gameState.darkArtsEvents.active;
 
-    const newDeck = state.darkArtsEvents.deck;
+    const newDeck = gameState.darkArtsEvents.deck;
     const newDarkArtsEventCard = newDeck.pop();
     if (!newDarkArtsEventCard) {
       throw new Error('No more dark arts events');
     }
     const newDiscardPile = [
-      ...state.darkArtsEvents.discardPile,
+      ...gameState.darkArtsEvents.discardPile,
       ...(activeDarkArtsEvent ? [activeDarkArtsEvent] : []),
     ];
 
-    state = getDarkArtsEventCardEffect(newDarkArtsEventCard.name)(
-      state,
+    gameState = getDarkArtsEventCardEffect(newDarkArtsEventCard.name)(
+      gameState,
       playerID
     );
 
+    gameState = ChangeTurnPhaseMutation.get().execute(gameState, {
+      turnPhase: TurnPhase.VILLAIN_EFFECTS,
+    });
+
     return {
-      ...state,
+      ...gameState,
       darkArtsEvents: {
         deck: newDeck,
         active: newDarkArtsEventCard,

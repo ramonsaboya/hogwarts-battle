@@ -4,6 +4,7 @@ import {
   PlayerID,
   PlayerInput,
   Stack,
+  TurnPhase,
   shuffle,
 } from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
@@ -433,6 +434,31 @@ export class SubtractVillainControlTokenMutation extends StateMutation<SubtractV
         ...gameState.locations,
         villainControlTokens: gameState.locations.villainControlTokens - amount,
       },
+    };
+  }
+}
+
+export interface ChangeTurnPhaseMutationInput extends StateMutationInput {
+  turnPhase: TurnPhase;
+}
+export class ChangeTurnPhaseMutation extends StateMutation<ChangeTurnPhaseMutationInput> {
+  private static instance: ChangeTurnPhaseMutation;
+  static get(): ChangeTurnPhaseMutation {
+    if (!ChangeTurnPhaseMutation.instance) {
+      ChangeTurnPhaseMutation.instance = new ChangeTurnPhaseMutation();
+    }
+    return ChangeTurnPhaseMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: ChangeTurnPhaseMutationInput
+  ): GameState {
+    const {turnPhase} = input;
+
+    return {
+      ...gameState,
+      turnPhase: turnPhase,
     };
   }
 }

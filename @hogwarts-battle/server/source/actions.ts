@@ -12,6 +12,7 @@ import {
   ServerToClientEvents,
   SerializedPlayerView,
   PlayerView,
+  TurnPhase,
 } from '@hogwarts-battle/common';
 
 export type ActionListener = {
@@ -24,6 +25,24 @@ export type ActionListener = {
     ) => GameState,
   ];
 }[keyof Action];
+
+export const ALLOWED_ACTIONS_PER_TURN_PHASE: Record<
+  TurnPhase,
+  (keyof Action)[]
+> = {
+  [TurnPhase.DARK_ARTS_EVENT_REVEAL]: [
+    'revealDarkArtsEvent',
+    'chooseDiscardCard',
+  ],
+  [TurnPhase.VILLAIN_EFFECTS]: ['chooseDiscardCard'],
+  [TurnPhase.PLAYER_ACTIONS]: [
+    'playCard',
+    'killVillain',
+    'acquireCard',
+    'chooseDiscardCard',
+    'endTurn',
+  ],
+};
 
 export function registerListeners(
   game: Game,
@@ -48,6 +67,11 @@ export function registerListeners(
 
         if (!game.isPlayerTurn(playerID)) {
           throw new Error('Not your turn');
+        }
+
+        const turnPhase = game.gameState.turnPhase;
+        if (!ALLOWED_ACTIONS_PER_TURN_PHASE[turnPhase].includes(action)) {
+          throw new Error('Not allowed action');
         }
 
         const oldGameState = game.gameState;

@@ -20,7 +20,7 @@ import {
   getInitialVillainsState,
 } from './villain/villains_internal_state';
 import {Game} from './game';
-import {SerializedPlayerView} from '@hogwarts-battle/common';
+import {SerializedPlayerView, TurnPhase} from '@hogwarts-battle/common';
 import {
   PlayerCardsInternalState,
   convertAndSerializePlayerCardsState,
@@ -28,6 +28,7 @@ import {
 } from './player_cards/player_cards_internal_state';
 
 export interface GameState {
+  turnPhase: TurnPhase;
   players: PlayersInternalState;
   playerCards: PlayerCardsInternalState;
   villains: VillainsInternalState;
@@ -36,6 +37,7 @@ export interface GameState {
 }
 
 export const getInitialGameState = (): GameState => ({
+  turnPhase: TurnPhase.DARK_ARTS_EVENT_REVEAL,
   players: getInitialPlayersState(),
   playerCards: getInitialPlayerCardsState(),
   villains: getInitialVillainsState(),
@@ -57,6 +59,7 @@ export function createPlayerView(
   return {
     gameContext: game.getGameContext,
     gameStateView: {
+      turnPhase: gameState.turnPhase,
       players: convertAndSerializePlayersState(gameState.players, playerID),
       playerCards: convertAndSerializePlayerCardsState(gameState.playerCards),
       darkArtsEvents: convertAndSerializeDarkArtsEventsState(

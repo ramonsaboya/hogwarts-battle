@@ -30,7 +30,10 @@ export default function Game() {
 
   return (
     <div>
-      <GameContextDisplay gameContext={playerView.gameContext} />
+      <GameContextDisplay
+        gameContext={playerView.gameContext}
+        turnPhase={gameStateView.turnPhase}
+      />
       <PlayersDisplay
         players={[
           gameStateView.players.selfPlayer,
