@@ -21,6 +21,7 @@
     "clean:client": "npm run clean -w @hogwarts-battle/client",
     "clean:common": "npm run clean -w @hogwarts-battle/common",
     "clean:server": "npm run clean -w @hogwarts-battle/server",
+    "deploy": "npm run build && npm run -w @hogwarts-battle/client deploy && npm run -w @hogwarts-battle/server deploy",
     "deploy:client": "npm run build:common && npm run build:client && npm run -w @hogwarts-battle/client deploy",
     "deploy:server": "npm run build:common && npm run build:server && docker build --tag ramonsaboya/hogwarts-battle:hogwarts-battle-server -f @hogwarts-battle/server/Dockerfile . && docker push ramonsaboya/hogwarts-battle:hogwarts-battle-server",
     "format:check": "prettier --list-different './@hogwarts-battle/{client,common,server}/**/*.{js,ts,tsx}' './**/*.json'",
