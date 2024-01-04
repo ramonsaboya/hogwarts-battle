@@ -53,7 +53,7 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
 
       const affectedPlayerState = {
         ...playerState,
-        influenceTokens: playerState.influenceTokens + 10,
+        influenceTokens: playerState.influenceTokens + 1,
       };
 
       const otherPlayers = gameState.players.filter(
@@ -146,7 +146,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   PlayerHogwartsCardConfig
 > = {
   [PlayerHogwartsCardName.ALBUS_DUMBLEDORE]: {
-    amount: 15,
+    amount: 1,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       const playerState = getInternalPlayer(gameState.players, playerID);
