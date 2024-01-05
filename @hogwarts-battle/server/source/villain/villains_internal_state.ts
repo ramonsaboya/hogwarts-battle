@@ -9,8 +9,9 @@ import {
 
 export interface VillainsInternalState {
   deck: Stack<VillainCard>;
-  activeVillain: VillainCard;
+  activeVillain: VillainCard | null;
   discardPile: VillainCard[];
+  attackTokens: number;
 }
 
 export function getInitialVillainsState(): VillainsInternalState {
@@ -20,6 +21,7 @@ export function getInitialVillainsState(): VillainsInternalState {
     deck: new Stack(cards.slice(1)),
     activeVillain: cards[0],
     discardPile: [],
+    attackTokens: 0,
   };
 }
 
@@ -30,5 +32,6 @@ export function convertAndSerializeVillainsState(
     deckSize: state.deck.length(),
     activeVillain: state.activeVillain,
     discardPile: state.discardPile,
+    attackTokens: state.attackTokens,
   });
 }

@@ -37,7 +37,7 @@ export const ALLOWED_ACTIONS_PER_TURN_PHASE: Record<
   [TurnPhase.VILLAIN_EFFECTS]: ['chooseDiscardCard'],
   [TurnPhase.PLAYER_ACTIONS]: [
     'playCard',
-    'killVillain',
+    'attackVillain',
     'acquireCard',
     'chooseDiscardCard',
     'chooseCardEffect',

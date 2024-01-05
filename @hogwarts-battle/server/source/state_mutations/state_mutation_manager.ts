@@ -12,6 +12,7 @@ import {
 import {GameState} from '../game_state';
 import {InternalPlayer} from '../player/players_internal_state';
 import {onCardDiscard} from '../player_cards/player_cards_config';
+import {onVillainDefeat} from '../villain/villain_cards_config';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface StateMutationInput {}
@@ -549,6 +550,91 @@ export class ChangeTurnPhaseMutation extends StateMutation<ChangeTurnPhaseMutati
     return {
       ...gameState,
       turnPhase: turnPhase,
+    };
+  }
+}
+
+export interface AttackVillainMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+  attackTokens: number;
+}
+export class AttackVillainMutation extends StateMutation<AttackVillainMutationInput> {
+  private static instance: AttackVillainMutation;
+  static get(): AttackVillainMutation {
+    if (!AttackVillainMutation.instance) {
+      AttackVillainMutation.instance = new AttackVillainMutation();
+    }
+    return AttackVillainMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: AttackVillainMutationInput
+  ): GameState {
+    const {playerID, attackTokens} = input;
+
+    const villainHealth = gameState.villains.activeVillain!.health;
+    const currentAttackTokens = gameState.villains.attackTokens;
+
+    if (currentAttackTokens + attackTokens >= villainHealth) {
+      gameState = DefeatVillainMutation.get().execute(gameState, {
+        playerID,
+      });
+    } else {
+      gameState = {
+        ...gameState,
+        villains: {
+          ...gameState.villains,
+          attackTokens: currentAttackTokens + attackTokens,
+        },
+      };
+    }
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID === playerID) {
+          return {
+            ...player,
+            attackTokens: player.attackTokens - attackTokens,
+          };
+        }
+        return player;
+      }),
+    };
+  }
+}
+
+export interface DefeatVillainMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+}
+export class DefeatVillainMutation extends StateMutation<DefeatVillainMutationInput> {
+  private static instance: DefeatVillainMutation;
+  static get(): DefeatVillainMutation {
+    if (!DefeatVillainMutation.instance) {
+      DefeatVillainMutation.instance = new DefeatVillainMutation();
+    }
+    return DefeatVillainMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: DefeatVillainMutationInput
+  ): GameState {
+    const {playerID} = input;
+
+    const villain = gameState.villains.activeVillain!;
+
+    gameState = onVillainDefeat(villain.name)(gameState, playerID);
+
+    return {
+      ...gameState,
+      villains: {
+        ...gameState.villains,
+        activeVillain: null,
+        discardPile: [...gameState.villains.discardPile, villain],
+        attackTokens: 0,
+      },
     };
   }
 }

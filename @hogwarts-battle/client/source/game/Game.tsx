@@ -6,6 +6,7 @@ import GameContextDisplay from './GameContextDisplay';
 import LocationsDisplay from './LocationsDisplay';
 import CardShop from './CardShop';
 import RequiredPlayerInputDisplay from './RequiredPlayerInputDisplay';
+import VillainsDisplay from './VillainsDisplay';
 
 export default function Game() {
   const playerView = usePlayerView();
@@ -43,10 +44,10 @@ export default function Game() {
       <LocationsDisplay locationsState={gameStateView.locations} />
       <CardShop playerCardsState={gameStateView.playerCards} />
       <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>
-      <div>Villain: {gameStateView.villains.activeVillain.name}</div>
-      <button onClick={() => runAction({action: 'killVillain', args: {}})}>
-        Kill Villain
-      </button>
+      <VillainsDisplay
+        villainsState={gameStateView.villains}
+        selfPlayer={gameStateView.players.selfPlayer}
+      />
       <button onClick={handleRevealDarkArtsCard}>Reveal Dark Arts Card</button>
       <button onClick={handleEndTurn}>End Turn</button>
     </div>

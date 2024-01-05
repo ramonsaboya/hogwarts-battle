@@ -1,14 +1,21 @@
 import {PlayerView} from '../player_view';
 import {VillainCard} from './villain_cards';
 
+export interface AttackVillainArgs {
+  attackTokens: number;
+}
 export interface VillainsEvents {
-  killVillain: (args: {}, callback: (playerView: PlayerView) => void) => void;
+  attackVillain: (
+    args: AttackVillainArgs,
+    callback: (playerView: PlayerView) => void
+  ) => void;
 }
 
 export interface VillainsExternalState {
   deckSize: number;
-  activeVillain: VillainCard;
+  activeVillain: VillainCard | null;
   discardPile: VillainCard[];
+  attackTokens: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -3,7 +3,10 @@ import {
   AddAttackTokenMutation,
   AddHeartMutation,
   AddInfluenceTokenMutation,
+  DefeatVillainMutation,
+  DefeatVillainMutationInput,
   DrawCardMutation,
+  MiddlewareNext,
   RequireChooseEffectPlayerInputMutation,
   RequireChooseHeroHealPlayerInputMutation,
 } from '../state_mutations/state_mutation_manager';
@@ -21,8 +24,8 @@ interface PlayerCardEvent {
 
 interface PlayerCardConfig {
   onPlay: PlayerCardEvent;
-  onDiscard: PlayerCardEvent;
-  onCleanup: () => void;
+  onDiscard?: PlayerCardEvent;
+  onCleanup?: () => void;
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PlayerHeroCardConfig extends PlayerCardConfig {}
@@ -35,11 +38,11 @@ export function onCardPlay(cardName: PlayerCardName): PlayerCardEvent {
 }
 
 export function onCardDiscard(cardName: PlayerCardName): PlayerCardEvent {
-  return getCardConfig(cardName).onDiscard;
+  return getCardConfig(cardName).onDiscard ?? (gameState => gameState);
 }
 
 export function onCardCleanup(cardName: PlayerCardName): () => void {
-  return getCardConfig(cardName).onCleanup;
+  return getCardConfig(cardName).onCleanup ?? (() => {});
 }
 
 const PLAYER_HOGWARTS_CARD_NAMES_VALUES_AS_STRING: string[] = Object.values(
@@ -76,6 +79,10 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
       return gameState;
     },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
       return AddInfluenceTokenMutation.get().execute(gameState, {
         playerID,
         amount: 1,
@@ -341,15 +348,36 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
   },
   [PlayerHogwartsCardName.OLIVER_WOOD]: {
-    amount: 1,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+    amount: 15,
+    onCleanup: () => {
+      DefeatVillainMutation.get().remove(PlayerHogwartsCardName.OLIVER_WOOD);
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      DefeatVillainMutation.get().use(
+        PlayerHogwartsCardName.OLIVER_WOOD,
+        (
+          gameState: GameState,
+          input: DefeatVillainMutationInput,
+          next: MiddlewareNext<DefeatVillainMutationInput>
+        ) => {
+          gameState = RequireChooseHeroHealPlayerInputMutation.get().execute(
+            gameState,
+            {
+              playerID,
+              playerInput: {
+                type: PlayerInputType.CHOOSE_ONE_HERO_FOR_HEAL,
+                amount: 2,
+              },
+            }
+          );
+          return next(gameState, input);
+        }
+      );
+
+      return AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHogwartsCardName.QUIDDITCH_GEAR]: {

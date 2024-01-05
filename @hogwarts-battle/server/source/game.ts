@@ -138,7 +138,7 @@ export class Game {
     };
 
     this.gameState = onVillainReveal(
-      this.gameState.villains.activeVillain.name
+      this.gameState.villains.activeVillain!.name
     )(this.gameState, this.gameContext.currentPlayer);
 
     ChangeTurnPhaseMutation.get().use(
@@ -151,7 +151,7 @@ export class Game {
         const {turnPhase} = input;
 
         if (turnPhase === TurnPhase.VILLAIN_EFFECTS) {
-          gameState = onVillainTurn(gameState.villains.activeVillain.name)(
+          gameState = onVillainTurn(gameState.villains.activeVillain!.name)(
             gameState,
             this.gameContext.currentPlayer
           );
@@ -191,6 +191,23 @@ export class Game {
     );
     const darkArtsEvent = this.gameState.darkArtsEvents.active!;
     getDarkArtsEventCardCleanup(darkArtsEvent.name)();
+
+    const activeVillain = this.gameState.villains.activeVillain;
+    if (activeVillain === null) {
+      const newVillain = this.gameState.villains.deck.pop()!;
+      this.gameState = {
+        ...this.gameState,
+        villains: {
+          ...this.gameState.villains,
+          activeVillain: newVillain,
+        },
+      };
+
+      this.gameState = onVillainReveal(newVillain.name)(
+        this.gameState,
+        currentPlayerID
+      );
+    }
 
     this.gameContext = {
       ...this.gameContext,
