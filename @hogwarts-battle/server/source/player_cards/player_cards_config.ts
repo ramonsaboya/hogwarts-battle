@@ -378,14 +378,14 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.ESSENCE_OF_DITTANY]: {
     amount: 4,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return RequireChooseHeroHealPlayerInputMutation.get().execute(gameState, {
+        playerID,
+        playerInput: {
+          type: PlayerInputType.CHOOSE_ONE_HERO_FOR_HEAL,
+          amount: 2,
+        },
+      });
     },
   },
   [PlayerHogwartsCardName.GOLDEN_SNITCH]: {
@@ -477,14 +477,30 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.REPARO]: {
     amount: 6,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
+        playerID,
+        options: [
+          {
+            text: '2 influence token',
+            effect: (gameState: GameState, playerID: PlayerID) => {
+              return AddInfluenceTokenMutation.get().execute(gameState, {
+                playerID,
+                amount: 2,
+              });
+            },
+          },
+          {
+            text: 'Draw a card',
+            effect: (gameState: GameState) => {
+              return DrawCardMutation.get().execute(gameState, {
+                playerID,
+                amount: 1,
+              });
+            },
+          },
+        ],
+      });
     },
   },
   [PlayerHogwartsCardName.RUBEUS_HAGRID]: {
