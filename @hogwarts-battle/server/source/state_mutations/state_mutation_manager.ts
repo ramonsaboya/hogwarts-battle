@@ -73,6 +73,7 @@ abstract class StateMutation<T extends StateMutationInput> {
 export interface AcquireCardMutationInput extends StateMutationInput {
   playerID: PlayerID;
   cardInstance: PlayerCardInstance;
+  target: 'DECK' | 'DISCARD_PILE';
 }
 export class AcquireCardMutation extends StateMutation<AcquireCardMutationInput> {
   private static instance: AcquireCardMutation;
@@ -99,14 +100,24 @@ export class AcquireCardMutation extends StateMutation<AcquireCardMutationInput>
     return {
       ...gameState,
       players: gameState.players.map(player => {
-        if (player.playerID === playerID) {
+        if (player.playerID !== playerID) {
+          return player;
+        }
+
+        const influenceTokens = player.influenceTokens - card.cost;
+        if (input.target === 'DECK') {
           return {
             ...player,
-            influenceTokens: player.influenceTokens - card.cost,
+            influenceTokens: influenceTokens,
+            deck: new Stack([...player.deck.getItems, cardInstance]),
+          };
+        } else {
+          return {
+            ...player,
+            influenceTokens: influenceTokens,
             discardPile: [...player.discardPile, cardInstance],
           };
         }
-        return player;
       }),
     };
   }

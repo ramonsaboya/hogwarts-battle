@@ -13,6 +13,7 @@ const acquireCardAction: ActionListener = [
     AcquireCardMutation.get().execute(gameState, {
       playerID,
       cardInstance,
+      target: 'DISCARD_PILE',
     }),
 ];
 

@@ -1,5 +1,7 @@
 import {GameState} from '../game_state';
 import {
+  AcquireCardMutation,
+  AcquireCardMutationInput,
   AddAttackTokenMutation,
   AddHeartMutation,
   AddInfluenceTokenMutation,
@@ -14,6 +16,7 @@ import {
 } from '../state_mutations/state_mutation_manager';
 import {
   PlayerCardName,
+  PlayerCardType,
   PlayerHeroCardName,
   PlayerHogwartsCardName,
   PlayerID,
@@ -89,13 +92,9 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
       return gameState;
     },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      gameState = AddAttackTokenMutation.get().execute(gameState, {
-        playerID,
-        amount: 1,
-      });
       return AddInfluenceTokenMutation.get().execute(gameState, {
         playerID,
-        amount: 1,
+        amount: 10,
       });
     },
   },
@@ -162,7 +161,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
           input: SubtractHeartMutationInput,
           next: MiddlewareNext<SubtractHeartMutationInput>
         ) => {
-          console.log('Invisibility Cloak middleware', ownerID, input);
           if (input.playerID === ownerID) {
             return next(gameState, {...input, amount: 1});
           } else {
@@ -376,7 +374,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
   },
   [PlayerHogwartsCardName.OLIVER_WOOD]: {
-    amount: 15,
+    amount: 1,
     onCleanup: () => {
       DefeatVillainMutation.get().remove(PlayerHogwartsCardName.OLIVER_WOOD);
     },
@@ -457,7 +455,24 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      AcquireCardMutation.get().use(
+        PlayerHogwartsCardName.SORTING_HAT,
+        (
+          gameState: GameState,
+          input: AcquireCardMutationInput,
+          next: MiddlewareNext<AcquireCardMutationInput>
+        ) => {
+          if (input.cardInstance.card.type === PlayerCardType.ALLY) {
+            return next(gameState, {...input, target: 'DECK'});
+          }
+          return next(gameState, input);
+        }
+      );
+
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHogwartsCardName.WINGARDIUM_LEVIOSA]: {
