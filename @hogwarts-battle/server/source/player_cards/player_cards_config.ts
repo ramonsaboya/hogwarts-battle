@@ -312,14 +312,25 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.TIME_TURNER]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      AcquireCardMutation.get().use(
+        PlayerHogwartsCardName.SORTING_HAT,
+        (
+          gameState: GameState,
+          input: AcquireCardMutationInput,
+          next: MiddlewareNext<AcquireCardMutationInput>
+        ) => {
+          if (input.cardInstance.card.type === PlayerCardType.SPELL) {
+            return next(gameState, {...input, target: 'DECK'});
+          }
+          return next(gameState, input);
+        }
+      );
+
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHeroCardName.TREVOR]: {
@@ -504,12 +515,6 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.SORTING_HAT]: {
     amount: 1,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       AcquireCardMutation.get().use(
         PlayerHogwartsCardName.SORTING_HAT,
@@ -533,14 +538,25 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.WINGARDIUM_LEVIOSA]: {
     amount: 3,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      AcquireCardMutation.get().use(
+        PlayerHogwartsCardName.SORTING_HAT,
+        (
+          gameState: GameState,
+          input: AcquireCardMutationInput,
+          next: MiddlewareNext<AcquireCardMutationInput>
+        ) => {
+          if (input.cardInstance.card.type === PlayerCardType.ITEM) {
+            return next(gameState, {...input, target: 'DECK'});
+          }
+          return next(gameState, input);
+        }
+      );
+
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
 };
