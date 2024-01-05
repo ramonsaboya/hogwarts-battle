@@ -6,8 +6,10 @@ export enum PlayerCardType {
   SPELL = 'SPELL',
 }
 
+export type PlayerCardName = PlayerHeroCardName | PlayerHogwartsCardName;
+
 export interface PlayerCard {
-  name: PlayerHeroCardName | PlayerHogwartsCardName;
+  name: PlayerCardName;
   description: string;
   type: PlayerCardType;
 }
