@@ -477,13 +477,15 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.QUIDDITCH_GEAR]: {
     amount: 4,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
+      gameState = AddHeartMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
       return gameState;
     },
   },
