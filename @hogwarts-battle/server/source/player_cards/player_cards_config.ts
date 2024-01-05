@@ -226,12 +226,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.MANDRAKE]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
         playerID,
@@ -289,14 +283,32 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.TALES_OF_BEEDLE_THE_BARD]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return RequireChooseEffectPlayerInputMutation.get().execute(gameState, {
+        playerID,
+        options: [
+          {
+            text: '2 influence token',
+            effect: (gameState: GameState, playerID: PlayerID) => {
+              return AddInfluenceTokenMutation.get().execute(gameState, {
+                playerID,
+                amount: 1,
+              });
+            },
+          },
+          {
+            text: 'ALL Heroes gain 1 influence token',
+            effect: (gameState: GameState) => {
+              return gameState.players.reduce((gameState, player) => {
+                return AddInfluenceTokenMutation.get().execute(gameState, {
+                  playerID: player.playerID,
+                  amount: 1,
+                });
+              }, gameState);
+            },
+          },
+        ],
+      });
     },
   },
   [PlayerHeroCardName.TIME_TURNER]: {
