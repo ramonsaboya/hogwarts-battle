@@ -99,13 +99,30 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.BERTIE_BOTTS_EVERY_FLAVOUR_BEANS]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      const alliesPlayed = gameState.players.reduce((count, player) => {
+        if (playerID !== player.playerID) {
+          return count;
+        }
+        return (
+          count +
+          player.cardsDuringTurnPile.reduce((count, card) => {
+            if (card.card.type === PlayerCardType.ALLY) {
+              return count + 1;
+            }
+            return count;
+          }, 0)
+        );
+      }, 0);
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: alliesPlayed,
+      });
+
+      gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
       return gameState;
     },
   },
@@ -431,7 +448,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
   },
   [PlayerHogwartsCardName.RUBEUS_HAGRID]: {
-    amount: 10,
+    amount: 30,
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       gameState = AddAttackTokenMutation.get().execute(gameState, {
         playerID,
