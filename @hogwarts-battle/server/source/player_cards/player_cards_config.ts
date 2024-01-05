@@ -127,14 +127,29 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.CLEANSWEEP_11]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+    onCleanup: () => {
+      DefeatVillainMutation.get().remove(PlayerHeroCardName.CLEANSWEEP_11);
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      DefeatVillainMutation.get().use(
+        PlayerHeroCardName.CLEANSWEEP_11,
+        (
+          gameState: GameState,
+          input: DefeatVillainMutationInput,
+          next: MiddlewareNext<DefeatVillainMutationInput>
+        ) => {
+          gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+            playerID,
+            amount: 1,
+          });
+          return next(gameState, input);
+        }
+      );
+
+      return AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHeroCardName.CROOCKSHANKS]: {
@@ -148,14 +163,29 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.FIREBOLT]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+    onCleanup: () => {
+      DefeatVillainMutation.get().remove(PlayerHeroCardName.FIREBOLT);
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      DefeatVillainMutation.get().use(
+        PlayerHeroCardName.FIREBOLT,
+        (
+          gameState: GameState,
+          input: DefeatVillainMutationInput,
+          next: MiddlewareNext<DefeatVillainMutationInput>
+        ) => {
+          gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+            playerID,
+            amount: 1,
+          });
+          return next(gameState, input);
+        }
+      );
+
+      return AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHeroCardName.HEDWIG]: {
