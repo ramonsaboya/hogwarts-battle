@@ -382,13 +382,11 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.DESCENDO]: {
     amount: 2,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 2,
+      });
       return gameState;
     },
   },
@@ -420,13 +418,15 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.INCENDIO]: {
     amount: 4,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
+      gameState = DrawCardMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
       return gameState;
     },
   },
