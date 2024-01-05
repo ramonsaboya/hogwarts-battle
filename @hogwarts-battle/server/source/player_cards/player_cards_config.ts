@@ -406,13 +406,15 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.GOLDEN_SNITCH]: {
     amount: 1,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      gameState = AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 2,
+      });
+      gameState = DrawCardMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
       return gameState;
     },
   },
