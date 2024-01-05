@@ -179,11 +179,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.HEDWIG]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
@@ -249,11 +244,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.PIGWIDGEON]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
@@ -324,7 +314,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.TREVOR]: {
-    onCleanup: () => {},
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
@@ -337,11 +326,6 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
 > = {
   [PlayerHogwartsCardName.ALBUS_DUMBLEDORE]: {
     amount: 1,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
     onPlay: (gameState: GameState) => {
       gameState = gameState.players.reduce((gameState, player) => {
         gameState = DrawCardMutation.get().execute(gameState, {
@@ -504,7 +488,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
   },
   [PlayerHogwartsCardName.RUBEUS_HAGRID]: {
-    amount: 30,
+    amount: 1,
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       gameState = AddAttackTokenMutation.get().execute(gameState, {
         playerID,
