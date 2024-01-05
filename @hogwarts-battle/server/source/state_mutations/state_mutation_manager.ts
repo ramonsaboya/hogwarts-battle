@@ -11,6 +11,7 @@ import {
 } from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {InternalPlayer} from '../player/players_internal_state';
+import {onCardDiscard} from '../player_cards/player_cards_config';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface StateMutationInput {}
@@ -128,6 +129,8 @@ export class DiscardCardMutation extends StateMutation<DiscardCardMutationInput>
     input: DiscardCardMutationInput
   ): GameState {
     const {playerID, cardInstance} = input;
+
+    gameState = onCardDiscard(cardInstance.card.name)(gameState, playerID);
 
     return {
       ...gameState,

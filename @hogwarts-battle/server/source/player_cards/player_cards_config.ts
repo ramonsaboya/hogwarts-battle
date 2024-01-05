@@ -199,11 +199,17 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     onCleanup: () => {},
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 2,
+      });
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHeroCardName.TALES_OF_BEEDLE_THE_BARD]: {
