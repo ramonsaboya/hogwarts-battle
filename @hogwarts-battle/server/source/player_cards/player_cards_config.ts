@@ -86,11 +86,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
   PlayerHeroCardConfig
 > = {
   [PlayerHeroCardName.ALOHOHOMORA]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return AddInfluenceTokenMutation.get().execute(gameState, {
         playerID,
@@ -153,11 +148,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.CROOCKSHANKS]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
@@ -335,10 +325,6 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
   },
   [PlayerHeroCardName.TREVOR]: {
     onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return getBaseAllyHeroCardEffect()(gameState, playerID);
     },
@@ -432,13 +418,13 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
   },
   [PlayerHogwartsCardName.LUMOS]: {
     amount: 2,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onPlay: (gameState: GameState, playerID: PlayerID) => {
+    onPlay: (gameState: GameState) => {
+      gameState = gameState.players.reduce((gameState, player) => {
+        return DrawCardMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+      }, gameState);
       return gameState;
     },
   },
