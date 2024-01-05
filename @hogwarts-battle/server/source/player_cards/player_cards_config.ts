@@ -265,7 +265,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
       return gameState;
     },
     onPlay: (gameState: GameState) => {
-      gameState.players.forEach(player => {
+      gameState = gameState.players.reduce((gameState, player) => {
         gameState = DrawCardMutation.get().execute(gameState, {
           playerID: player.playerID,
           amount: 1,
@@ -282,7 +282,8 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
           playerID: player.playerID,
           amount: 1,
         });
-      });
+        return gameState;
+      }, gameState);
 
       return gameState;
     },
@@ -405,14 +406,18 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
     },
   },
   [PlayerHogwartsCardName.RUBEUS_HAGRID]: {
-    amount: 1,
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
-      return gameState;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    amount: 10,
     onPlay: (gameState: GameState, playerID: PlayerID) => {
+      gameState = AddAttackTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
+      gameState = gameState.players.reduce((gameState, player) => {
+        return AddHeartMutation.get().execute(gameState, {
+          playerID: player.playerID,
+          amount: 1,
+        });
+      }, gameState);
       return gameState;
     },
   },
