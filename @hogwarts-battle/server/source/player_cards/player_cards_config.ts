@@ -275,15 +275,12 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.REMEMBRALL]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onDiscard: (gameState: GameState, playerID: PlayerID) => {
       return AddInfluenceTokenMutation.get().execute(gameState, {
         playerID,
         amount: 2,
       });
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onPlay: (gameState: GameState, playerID: PlayerID) => {
       return AddInfluenceTokenMutation.get().execute(gameState, {
         playerID,
