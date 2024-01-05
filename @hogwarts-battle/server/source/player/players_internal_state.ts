@@ -93,6 +93,7 @@ export function convertAndSerializePlayersState(
     attackTokens: selfInternalPlayer.attackTokens,
     hand: selfInternalPlayer.hand,
     discardPile: selfInternalPlayer.discardPile,
+    cardsDuringTurnPile: selfInternalPlayer.cardsDuringTurnPile,
   };
   const otherExternalPlayers: ExternalPlayer[] = state
     .filter(player => player.playerID !== playerID)

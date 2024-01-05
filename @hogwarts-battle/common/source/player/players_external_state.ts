@@ -53,6 +53,7 @@ export interface ExternalPlayer {
 export interface SelfExternalPlayer extends ExternalPlayer {
   hand: PlayerCardInstance[];
   discardPile: PlayerCardInstance[];
+  cardsDuringTurnPile: PlayerCardInstance[];
 }
 
 export interface PlayersExternalState {

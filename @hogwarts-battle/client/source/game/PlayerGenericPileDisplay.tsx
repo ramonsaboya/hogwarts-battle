@@ -6,7 +6,7 @@ type Props = {
   pile: PlayerCardInstance[];
 };
 
-export default function PlayerDiscardPileDisplay({pile}: Props) {
+export default function PlayerGenericPileDisplay({pile}: Props) {
   return (
     <>
       {pile.map(cardInstance => (

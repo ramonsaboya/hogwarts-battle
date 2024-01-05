@@ -1,6 +1,6 @@
 import React from 'react';
 import PlayerHandDisplay from './PlayerHandDisplay';
-import PlayerDiscardPileDisplay from './PlayerDiscardPileDisplay';
+import PlayerGenericPileDisplay from './PlayerGenericPileDisplay';
 import './Players.css';
 import {ExternalPlayer, SelfExternalPlayer} from '@hogwarts-battle/common';
 
@@ -13,8 +13,10 @@ export default function PlayerDisplay({player}: Props) {
     <>
       <div>hand:</div>
       <PlayerHandDisplay hand={player.hand} />
+      <div>cards played this turn:</div>
+      <PlayerGenericPileDisplay pile={player.cardsDuringTurnPile} />
       <div>discard:</div>
-      <PlayerDiscardPileDisplay pile={player.discardPile} />
+      <PlayerGenericPileDisplay pile={player.discardPile} />
     </>
   ) : null;
 
