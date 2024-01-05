@@ -9,6 +9,8 @@ import {
   MiddlewareNext,
   RequireChooseEffectPlayerInputMutation,
   RequireChooseHeroHealPlayerInputMutation,
+  SubtractHeartMutation,
+  SubtractHeartMutationInput,
 } from '../state_mutations/state_mutation_manager';
 import {
   PlayerCardName,
@@ -21,10 +23,14 @@ import {
 interface PlayerCardEvent {
   (gameState: GameState, playerID: PlayerID): GameState;
 }
+interface PlayerDrawCardEvent {
+  (playerID: PlayerID): void;
+}
 
 interface PlayerCardConfig {
   onPlay: PlayerCardEvent;
   onDiscard?: PlayerCardEvent;
+  onDraw?: PlayerDrawCardEvent;
   onCleanup?: () => void;
 }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -39,6 +45,10 @@ export function onCardPlay(cardName: PlayerCardName): PlayerCardEvent {
 
 export function onCardDiscard(cardName: PlayerCardName): PlayerCardEvent {
   return getCardConfig(cardName).onDiscard ?? (gameState => gameState);
+}
+
+export function onCardDraw(cardName: PlayerCardName): PlayerDrawCardEvent {
+  return getCardConfig(cardName).onDraw ?? (() => {});
 }
 
 export function onCardCleanup(cardName: PlayerCardName): () => void {
@@ -143,13 +153,30 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
     },
   },
   [PlayerHeroCardName.INVISIBILITY_CLOAK]: {
-    onCleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDiscard: (gameState: GameState, playerID: PlayerID) => {
+    onDraw: (playerID: PlayerID) => {
+      const ownerID = playerID;
+      SubtractHeartMutation.get().use(
+        PlayerHeroCardName.INVISIBILITY_CLOAK,
+        (
+          gameState: GameState,
+          input: SubtractHeartMutationInput,
+          next: MiddlewareNext<SubtractHeartMutationInput>
+        ) => {
+          console.log('Invisibility Cloak middleware', ownerID, input);
+          if (input.playerID === ownerID) {
+            return next(gameState, {...input, amount: 1});
+          } else {
+            return next(gameState, input);
+          }
+        }
+      );
+    },
+    onDiscard: (gameState: GameState) => {
+      SubtractHeartMutation.get().remove(PlayerHeroCardName.INVISIBILITY_CLOAK);
       return gameState;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onPlay: (gameState: GameState, playerID: PlayerID) => {
+    onPlay: (gameState: GameState) => {
+      SubtractHeartMutation.get().remove(PlayerHeroCardName.INVISIBILITY_CLOAK);
       return gameState;
     },
   },

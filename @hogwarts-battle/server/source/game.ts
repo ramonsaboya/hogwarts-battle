@@ -1,16 +1,8 @@
 import {Socket} from 'socket.io';
 import {GameState, createPlayerView, getInitialGameState} from './game_state';
 import {HERO_TURN_ORDER} from './game_context';
+import {GameContext, Hero, PlayerID, TurnPhase} from '@hogwarts-battle/common';
 import {
-  GameContext,
-  Hero,
-  PlayerID,
-  Stack,
-  TurnPhase,
-  shuffle,
-} from '@hogwarts-battle/common';
-import {
-  InternalPlayer,
   getInitialPlayerState,
   getInternalPlayer,
 } from './player/players_internal_state';
@@ -19,8 +11,11 @@ import {onVillainReveal, onVillainTurn} from './villain/villain_cards_config';
 import {
   ChangeTurnPhaseMutation,
   ChangeTurnPhaseMutationInput,
+  DiscardCardMutation,
+  DrawCardMutation,
   MiddlewareNext,
 } from './state_mutations/state_mutation_manager';
+import {onCardCleanup, onCardDraw} from './player_cards/player_cards_config';
 
 interface Player {
   id: PlayerID;
@@ -141,6 +136,12 @@ export class Game {
       this.gameState.villains.activeVillain!.name
     )(this.gameState, this.gameContext.currentPlayer);
 
+    this.gameState.players.forEach(player => {
+      player.hand.forEach(cardInstance => {
+        onCardDraw(cardInstance.card.name)(player.playerID);
+      });
+    });
+
     ChangeTurnPhaseMutation.get().use(
       'GAME',
       (
@@ -186,9 +187,7 @@ export class Game {
     if (!currentPlayerState) {
       throw new Error('Player not found');
     }
-    const otherPlayers = this.gameState.players.filter(
-      player => player.playerID !== currentPlayerID
-    );
+
     const darkArtsEvent = this.gameState.darkArtsEvents.active!;
     getDarkArtsEventCardCleanup(darkArtsEvent.name)();
 
@@ -209,6 +208,8 @@ export class Game {
       );
     }
 
+    this.gameState = drawNewHand(this.gameState, currentPlayerID);
+
     this.gameContext = {
       ...this.gameContext,
       turn: this.gameContext.turn + 1,
@@ -217,41 +218,74 @@ export class Game {
     this.gameState = {
       ...this.gameState,
       turnPhase: TurnPhase.DARK_ARTS_EVENT_REVEAL,
-      players: [
-        ...otherPlayers,
-        {
-          ...currentPlayerState,
-          ...drawNewHand(currentPlayerState),
-          influenceTokens: 0,
+      players: this.gameState.players.map(player => {
+        if (player.playerID !== currentPlayerID) {
+          return player;
+        }
+
+        return {
+          ...player,
           attackTokens: 0,
-        },
-      ],
+          influenceTokens: 0,
+        };
+      }),
     };
   }
 }
 
 const HAND_SIZE = 5;
 
-function drawNewHand(player: InternalPlayer): InternalPlayer {
-  const currentHand = player.hand;
-  const newDiscardPile = [...player.discardPile, ...currentHand];
+function drawNewHand(
+  gameState: GameState,
+  currentPlayerID: PlayerID
+): GameState {
+  gameState.players.forEach(player => {
+    if (player.playerID !== currentPlayerID) {
+      return;
+    }
 
-  const deckSize = player.deck.length();
-  if (deckSize >= HAND_SIZE) {
-    return {
-      ...player,
-      hand: player.deck.draw(HAND_SIZE),
-      discardPile: newDiscardPile,
+    player.cardsDuringTurnPile.forEach(cardInstance => {
+      onCardCleanup(cardInstance.card.name)();
+      gameState = {
+        ...gameState,
+        players: gameState.players.map(player => {
+          if (player.playerID !== currentPlayerID) {
+            return player;
+          }
+
+          return {
+            ...player,
+            discardPile: [...player.discardPile, cardInstance],
+          };
+        }),
+      };
+    });
+
+    player.hand.forEach(cardInstance => {
+      gameState = DiscardCardMutation.get().execute(gameState, {
+        playerID: currentPlayerID,
+        cardInstance,
+      });
+    });
+
+    gameState = DrawCardMutation.get().execute(gameState, {
+      playerID: currentPlayerID,
+      amount: HAND_SIZE,
+    });
+
+    gameState = {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID !== currentPlayerID) {
+          return player;
+        }
+
+        return {
+          ...player,
+          cardsDuringTurnPile: [],
+        };
+      }),
     };
-  }
-
-  const firstDrawnCards = player.deck.draw(deckSize);
-  const newDeck = new Stack(shuffle(newDiscardPile));
-  const secondDrawnCards = newDeck.draw(HAND_SIZE - firstDrawnCards.length);
-  return {
-    ...player,
-    hand: [...firstDrawnCards, ...secondDrawnCards],
-    deck: newDeck,
-    discardPile: [],
-  };
+  });
+  return gameState;
 }

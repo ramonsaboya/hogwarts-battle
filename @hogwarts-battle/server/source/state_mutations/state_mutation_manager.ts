@@ -11,7 +11,7 @@ import {
 } from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {InternalPlayer} from '../player/players_internal_state';
-import {onCardDiscard} from '../player_cards/player_cards_config';
+import {onCardDiscard, onCardDraw} from '../player_cards/player_cards_config';
 import {onVillainDefeat} from '../villain/villain_cards_config';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -176,11 +176,16 @@ export class DrawCardMutation extends StateMutation<DrawCardMutationInput> {
 
           let newPlayer;
           if (amount <= deckSize) {
-            newPlayer = this.drawCards(player, amount);
+            newPlayer = this.drawCards(gameState, playerID, player, amount);
           } else {
-            newPlayer = this.drawCards(player, deckSize);
+            newPlayer = this.drawCards(gameState, playerID, player, deckSize);
             newPlayer = this.resetDeck(newPlayer);
-            newPlayer = this.drawCards(newPlayer, amount - deckSize);
+            newPlayer = this.drawCards(
+              gameState,
+              playerID,
+              newPlayer,
+              amount - deckSize
+            );
           }
 
           return newPlayer;
@@ -191,6 +196,8 @@ export class DrawCardMutation extends StateMutation<DrawCardMutationInput> {
   }
 
   private drawCards(
+    gameState: GameState,
+    playerID: PlayerID,
     playerState: InternalPlayer,
     amount: number
   ): InternalPlayer {
@@ -198,7 +205,11 @@ export class DrawCardMutation extends StateMutation<DrawCardMutationInput> {
       ...playerState,
       hand: [
         ...playerState.hand,
-        ...new Array(amount).fill(null).map(() => playerState.deck.pop()!),
+        ...new Array(amount).fill(null).map(() => {
+          const cardInstance = playerState.deck.pop()!;
+          onCardDraw(cardInstance.card.name)(playerID);
+          return cardInstance;
+        }),
       ],
     };
   }

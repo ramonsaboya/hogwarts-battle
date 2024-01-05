@@ -37,11 +37,10 @@ const playCardAction: ActionListener = [
     const newHand = playerState.hand.filter(
       card => card.id !== cardInstance.id
     );
-    const newDiscardPile = [...playerState.discardPile, cardInstance];
     const newPlayerState = {
       ...playerState,
       hand: newHand,
-      discardPile: newDiscardPile,
+      cardsDuringTurnPile: [...playerState.cardsDuringTurnPile, cardInstance],
     };
 
     const otherPlayers = gameState.players.filter(
