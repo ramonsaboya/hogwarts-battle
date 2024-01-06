@@ -87,73 +87,81 @@ export const PLAYER_HERO_CARDS: PlayerHeroCard[] = [
   },
   {
     name: PlayerHeroCardName.BERTIE_BOTTS_EVERY_FLAVOUR_BEANS,
-    description: '',
+    description:
+      'Gain 1 influence token. For each Ally played this turn, gain 1 attack token.',
     type: PlayerCardType.ITEM,
     hero: Hero.RON,
   },
   {
     name: PlayerHeroCardName.CLEANSWEEP_11,
-    description: '',
+    description:
+      'Gain 1 attack token. If you defeat a Villain, also gain 1 influence token.',
     type: PlayerCardType.ITEM,
     hero: Hero.RON,
   },
   {
     name: PlayerHeroCardName.CROOCKSHANKS,
-    description: '',
+    description: 'Choose one: Gain 1 attack token; or gain 2 hearts.',
     type: PlayerCardType.ALLY,
     hero: Hero.HERMIONE,
   },
   {
     name: PlayerHeroCardName.FIREBOLT,
-    description: '',
+    description:
+      'Gain 1 attack token. If you defeat a Villain, also gain 1 influence token.',
     type: PlayerCardType.ITEM,
     hero: Hero.HARRY,
   },
   {
     name: PlayerHeroCardName.HEDWIG,
-    description: '',
+    description: 'Choose one: Gain 1 attack token; or gain 2 hearts.',
     type: PlayerCardType.ALLY,
     hero: Hero.HARRY,
   },
   {
     name: PlayerHeroCardName.INVISIBILITY_CLOAK,
-    description: '',
+    description:
+      "Gain 1 influence token. If this is in your hand, you can't lose more than 1 heart from each Dark Arts event or Villain.",
     type: PlayerCardType.ITEM,
     hero: Hero.HARRY,
   },
   {
     name: PlayerHeroCardName.MANDRAKE,
-    description: '',
+    description:
+      'Choose one: Gain 1 attack token; or any one Hero gains 2 hearts.',
     type: PlayerCardType.ALLY,
     hero: Hero.NEVILLE,
   },
   {
     name: PlayerHeroCardName.PIGWIDGEON,
-    description: '',
+    description: 'Choose one: Gain 1 attack token; or gain 2 hearts.',
     type: PlayerCardType.ALLY,
     hero: Hero.RON,
   },
   {
     name: PlayerHeroCardName.REMEMBRALL,
-    description: '',
+    description:
+      'Gain 1 influence token. If you discard this, gain 2 influence tokens.',
     type: PlayerCardType.ITEM,
     hero: Hero.NEVILLE,
   },
   {
     name: PlayerHeroCardName.TALES_OF_BEEDLE_THE_BARD,
-    description: '',
+    description:
+      'Choose one: Gain 2 influence tokens; or ALL Heroes gain 1 influence token.',
     type: PlayerCardType.ITEM,
     hero: Hero.HERMIONE,
   },
   {
     name: PlayerHeroCardName.TIME_TURNER,
-    description: '',
+    description:
+      'Gain 1 influence token. You may put Spells you acquire on top of your deck instead of in your discard pile.',
     type: PlayerCardType.ITEM,
     hero: Hero.HERMIONE,
   },
   {
     name: PlayerHeroCardName.TREVOR,
-    description: '',
+    description: 'Choose one: Gain 1 attack token; or gain 2 hearts.',
     type: PlayerCardType.ALLY,
     hero: Hero.NEVILLE,
   },
@@ -169,67 +177,70 @@ export const PLAYER_HOGWARTS_CARDS: PlayerHogwartsCard[] = [
   },
   {
     name: PlayerHogwartsCardName.DESCENDO,
-    description: '',
+    description: 'Gain 2 attack tokens.',
     type: PlayerCardType.SPELL,
     cost: 5,
   },
   {
     name: PlayerHogwartsCardName.ESSENCE_OF_DITTANY,
-    description: '',
+    description: 'Any one Hero gains 2 hearts.',
     type: PlayerCardType.ITEM,
     cost: 2,
   },
   {
     name: PlayerHogwartsCardName.GOLDEN_SNITCH,
-    description: '',
+    description: 'Gain 2 influence tokens. Draw a card.',
     type: PlayerCardType.ITEM,
     cost: 5,
   },
   {
     name: PlayerHogwartsCardName.INCENDIO,
-    description: '',
+    description: 'Gain 1 attack token. Draw a card.',
     type: PlayerCardType.SPELL,
     cost: 4,
   },
   {
     name: PlayerHogwartsCardName.LUMOS,
-    description: '',
+    description: 'ALL Heroes draw a card.',
     type: PlayerCardType.SPELL,
     cost: 4,
   },
   {
     name: PlayerHogwartsCardName.OLIVER_WOOD,
-    description: '',
+    description:
+      'Gain 1 attack token. If you defeat a Villain, any one Hero gains 2 hearts.',
     type: PlayerCardType.ALLY,
     cost: 3,
   },
   {
     name: PlayerHogwartsCardName.QUIDDITCH_GEAR,
-    description: '',
+    description: 'Gain 1 attack token and 1 heart.',
     type: PlayerCardType.ITEM,
     cost: 3,
   },
   {
     name: PlayerHogwartsCardName.REPARO,
-    description: '',
+    description: 'Choose one: Gain 2 influence tokens; or draw a card.',
     type: PlayerCardType.SPELL,
     cost: 3,
   },
   {
     name: PlayerHogwartsCardName.RUBEUS_HAGRID,
-    description: '',
+    description: 'Gain 1 attack token. ALL Heroes gain 1 heart.',
     type: PlayerCardType.ALLY,
     cost: 4,
   },
   {
     name: PlayerHogwartsCardName.SORTING_HAT,
-    description: '',
+    description:
+      'Gain 2 influence tokens. You may put Allies you acquire on top of your deck instead of in your discard pile.',
     type: PlayerCardType.ITEM,
     cost: 4,
   },
   {
     name: PlayerHogwartsCardName.WINGARDIUM_LEVIOSA,
-    description: '',
+    description:
+      'Gain 1 influence token. You may put Items you acquire on top of your deck instead of in your discard pile.',
     type: PlayerCardType.SPELL,
     cost: 2,
   },
