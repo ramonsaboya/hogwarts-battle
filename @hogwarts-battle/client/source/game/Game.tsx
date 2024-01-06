@@ -2,6 +2,8 @@ import React from 'react';
 import {createUseStyles} from 'react-jss';
 import GameArea from './GameArea';
 import SelfPlayerDisplay from './SelfPlayerDisplay';
+import {usePlayerView} from './PlayerViewContext';
+import {GameResult} from '@hogwarts-battle/common';
 
 const useStyles = createUseStyles({
   container: {
@@ -18,6 +20,19 @@ const useStyles = createUseStyles({
 
 export default function Game() {
   const classes = useStyles();
+  const {gameContext} = usePlayerView();
+
+  if (
+    gameContext.playerTurnOrder !== undefined &&
+    gameContext.gameResult !== null
+  ) {
+    const gameResult = gameContext.gameResult;
+    if (gameResult === GameResult.WIN) {
+      return <div>YOU WIN!</div>;
+    } else if (gameResult === GameResult.LOSS) {
+      return <div>YOU LOSE!</div>;
+    }
+  }
 
   return (
     <div className={classes.container}>

@@ -1,7 +1,13 @@
 import {Socket} from 'socket.io';
 import {GameState, createPlayerView, getInitialGameState} from './game_state';
 import {HERO_TURN_ORDER} from './game_context';
-import {GameContext, Hero, PlayerID, TurnPhase} from '@hogwarts-battle/common';
+import {
+  GameContext,
+  GameResult,
+  Hero,
+  PlayerID,
+  TurnPhase,
+} from '@hogwarts-battle/common';
 import {
   getInitialPlayerState,
   getInternalPlayer,
@@ -125,6 +131,7 @@ export class Game {
       turn: 1,
       currentPlayer: playerTurnOrder[0],
       playerTurnOrder: playerTurnOrder,
+      gameResult: null,
     };
 
     this.gameState = onVillainReveal(
@@ -183,7 +190,15 @@ export class Game {
       throw new Error('Player not found');
     }
 
-    this.gameState = maybeReplaceLocation(this.gameState);
+    if (
+      this.gameState.villains.activeVillain === null &&
+      this.gameState.villains.deck.length() === 0
+    ) {
+      this.gameContext.gameResult = GameResult.WIN;
+      return;
+    }
+
+    this.maybeReplaceLocation();
 
     const darkArtsEvent = this.gameState.darkArtsEvents.active!;
     getDarkArtsEventCardCleanup(darkArtsEvent.name)();
@@ -226,6 +241,30 @@ export class Game {
           influenceTokens: 0,
         };
       }),
+    };
+  }
+
+  maybeReplaceLocation() {
+    const currentLocation = this.gameState.locations.deck.peek()!;
+    const currentVillainControlTokens =
+      this.gameState.locations.villainControlTokens;
+
+    if (currentVillainControlTokens < currentLocation.requiredVillainControl) {
+      return this.gameState;
+    }
+
+    if (this.gameState.locations.deck.length() === 0) {
+      this.gameContext.gameResult = GameResult.LOSS;
+      return this.gameState;
+    }
+
+    this.gameState.locations.deck.pop()!;
+    this.gameState = {
+      ...this.gameState,
+      locations: {
+        ...this.gameState.locations,
+        villainControlTokens: 0,
+      },
     };
   }
 }
@@ -285,22 +324,4 @@ function drawNewHand(
     };
   });
   return gameState;
-}
-
-function maybeReplaceLocation(gameState: GameState): GameState {
-  const currentLocation = gameState.locations.deck.peek()!;
-  const currentVillainControlTokens = gameState.locations.villainControlTokens;
-
-  if (currentVillainControlTokens < currentLocation.requiredVillainControl) {
-    return gameState;
-  }
-
-  gameState.locations.deck.pop()!;
-  return {
-    ...gameState,
-    locations: {
-      ...gameState.locations,
-      villainControlTokens: 0,
-    },
-  };
 }
