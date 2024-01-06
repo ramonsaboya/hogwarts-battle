@@ -338,6 +338,11 @@ export class StunHeroMutation extends StateMutation<StunHeroMutationInput> {
   ): GameState {
     const {playerID} = input;
 
+    gameState = AddVillainControlTokenMutation.get().execute(gameState, {
+      playerID,
+      amount: 1,
+    });
+
     return {
       ...gameState,
       players: gameState.players.map(player => {
