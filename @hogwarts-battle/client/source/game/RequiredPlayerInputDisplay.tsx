@@ -16,10 +16,7 @@ export default function RequiredPlayerInputDisplay({playerView}: Props) {
 
   return (
     <div>
-      <GameContextDisplay
-        gameContext={playerView.gameContext}
-        turnPhase={playerView.gameStateView.turnPhase}
-      />
+      <GameContextDisplay />
       {(() => {
         switch (requiredPlayerInput?.type) {
           case PlayerInputType.CHOOSE_DISCARD_CARD:

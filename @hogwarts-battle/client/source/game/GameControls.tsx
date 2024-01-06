@@ -1,5 +1,4 @@
 import React from 'react';
-import {usePlayerView} from './PlayerViewContext';
 import {useAction} from '../socket/useAction';
 import GameContextDisplay from './GameContextDisplay';
 import {createUseStyles} from 'react-jss';
@@ -14,7 +13,6 @@ const useStyles = createUseStyles({
 
 export default function GameControls() {
   const classes = useStyles();
-  const playerView = usePlayerView();
 
   const runAction = useAction();
   const handleEndTurn = () => {
@@ -23,10 +21,7 @@ export default function GameControls() {
 
   return (
     <div className={classes.container}>
-      <GameContextDisplay
-        gameContext={playerView.gameContext}
-        turnPhase={playerView.gameStateView.turnPhase}
-      />
+      <GameContextDisplay />
       <button onClick={handleEndTurn}>End Turn</button>
     </div>
   );

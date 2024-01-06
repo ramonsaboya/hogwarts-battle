@@ -1,18 +1,33 @@
 import React from 'react';
-import {GameContext, TurnPhase} from '@hogwarts-battle/common';
+import {usePlayerView} from './PlayerViewContext';
 
-type Props = {
-  gameContext: GameContext;
-  turnPhase: TurnPhase;
-};
+export default function GameContextDisplay() {
+  const {gameContext, gameStateView} = usePlayerView();
 
-export default function GameContextDisplay({gameContext, turnPhase}: Props) {
+  if (gameContext.playerTurnOrder === undefined) {
+    return null;
+  }
+
+  const allPlayers = [
+    ...gameStateView.players.otherPlayers,
+    gameStateView.players.selfPlayer,
+  ];
+  const currentPlayer = allPlayers.find(
+    player => player.playerID === gameContext.currentPlayer
+  )!;
+
+  console.log(gameContext.playerTurnOrder);
+  const playerOrder = gameContext.playerTurnOrder.map(playerID => {
+    const player = allPlayers.find(player => player.playerID === playerID)!;
+    return player.playerName;
+  });
+
   return (
     <div className="GameContextDisplay">
       <div>Turn: {gameContext.turn}</div>
-      <div>Current player: {gameContext.currentPlayer}</div>
-      <div>Player order: {gameContext.playerTurnOrder}</div>
-      <div>Game phase: {turnPhase}</div>
+      <div>Current player: {currentPlayer.playerName}</div>
+      <div>Player order: {playerOrder.join(' -> ')}</div>
+      <div>Game phase: {gameStateView.turnPhase}</div>
     </div>
   );
 }
