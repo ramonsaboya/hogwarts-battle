@@ -1,6 +1,8 @@
 import React from 'react';
 import {createUseStyles} from 'react-jss';
 import {useAction} from '../socket/useAction';
+import {usePlayerView} from './PlayerViewContext';
+import {TurnPhase} from '@hogwarts-battle/common';
 
 const useStyles = createUseStyles({
   container: {
@@ -21,8 +23,11 @@ const useStyles = createUseStyles({
     backgroundColor: 'transparent',
     color: 'white',
     cursor: 'pointer',
-    '&:hover': {
+    '&:enabled:hover': {
       backgroundColor: 'blue',
+    },
+    '&:disabled': {
+      cursor: 'not-allowed',
     },
     padding: '10px',
   },
@@ -30,13 +35,18 @@ const useStyles = createUseStyles({
 
 export default function DarkArtsEventStack() {
   const classes = useStyles();
+  const {gameStateView} = usePlayerView();
   const runAction = useAction();
+
+  const isDarkArtsEventRevealPhase =
+    gameStateView.turnPhase === TurnPhase.DARK_ARTS_EVENT_REVEAL;
 
   return (
     <div className={classes.container}>
       <button
         className={classes.darkArtsEventCard}
         onClick={() => runAction({action: 'revealDarkArtsEvent', args: {}})}
+        disabled={!isDarkArtsEventRevealPhase}
       />
     </div>
   );

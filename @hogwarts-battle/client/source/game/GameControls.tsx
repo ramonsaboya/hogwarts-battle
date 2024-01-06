@@ -3,6 +3,7 @@ import {useAction} from '../socket/useAction';
 import GameContextDisplay from './GameContextDisplay';
 import {createUseStyles} from 'react-jss';
 import {usePlayerView} from './PlayerViewContext';
+import {TurnPhase} from '@hogwarts-battle/common';
 
 const useStyles = createUseStyles({
   container: {
@@ -18,6 +19,8 @@ export default function GameControls() {
 
   const isOwnTurn =
     gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
+  const isPlayerActionsPhase =
+    gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
 
   const runAction = useAction();
   const handleEndTurn = () => {
@@ -30,7 +33,10 @@ export default function GameControls() {
   return (
     <div className={classes.container}>
       <GameContextDisplay />
-      <button onClick={handleEndTurn} disabled={!isOwnTurn}>
+      <button
+        onClick={handleEndTurn}
+        disabled={!isOwnTurn || !isPlayerActionsPhase}
+      >
         End Turn
       </button>
     </div>

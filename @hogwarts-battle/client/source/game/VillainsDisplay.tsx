@@ -2,6 +2,7 @@ import React from 'react';
 import {useAction} from '../socket/useAction';
 import {createUseStyles} from 'react-jss';
 import {usePlayerView} from './PlayerViewContext';
+import {TurnPhase} from '@hogwarts-battle/common';
 
 const useStyles = createUseStyles({
   container: {
@@ -21,8 +22,11 @@ const useStyles = createUseStyles({
     backgroundColor: 'transparent',
     color: 'white',
     cursor: 'pointer',
-    '&:hover': {
+    '&:enabled:hover': {
       backgroundColor: 'blue',
+    },
+    '&:disabled': {
+      cursor: 'not-allowed',
     },
     padding: '10px',
   },
@@ -91,6 +95,9 @@ export default function VillainsDisplay() {
     return null;
   }
 
+  const isPlayerActionsPhase =
+    gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
+
   return (
     <div className={classes.container}>
       <div className={classes.villainWithAttacksSlot}>
@@ -99,6 +106,7 @@ export default function VillainsDisplay() {
           onClick={() =>
             runAction({action: 'attackVillain', args: {attackTokens: 1}})
           }
+          disabled={!isPlayerActionsPhase}
         >
           <div className={classes.villainName}>{villain.name}</div>
           <div className={classes.villainContent}>

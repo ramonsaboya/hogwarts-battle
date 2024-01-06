@@ -22,8 +22,11 @@ const useStyles = createUseStyles({
     backgroundColor: 'transparent',
     color: 'white',
     cursor: 'pointer',
-    '&:hover': {
+    '&:enabled:hover': {
       backgroundColor: 'blue',
+    },
+    '&:disabled': {
+      cursor: 'not-allowed',
     },
   },
   type: {},
@@ -47,9 +50,14 @@ const useStyles = createUseStyles({
 type Props = {
   cardInstance: PlayerCardInstance;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
-export default function PlayerCardDisplay({cardInstance, onClick}: Props) {
+export default function PlayerCardDisplay({
+  cardInstance,
+  onClick,
+  disabled = false,
+}: Props) {
   const classes = useStyles();
   const {card} = cardInstance;
 
@@ -61,7 +69,7 @@ export default function PlayerCardDisplay({cardInstance, onClick}: Props) {
   ) : null;
 
   return (
-    <button className={classes.container} onClick={onClick}>
+    <button className={classes.container} onClick={onClick} disabled={disabled}>
       <div className={classes.type}>{card.type}</div>
       <div className={classes.name}>{card.name}</div>
       <div className={classes.description}>{card.description}</div>

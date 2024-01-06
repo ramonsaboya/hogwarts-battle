@@ -3,6 +3,7 @@ import PlayerCardDisplay from './PlayerCardDisplay';
 import {useAction} from '../socket/useAction';
 import {usePlayerView} from './PlayerViewContext';
 import {createUseStyles} from 'react-jss';
+import {TurnPhase} from '@hogwarts-battle/common';
 
 const useStyles = createUseStyles({
   container: {
@@ -46,6 +47,9 @@ export default function CardShop() {
 
   const cards = gameStateView.playerCards.availableCards;
 
+  const isPlayerActionsPhase =
+    gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
+
   return (
     <div className={classes.container}>
       <div className={classes.cardShopStackArea}>
@@ -62,6 +66,7 @@ export default function CardShop() {
                   args: {cardInstance},
                 });
               }}
+              disabled={!isPlayerActionsPhase}
             />
           </div>
         ))}
