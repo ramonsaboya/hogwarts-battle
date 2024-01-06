@@ -51,6 +51,10 @@ export default function CardShop() {
     gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isPlayerActionsPhase =
     gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
+  const hasRequiredInput =
+    gameStateView.players.selfPlayer.requiredPlayerInput !== null;
+
+  const disableAction = !isPlayerActionsPhase || !isOwnTurn || hasRequiredInput;
 
   return (
     <div className={classes.container}>
@@ -63,12 +67,16 @@ export default function CardShop() {
             <PlayerCardDisplay
               cardInstance={cardInstance}
               onClick={() => {
+                if (disableAction) {
+                  return;
+                }
+
                 runAction({
                   action: 'acquireCard',
                   args: {cardInstance},
                 });
               }}
-              disabled={!isPlayerActionsPhase || !isOwnTurn}
+              disabled={disableAction}
             />
           </div>
         ))}

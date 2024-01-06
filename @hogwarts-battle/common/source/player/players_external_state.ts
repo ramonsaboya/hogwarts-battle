@@ -7,6 +7,7 @@ export interface PlayCardActionArgs {
 }
 export interface ChooseDiscardCardArgs {
   cardInstance: PlayerCardInstance;
+  remainingAmount: number;
 }
 export interface ChooseCardEffectArgs {
   option: 'first' | 'second';

@@ -61,7 +61,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
         gameState,
         {
           playerID,
-          playerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD},
+          playerInput: {type: PlayerInputType.CHOOSE_DISCARD_CARD, amount: 1},
         }
       );
 

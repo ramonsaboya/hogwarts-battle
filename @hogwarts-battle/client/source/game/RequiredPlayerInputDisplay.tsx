@@ -1,5 +1,4 @@
 import React from 'react';
-import ChooseDiscardCardPlayerInput from './ChooseDiscardCardPlayerInput';
 import {PlayerInputType} from '@hogwarts-battle/common';
 import ChooseCardEffectPlayerInput from './ChooseCardEffectPlayerInput';
 import ChooseHeroHealPlayerInput from './ChooseHeroHealPlayerInput';
@@ -27,12 +26,12 @@ export default function RequiredPlayerInputDisplay() {
     <div className={classes.container}>
       {(() => {
         switch (requiredPlayerInput?.type) {
-          case PlayerInputType.CHOOSE_DISCARD_CARD:
-            return <ChooseDiscardCardPlayerInput playerState={selfPlayer} />;
           case PlayerInputType.CHOOSE_PLAYER_CARD_EFFECT:
             return <ChooseCardEffectPlayerInput playerState={selfPlayer} />;
           case PlayerInputType.CHOOSE_ONE_HERO_FOR_HEAL:
             return <ChooseHeroHealPlayerInput playersState={playersState} />;
+          default:
+            return null;
         }
       })()}
     </div>

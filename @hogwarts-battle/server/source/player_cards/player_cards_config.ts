@@ -205,9 +205,12 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
       SubtractHeartMutation.get().remove(PlayerHeroCardName.INVISIBILITY_CLOAK);
       return gameState;
     },
-    onPlay: (gameState: GameState) => {
+    onPlay: (gameState: GameState, playerID: PlayerID) => {
       SubtractHeartMutation.get().remove(PlayerHeroCardName.INVISIBILITY_CLOAK);
-      return gameState;
+      return AddInfluenceTokenMutation.get().execute(gameState, {
+        playerID,
+        amount: 1,
+      });
     },
   },
   [PlayerHeroCardName.MANDRAKE]: {

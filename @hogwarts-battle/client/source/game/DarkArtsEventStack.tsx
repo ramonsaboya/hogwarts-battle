@@ -42,13 +42,23 @@ export default function DarkArtsEventStack() {
     gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isDarkArtsEventRevealPhase =
     gameStateView.turnPhase === TurnPhase.DARK_ARTS_EVENT_REVEAL;
+  const hasRequiredInput =
+    gameStateView.players.selfPlayer.requiredPlayerInput !== null;
+
+  const disableAction =
+    !isDarkArtsEventRevealPhase || !isOwnTurn || hasRequiredInput;
 
   return (
     <div className={classes.container}>
       <button
         className={classes.darkArtsEventCard}
-        onClick={() => runAction({action: 'revealDarkArtsEvent', args: {}})}
-        disabled={!isDarkArtsEventRevealPhase || !isOwnTurn}
+        onClick={() => {
+          if (disableAction) {
+            return;
+          }
+          runAction({action: 'revealDarkArtsEvent', args: {}});
+        }}
+        disabled={disableAction}
       />
     </div>
   );

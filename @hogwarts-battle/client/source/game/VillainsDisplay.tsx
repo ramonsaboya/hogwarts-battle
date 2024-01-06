@@ -87,7 +87,7 @@ const useStyles = createUseStyles({
 export default function VillainsDisplay() {
   const classes = useStyles();
   const runAction = useAction();
-  const {gameStateView} = usePlayerView();
+  const {gameContext, gameStateView} = usePlayerView();
 
   const villainsState = gameStateView.villains;
   const villain = villainsState.activeVillain;
@@ -95,18 +95,27 @@ export default function VillainsDisplay() {
     return null;
   }
 
+  const isOwnTurn =
+    gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isPlayerActionsPhase =
     gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
+  const hasRequiredInput =
+    gameStateView.players.selfPlayer.requiredPlayerInput !== null;
+
+  const disableAction = !isPlayerActionsPhase || !isOwnTurn || hasRequiredInput;
 
   return (
     <div className={classes.container}>
       <div className={classes.villainWithAttacksSlot}>
         <button
           className={classes.villain}
-          onClick={() =>
-            runAction({action: 'attackVillain', args: {attackTokens: 1}})
-          }
-          disabled={!isPlayerActionsPhase}
+          onClick={() => {
+            if (disableAction) {
+              return;
+            }
+            runAction({action: 'attackVillain', args: {attackTokens: 1}});
+          }}
+          disabled={disableAction}
         >
           <div className={classes.villainName}>{villain.name}</div>
           <div className={classes.villainContent}>

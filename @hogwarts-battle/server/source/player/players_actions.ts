@@ -4,6 +4,7 @@ import {getInternalPlayer} from './players_internal_state';
 import {
   AddHeartMutation,
   DiscardCardMutation,
+  RequireChooseCardPlayerInputMutation,
 } from '../state_mutations/state_mutation_manager';
 import {onCardPlay} from '../player_cards/player_cards_config';
 import {
@@ -74,6 +75,16 @@ const chooseDiscardCardAction: ActionListener = [
       playerID,
       cardInstance: args.cardInstance,
     });
+
+    if (args.remainingAmount > 0) {
+      return RequireChooseCardPlayerInputMutation.get().execute(gameState, {
+        playerID,
+        playerInput: {
+          type: PlayerInputType.CHOOSE_DISCARD_CARD,
+          amount: args.remainingAmount,
+        },
+      });
+    }
 
     return {
       ...gameState,

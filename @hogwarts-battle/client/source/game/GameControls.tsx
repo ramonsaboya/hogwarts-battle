@@ -21,10 +21,13 @@ export default function GameControls() {
     gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isPlayerActionsPhase =
     gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
+  const hasRequiredInput =
+    gameStateView.players.selfPlayer.requiredPlayerInput !== null;
+  const disableAction = !isPlayerActionsPhase || !isOwnTurn || hasRequiredInput;
 
   const runAction = useAction();
   const handleEndTurn = () => {
-    if (!isOwnTurn) {
+    if (disableAction) {
       return;
     }
     runAction({action: 'endTurn', args: {}});
@@ -33,10 +36,7 @@ export default function GameControls() {
   return (
     <div className={classes.container}>
       <GameContextDisplay />
-      <button
-        onClick={handleEndTurn}
-        disabled={!isOwnTurn || !isPlayerActionsPhase}
-      >
+      <button onClick={handleEndTurn} disabled={disableAction}>
         End Turn
       </button>
     </div>

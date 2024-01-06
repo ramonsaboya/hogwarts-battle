@@ -343,6 +343,17 @@ export class StunHeroMutation extends StateMutation<StunHeroMutationInput> {
       amount: 1,
     });
 
+    const handSize = gameState.players.find(
+      player => player.playerID === playerID
+    )!.hand.length;
+    gameState = RequireChooseCardPlayerInputMutation.get().execute(gameState, {
+      playerID,
+      playerInput: {
+        type: PlayerInputType.CHOOSE_DISCARD_CARD,
+        amount: Math.floor(handSize / 2),
+      },
+    });
+
     return {
       ...gameState,
       players: gameState.players.map(player => {
@@ -605,7 +616,10 @@ export class SubtractVillainControlTokenMutation extends StateMutation<SubtractV
       ...gameState,
       locations: {
         ...gameState.locations,
-        villainControlTokens: gameState.locations.villainControlTokens - amount,
+        villainControlTokens: Math.max(
+          0,
+          gameState.locations.villainControlTokens - amount
+        ),
       },
     };
   }

@@ -4,6 +4,7 @@ import PlayerHandDisplay from './PlayerHandDisplay';
 import PlayerGenericPileDisplay from './PlayerGenericPileDisplay';
 import {createUseStyles} from 'react-jss';
 import PlayerInfoDisplay from './PlayerInfoDisplay';
+import {PlayerInputType} from '@hogwarts-battle/common';
 
 const useStyles = createUseStyles({
   container: {
@@ -46,13 +47,17 @@ export default function SelfPlayerDisplay() {
   const {gameStateView} = usePlayerView();
   const player = gameStateView.players.selfPlayer;
 
+  const requiredDiscard =
+    gameStateView.players.selfPlayer.requiredPlayerInput?.type ===
+    PlayerInputType.CHOOSE_DISCARD_CARD;
+
   return (
     <div className={classes.container}>
       <div className={classes.info}>
         <PlayerInfoDisplay player={player} />
       </div>
       <div className={classes.hand}>
-        <div>hand:</div>
+        <div>{requiredDiscard ? 'choose card to discard:' : 'hand:'}</div>
         <PlayerHandDisplay hand={player.hand} />
       </div>
       <div className={classes.stack}>
