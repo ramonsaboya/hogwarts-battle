@@ -525,7 +525,7 @@ const PLAYER_HOGWARTS_CARDS_CONFIG: Record<
 
       return AddInfluenceTokenMutation.get().execute(gameState, {
         playerID,
-        amount: 1,
+        amount: 2,
       });
     },
   },
@@ -569,11 +569,11 @@ function getBaseAllyHeroCardEffect(): PlayerCardEvent {
           },
         },
         {
-          text: '1 heart',
+          text: '2 hearts',
           effect: (gameState: GameState) => {
             return AddHeartMutation.get().execute(gameState, {
               playerID,
-              amount: 1,
+              amount: 2,
             });
           },
         },

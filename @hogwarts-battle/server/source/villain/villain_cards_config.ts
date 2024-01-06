@@ -76,10 +76,16 @@ const VILLAIN_CARDS_CONFIG: Record<VillainCardName, VillainCardConfig> = {
           input: AddVillainControlTokenMutationInput,
           next: MiddlewareNext<AddVillainControlTokenMutationInput>
         ) => {
-          gameState = SubtractHeartMutation.get().execute(gameState, {
-            playerID: input.playerID,
-            amount: 2,
-          });
+          const playerHealth = gameState.players.find(
+            player => player.playerID === input.playerID
+          )!.health;
+          if (playerHealth > 0) {
+            gameState = SubtractHeartMutation.get().execute(gameState, {
+              playerID: input.playerID,
+              amount: 2,
+            });
+          }
+
           return next(gameState, input);
         }
       );
