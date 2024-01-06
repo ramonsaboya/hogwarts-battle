@@ -183,6 +183,8 @@ export class Game {
       throw new Error('Player not found');
     }
 
+    this.gameState = maybeReplaceLocation(this.gameState);
+
     const darkArtsEvent = this.gameState.darkArtsEvents.active!;
     getDarkArtsEventCardCleanup(darkArtsEvent.name)();
 
@@ -283,4 +285,22 @@ function drawNewHand(
     };
   });
   return gameState;
+}
+
+function maybeReplaceLocation(gameState: GameState): GameState {
+  const currentLocation = gameState.locations.deck.peek()!;
+  const currentVillainControlTokens = gameState.locations.villainControlTokens;
+
+  if (currentVillainControlTokens < currentLocation.requiredVillainControl) {
+    return gameState;
+  }
+
+  gameState.locations.deck.pop()!;
+  return {
+    ...gameState,
+    locations: {
+      ...gameState.locations,
+      villainControlTokens: 0,
+    },
+  };
 }

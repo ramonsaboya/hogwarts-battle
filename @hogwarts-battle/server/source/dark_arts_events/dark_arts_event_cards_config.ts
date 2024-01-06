@@ -70,7 +70,7 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
     },
   },
   [DarkArtsEventCardName.HE_WHO_MUST_NOT_BE_NAMED]: {
-    amount: 2,
+    amount: 25,
     cleanup: () => {},
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
