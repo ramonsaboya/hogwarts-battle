@@ -92,6 +92,16 @@ export class AcquireCardMutation extends StateMutation<AcquireCardMutationInput>
     const card = cardInstance.card as PlayerHogwartsCard;
 
     const playerCards = gameState.playerCards;
+
+    const playerInfluenceTokens = gameState.players.find(
+      player => player.playerID === playerID
+    )!.influenceTokens;
+    const cardCost = card.cost;
+
+    if (playerInfluenceTokens < cardCost) {
+      return gameState;
+    }
+
     const cardIdx = playerCards.availableCards.findIndex(
       card => card.id === cardInstance.id
     );
