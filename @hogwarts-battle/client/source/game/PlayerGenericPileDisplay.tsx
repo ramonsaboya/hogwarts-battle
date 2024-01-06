@@ -19,7 +19,11 @@ export default function PlayerGenericPileDisplay({pile}: Props) {
   return (
     <div className={classes.container}>
       {pile.map(cardInstance => (
-        <PlayerCardDisplay key={cardInstance.id} cardInstance={cardInstance} />
+        <PlayerCardDisplay
+          key={cardInstance.id}
+          cardInstance={cardInstance}
+          disabled={true}
+        />
       ))}
     </div>
   );
