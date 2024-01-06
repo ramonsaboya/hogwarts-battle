@@ -57,28 +57,28 @@ function GameLobbyPage() {
   const [hero, setHero] = useState<Hero>(Hero.HARRY);
   const [apiResponse, setApiResponse] = useState('');
 
-  useEffect(() => {
-    socket.emit(
-      'join',
-      'Ramon',
-      Hero.HARRY,
-      (playerView: SerializedPlayerView | null) => {
-        if (!playerView) {
-          return;
-        }
+  // useEffect(() => {
+  //   socket.emit(
+  //     'join',
+  //     'Ramon',
+  //     Hero.HARRY,
+  //     (playerView: SerializedPlayerView | null) => {
+  //       if (!playerView) {
+  //         return;
+  //       }
 
-        console.log('join callback', playerView);
-        setPlayerView(playerView);
-        socket.emit('startGame', {}, (playerView: SerializedPlayerView) => {
-          if (playerView) {
-            console.log('startGame callback', playerView);
-            setPlayerView(playerView);
-          }
-        });
-        setApiResponse('Success');
-      }
-    );
-  }, []);
+  //       console.log('join callback', playerView);
+  //       setPlayerView(playerView);
+  //       socket.emit('startGame', {}, (playerView: SerializedPlayerView) => {
+  //         if (playerView) {
+  //           console.log('startGame callback', playerView);
+  //           setPlayerView(playerView);
+  //         }
+  //       });
+  //       setApiResponse('Success');
+  //     }
+  //   );
+  // }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

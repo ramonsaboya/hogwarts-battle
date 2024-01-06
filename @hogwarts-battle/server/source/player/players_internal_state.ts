@@ -20,6 +20,7 @@ const STARTING_ALOHOMORA_CARDS = 7;
 
 export interface InternalPlayer {
   playerID: PlayerID;
+  playerName: string;
   hero: Hero;
   requiredPlayerInput: PlayerInput | null;
   playerInputCallbacks: ChooseCardEffectPlayerInputCallback[] | null;
@@ -41,6 +42,7 @@ export function getInitialPlayersState(): PlayersInternalState {
 
 export function getInitialPlayerState(
   playerID: PlayerID,
+  playerName: string,
   hero: Hero
 ): InternalPlayer {
   const startingDeck = shuffle(
@@ -61,7 +63,8 @@ export function getInitialPlayerState(
   );
 
   return {
-    playerID: playerID,
+    playerID,
+    playerName,
     hero: hero,
     requiredPlayerInput: null,
     playerInputCallbacks: null,
@@ -86,6 +89,7 @@ export function convertAndSerializePlayersState(
 
   const selfExternalPlayer: SelfExternalPlayer = {
     playerID: selfInternalPlayer.playerID,
+    playerName: selfInternalPlayer.playerName,
     hero: selfInternalPlayer.hero,
     requiredPlayerInput: selfInternalPlayer.requiredPlayerInput,
     health: selfInternalPlayer.health,
@@ -99,8 +103,9 @@ export function convertAndSerializePlayersState(
     .filter(player => player.playerID !== playerID)
     .map(player => ({
       playerID: player.playerID,
+      playerName: player.playerName,
       hero: player.hero,
-      requiredPlayerInput: selfInternalPlayer.requiredPlayerInput,
+      requiredPlayerInput: player.requiredPlayerInput,
       health: player.health,
       influenceTokens: player.influenceTokens,
       attackTokens: player.attackTokens,

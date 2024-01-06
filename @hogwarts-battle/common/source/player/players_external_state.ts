@@ -44,6 +44,7 @@ export enum Hero {
 export interface ExternalPlayer {
   requiredPlayerInput: PlayerInput | null;
   playerID: PlayerID;
+  playerName: string;
   hero: Hero;
   health: number;
   influenceTokens: number;

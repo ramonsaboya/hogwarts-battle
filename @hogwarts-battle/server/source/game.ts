@@ -17,11 +17,6 @@ import {
 } from './state_mutations/state_mutation_manager';
 import {onCardCleanup, onCardDraw} from './player_cards/player_cards_config';
 
-interface Player {
-  id: PlayerID;
-  name: string;
-}
-
 type UnableToJoinReason = 'GAME_FULL' | 'NAME_TAKEN';
 
 const MAX_PLAYERS = 4;
@@ -30,7 +25,6 @@ export class Game {
   private gameContext: GameContext;
   gameState: GameState;
 
-  private players: Player[];
   private playerSocketMap: Map<PlayerID, Socket>;
 
   private static nextPlayerID = 1;
@@ -39,16 +33,11 @@ export class Game {
     this.gameContext = {} as GameContext;
     this.gameState = getInitialGameState();
 
-    this.players = [];
     this.playerSocketMap = new Map();
   }
 
   get getGameContext(): GameContext {
     return this.gameContext;
-  }
-
-  get getPlayers(): Player[] {
-    return this.players;
   }
 
   getPlayerSocket(playerID: PlayerID): Socket {
@@ -59,7 +48,7 @@ export class Game {
     return socket;
   }
 
-  addPlayer(playerName: string, hero: Hero, socket: Socket): Player {
+  addPlayer(playerName: string, hero: Hero, socket: Socket): PlayerID {
     // if (this.isGameFull()) {
     //   throw new Error('Game is full');
     // }
@@ -68,26 +57,26 @@ export class Game {
     //   throw new Error('Player name is taken');
     // }
 
-    if (this.players.some(player => player.name === playerName)) {
-      return this.players.find(player => player.name === playerName)!;
+    if (
+      this.gameState.players.some(player => player.playerName === playerName)
+    ) {
+      return this.gameState.players.find(
+        player => player.playerName === playerName
+      )!.playerID;
     }
 
-    const player: Player = {
-      id: Game.nextPlayerID++,
-      name: playerName,
-    };
-    this.players.push(player);
-    this.playerSocketMap.set(player.id, socket);
+    const playerID = Game.nextPlayerID++;
+    this.playerSocketMap.set(playerID, socket);
 
     this.gameState = {
       ...this.gameState,
       players: [
         ...this.gameState.players,
-        getInitialPlayerState(player.id, hero),
+        getInitialPlayerState(playerID, playerName, hero),
       ],
     };
 
-    return player;
+    return playerID;
   }
 
   canPlayerJoin(): [boolean, UnableToJoinReason | null] {
@@ -103,19 +92,21 @@ export class Game {
   }
 
   private isPlayerNameTaken(playerName: string) {
-    return this.players.some(player => player.name === playerName);
+    return this.gameState.players.some(
+      player => player.playerName === playerName
+    );
   }
 
   private isGameFull() {
-    return this.players.length >= MAX_PLAYERS;
+    return this.gameState.players.length >= MAX_PLAYERS;
   }
 
   broadcastPlayerViews(expectPlayerID: number) {
-    this.players
-      .filter(player => player.id !== expectPlayerID)
+    this.gameState.players
+      .filter(player => player.playerID !== expectPlayerID)
       .forEach(player => {
-        const playerView = createPlayerView(this, player.id);
-        this.getPlayerSocket(player.id).emit('sync', playerView);
+        const playerView = createPlayerView(this, player.playerID);
+        this.getPlayerSocket(player.playerID).emit('sync', playerView);
       });
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import {createUseStyles} from 'react-jss';
-import {Hero} from '@hogwarts-battle/common';
 import PlayerInfoDisplay from './PlayerInfoDisplay';
+import {usePlayerView} from './PlayerViewContext';
+import {createUseStyles} from 'react-jss';
 
 const useStyles = createUseStyles({
   container: {
@@ -13,29 +13,14 @@ const useStyles = createUseStyles({
 
 export default function OtherPlayersDisplay() {
   const classes = useStyles();
+  const {gameStateView} = usePlayerView();
+  const players = gameStateView.players.otherPlayers;
 
   return (
     <div className={classes.container}>
-      <PlayerInfoDisplay
-        player={{
-          health: 10,
-          attackTokens: 0,
-          influenceTokens: 0,
-          hero: Hero.NEVILLE,
-          playerID: 131243,
-          requiredPlayerInput: null,
-        }}
-      />
-      <PlayerInfoDisplay
-        player={{
-          health: 10,
-          attackTokens: 0,
-          influenceTokens: 0,
-          hero: Hero.HERMIONE,
-          playerID: 13123,
-          requiredPlayerInput: null,
-        }}
-      />
+      {players.map(player => (
+        <PlayerInfoDisplay key={player.playerID} player={player} />
+      ))}
     </div>
   );
 }

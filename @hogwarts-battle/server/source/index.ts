@@ -49,13 +49,17 @@ io.on('connection', socket => {
 
       socket.leave('outside');
 
-      const player = game.addPlayer(playerName, hero, socket);
-      registerListeners(game, player.id, socket);
+      const playerID = game.addPlayer(playerName, hero, socket);
+      registerListeners(game, playerID, socket);
 
-      callback(createPlayerView(game, player.id));
-      game.broadcastPlayerViews(player.id);
+      callback(createPlayerView(game, playerID));
+      game.broadcastPlayerViews(playerID);
 
-      console.log('player joined: ' + player.name);
+      console.log(
+        'player joined: ' +
+          game.gameState.players.find(player => player.playerID === playerID)!
+            .playerName
+      );
       socket.removeAllListeners('join');
     }
   );

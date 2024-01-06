@@ -28,7 +28,7 @@ export default function PlayerInfoDisplay({player}: Props) {
 
   return (
     <div className={classes.container}>
-      <div>Ramon</div>
+      <div>{player.playerName}</div>
       <div>{player.hero}</div>
       <div>{player.health} hearts</div>
       <div>{player.influenceTokens} influence</div>
