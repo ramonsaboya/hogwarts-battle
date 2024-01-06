@@ -1,55 +1,33 @@
 import React from 'react';
 import {usePlayerView} from './PlayerViewContext';
-import {useAction} from '../socket/useAction';
-import PlayersDisplay from './PlayersDisplay';
-import GameContextDisplay from './GameContextDisplay';
-import LocationsDisplay from './LocationsDisplay';
-import CardShop from './CardShop';
-import RequiredPlayerInputDisplay from './RequiredPlayerInputDisplay';
-import VillainsDisplay from './VillainsDisplay';
+import {createUseStyles} from 'react-jss';
+import GameArea from './GameArea';
+import PlayerDisplay from './PlayerDisplay';
+
+const useStyles = createUseStyles({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    width: '100vw',
+    margin: 0,
+    padding: 0,
+  },
+});
 
 export default function Game() {
-  const playerView = usePlayerView();
-  const runAction = useAction();
-  const gameStateView = playerView.gameStateView;
+  const classes = useStyles();
 
-  const handleRevealDarkArtsCard = () => {
-    runAction({action: 'revealDarkArtsEvent', args: {}});
-  };
-
-  const handleEndTurn = () => {
-    runAction({action: 'endTurn', args: {}});
-  };
-
-  if (gameStateView.villains === undefined) {
-    return <div>loading...</div>;
-  }
-
-  if (gameStateView.players.selfPlayer.requiredPlayerInput !== null) {
-    return <RequiredPlayerInputDisplay playerView={playerView} />;
-  }
+  const {gameStateView} = usePlayerView();
 
   return (
-    <div>
-      <GameContextDisplay
-        gameContext={playerView.gameContext}
-        turnPhase={gameStateView.turnPhase}
-      />
-      <PlayersDisplay
-        players={[
-          gameStateView.players.selfPlayer,
-          ...gameStateView.players.otherPlayers,
-        ]}
-      />
-      <LocationsDisplay locationsState={gameStateView.locations} />
-      <CardShop playerCardsState={gameStateView.playerCards} />
-      <div>Dark Arts Event: {gameStateView.darkArtsEvents.active?.name}</div>
-      <VillainsDisplay
-        villainsState={gameStateView.villains}
-        selfPlayer={gameStateView.players.selfPlayer}
-      />
-      <button onClick={handleRevealDarkArtsCard}>Reveal Dark Arts Card</button>
-      <button onClick={handleEndTurn}>End Turn</button>
+    <div className={classes.container}>
+      <GameArea />
+      <div>
+        <PlayerDisplay player={gameStateView.players.selfPlayer} />
+      </div>
     </div>
   );
 }
