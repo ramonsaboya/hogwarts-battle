@@ -1,5 +1,4 @@
 import React from 'react';
-import './GameContextDisplay.css';
 import {GameContext, TurnPhase} from '@hogwarts-battle/common';
 
 type Props = {

@@ -17,11 +17,6 @@ export default function GameControls() {
   const playerView = usePlayerView();
 
   const runAction = useAction();
-
-  const handleRevealDarkArtsCard = () => {
-    runAction({action: 'revealDarkArtsEvent', args: {}});
-  };
-
   const handleEndTurn = () => {
     runAction({action: 'endTurn', args: {}});
   };
@@ -32,7 +27,6 @@ export default function GameControls() {
         gameContext={playerView.gameContext}
         turnPhase={playerView.gameStateView.turnPhase}
       />
-      <button onClick={handleRevealDarkArtsCard}>Reveal Dark Arts Card</button>
       <button onClick={handleEndTurn}>End Turn</button>
     </div>
   );

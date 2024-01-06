@@ -1,44 +1,71 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PlayerCardDisplay from './PlayerCardDisplay';
 import {useAction} from '../socket/useAction';
-import {PlayerCardsExternalState} from '@hogwarts-battle/common';
+import {usePlayerView} from './PlayerViewContext';
+import {createUseStyles} from 'react-jss';
 
-type Props = {
-  playerCardsState: PlayerCardsExternalState;
-};
+const useStyles = createUseStyles({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '30%',
+  },
+  cardShopStackArea: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardShopStack: {
+    height: '150px',
+    width: '100px',
+    margin: '25px',
+    boxSizing: 'border-box',
+    borderRadius: '10px',
+    border: '1px solid white',
+    backgroundColor: 'transparent',
+  },
+  cardShopAvailableArea: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingTop: '25px',
+    paddingBottom: '25px',
+  },
+  cardWrapper: {
+    marginLeft: '50px',
+    marginRight: '50px',
+  },
+});
 
-export default function CardShop({playerCardsState}: Props) {
+export default function CardShop() {
+  const classes = useStyles();
   const runAction = useAction();
-  const [selectedCard, setSelectedCard] = useState(-1);
+  const {gameStateView} = usePlayerView();
 
-  const cards = playerCardsState.availableCards;
-
-  const handleCardSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCard(parseInt(event.target.value));
-  };
-
-  const handlePlayCard = () => {
-    runAction({
-      action: 'acquireCard',
-      args: {cardInstance: cards[selectedCard]},
-    });
-  };
+  const cards = gameStateView.playerCards.availableCards;
 
   return (
-    <>
-      {cards.map(cardInstance => (
-        <PlayerCardDisplay key={cardInstance.id} cardInstance={cardInstance} />
-      ))}
-
-      <select value={selectedCard} onChange={handleCardSelection}>
-        <option value="">Select a card</option>
-        {cards.map((cardInstance, idx) => (
-          <option key={cardInstance.id} value={idx}>
-            {cardInstance.card.name}
-          </option>
+    <div className={classes.container}>
+      <div className={classes.cardShopStackArea}>
+        <div className={classes.cardShopStack}></div>
+      </div>
+      <div className={classes.cardShopAvailableArea}>
+        {cards.map(cardInstance => (
+          <div key={cardInstance.id} className={classes.cardWrapper}>
+            <PlayerCardDisplay
+              cardInstance={cardInstance}
+              onClick={() => {
+                runAction({
+                  action: 'acquireCard',
+                  args: {cardInstance},
+                });
+              }}
+            />
+          </div>
         ))}
-      </select>
-      <button onClick={handlePlayCard}>Acquire a Card</button>
-    </>
+      </div>
+    </div>
   );
 }

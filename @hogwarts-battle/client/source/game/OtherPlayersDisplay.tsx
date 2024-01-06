@@ -1,22 +1,41 @@
 import React from 'react';
-import {usePlayerView} from './PlayerViewContext';
-import PlayersDisplay from './PlayersDisplay';
 import {createUseStyles} from 'react-jss';
+import {Hero} from '@hogwarts-battle/common';
+import PlayerInfoDisplay from './PlayerInfoDisplay';
 
 const useStyles = createUseStyles({
   container: {
     display: 'flex',
     width: '10%',
+    flexDirection: 'column',
   },
 });
 
 export default function OtherPlayersDisplay() {
   const classes = useStyles();
-  const {gameStateView} = usePlayerView();
 
   return (
     <div className={classes.container}>
-      <PlayersDisplay players={gameStateView.players.otherPlayers} />
+      <PlayerInfoDisplay
+        player={{
+          health: 10,
+          attackTokens: 0,
+          influenceTokens: 0,
+          hero: Hero.NEVILLE,
+          playerID: 131243,
+          requiredPlayerInput: null,
+        }}
+      />
+      <PlayerInfoDisplay
+        player={{
+          health: 10,
+          attackTokens: 0,
+          influenceTokens: 0,
+          hero: Hero.HERMIONE,
+          playerID: 13123,
+          requiredPlayerInput: null,
+        }}
+      />
     </div>
   );
 }
