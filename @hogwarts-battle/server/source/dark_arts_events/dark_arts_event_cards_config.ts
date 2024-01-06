@@ -14,7 +14,7 @@ import {
 
 interface DarkArtsEventCardConfig {
   amount: number;
-  cleanup: DarkArtsEventCardCleanup;
+  cleanup?: DarkArtsEventCardCleanup;
   effect: DarkArtsEventCardEffect;
 }
 interface DarkArtsEventCardEffect {
@@ -34,7 +34,8 @@ export const getDarkArtsEventCardEffect = (
 
 export const getDarkArtsEventCardCleanup = (
   cardName: DarkArtsEventCardName
-): DarkArtsEventCardCleanup => DARK_ARTS_EVENT_CARDS_CONFIG[cardName].cleanup;
+): DarkArtsEventCardCleanup =>
+  DARK_ARTS_EVENT_CARDS_CONFIG[cardName].cleanup ?? (() => {});
 
 const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   DarkArtsEventCardName,
@@ -42,7 +43,6 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
 > = {
   [DarkArtsEventCardName.EXPULSO]: {
     amount: 3,
-    cleanup: () => {},
     effect: (gameState: GameState, playerID: PlayerID) => {
       return SubtractHeartMutation.get().execute(gameState, {
         playerID,
@@ -52,7 +52,6 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   },
   [DarkArtsEventCardName.FLIPENDO]: {
     amount: 2,
-    cleanup: () => {},
     effect: (gameState: GameState, playerID: PlayerID) => {
       gameState = SubtractHeartMutation.get().execute(gameState, {
         playerID,
@@ -71,8 +70,6 @@ const DARK_ARTS_EVENT_CARDS_CONFIG: Record<
   },
   [DarkArtsEventCardName.HE_WHO_MUST_NOT_BE_NAMED]: {
     amount: 3,
-    cleanup: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     effect: (gameState: GameState, playerID: PlayerID) => {
       return AddVillainControlTokenMutation.get().execute(gameState, {
         playerID,

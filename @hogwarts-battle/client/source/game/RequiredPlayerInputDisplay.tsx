@@ -1,22 +1,30 @@
 import React from 'react';
-import GameContextDisplay from './GameContextDisplay';
 import ChooseDiscardCardPlayerInput from './ChooseDiscardCardPlayerInput';
-import {PlayerInputType, PlayerView} from '@hogwarts-battle/common';
+import {PlayerInputType} from '@hogwarts-battle/common';
 import ChooseCardEffectPlayerInput from './ChooseCardEffectPlayerInput';
 import ChooseHeroHealPlayerInput from './ChooseHeroHealPlayerInput';
+import {usePlayerView} from './PlayerViewContext';
+import {createUseStyles} from 'react-jss';
 
-type Props = {
-  playerView: PlayerView;
-};
+const useStyles = createUseStyles({
+  container: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
-export default function RequiredPlayerInputDisplay({playerView}: Props) {
+export default function RequiredPlayerInputDisplay() {
+  const classes = useStyles();
+  const playerView = usePlayerView();
+
   const playersState = playerView.gameStateView.players;
   const selfPlayer = playersState.selfPlayer;
   const requiredPlayerInput = selfPlayer.requiredPlayerInput;
 
   return (
-    <div>
-      <GameContextDisplay />
+    <div className={classes.container}>
       {(() => {
         switch (requiredPlayerInput?.type) {
           case PlayerInputType.CHOOSE_DISCARD_CARD:

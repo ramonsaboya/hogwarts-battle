@@ -13,18 +13,19 @@ export enum DarkArtsEventCardName {
 export const DARK_ARTS_EVENT_CARDS: DarkArtsEventCard[] = [
   {
     name: DarkArtsEventCardName.EXPULSO,
-    description: 'Active hero loses 1 health and discards 1 card',
+    description: 'Active Hero loses 2 hearts.',
   },
   {
     name: DarkArtsEventCardName.FLIPENDO,
-    description: 'Active hero loses 1 health and discards 1 card',
+    description: 'Active Hero loses 1 heart and discards a card.',
   },
   {
     name: DarkArtsEventCardName.HE_WHO_MUST_NOT_BE_NAMED,
-    description: 'Active hero loses 1 health and discards 1 card',
+    description: 'Add 1 villain control token to the Location.',
   },
   {
     name: DarkArtsEventCardName.PETRIFICATION,
-    description: 'Active hero loses 1 health and discards 1 card',
+    description:
+      'ALL Heroes lose 1 heart and cannot draw extra cards this turn.',
   },
 ];
