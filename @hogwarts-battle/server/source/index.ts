@@ -40,7 +40,7 @@ io.on('connection', socket => {
       hero: Hero,
       callback: (gameState: SerializedPlayerView | null) => void
     ) => {
-      const [canJoin, reason] = game.canPlayerJoin(playerName);
+      const [canJoin, reason] = game.canPlayerJoin();
       if (!canJoin) {
         console.log(`player ${playerName} cannot join: ${reason}`);
         callback(null);

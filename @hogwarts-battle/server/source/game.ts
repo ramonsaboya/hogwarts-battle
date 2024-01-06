@@ -60,12 +60,16 @@ export class Game {
   }
 
   addPlayer(playerName: string, hero: Hero, socket: Socket): Player {
-    if (this.isGameFull()) {
-      throw new Error('Game is full');
-    }
+    // if (this.isGameFull()) {
+    //   throw new Error('Game is full');
+    // }
 
-    if (this.isPlayerNameTaken(playerName)) {
-      throw new Error('Player name is taken');
+    // if (this.isPlayerNameTaken(playerName)) {
+    //   throw new Error('Player name is taken');
+    // }
+
+    if (this.players.some(player => player.name === playerName)) {
+      return this.players.find(player => player.name === playerName)!;
     }
 
     const player: Player = {
@@ -86,14 +90,14 @@ export class Game {
     return player;
   }
 
-  canPlayerJoin(playerName: string): [boolean, UnableToJoinReason | null] {
-    if (this.isGameFull()) {
-      return [false, 'GAME_FULL'];
-    }
+  canPlayerJoin(): [boolean, UnableToJoinReason | null] {
+    // if (this.isGameFull()) {
+    //   return [false, 'GAME_FULL'];
+    // }
 
-    if (this.isPlayerNameTaken(playerName)) {
-      return [false, 'NAME_TAKEN'];
-    }
+    // if (this.isPlayerNameTaken(playerName)) {
+    //   return [false, 'NAME_TAKEN'];
+    // }
 
     return [true, null];
   }
