@@ -605,6 +605,14 @@ export class AttackVillainMutation extends StateMutation<AttackVillainMutationIn
   ): GameState {
     const {playerID, attackTokens} = input;
 
+    const playerAttackTokens = gameState.players.find(
+      player => player.playerID === playerID
+    )!.attackTokens;
+
+    if (playerAttackTokens < attackTokens) {
+      return gameState;
+    }
+
     const villainHealth = gameState.villains.activeVillain!.health;
     const currentAttackTokens = gameState.villains.attackTokens;
 
