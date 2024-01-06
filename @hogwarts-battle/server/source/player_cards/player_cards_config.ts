@@ -272,7 +272,7 @@ const PLAYER_HERO_CARDS_CONFIG: Record<
             effect: (gameState: GameState, playerID: PlayerID) => {
               return AddInfluenceTokenMutation.get().execute(gameState, {
                 playerID,
-                amount: 1,
+                amount: 2,
               });
             },
           },

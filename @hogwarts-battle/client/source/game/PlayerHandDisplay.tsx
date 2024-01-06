@@ -18,9 +18,11 @@ type Props = {
 
 export default function PlayerHandDisplay({hand}: Props) {
   const classes = useStyles();
-  const {gameStateView} = usePlayerView();
+  const {gameContext, gameStateView} = usePlayerView();
   const runAction = useAction();
 
+  const isOwnTurn =
+    gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isPlayerActionsPhase =
     gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
 
@@ -31,7 +33,7 @@ export default function PlayerHandDisplay({hand}: Props) {
           key={cardInstance.id}
           cardInstance={cardInstance}
           onClick={() => runAction({action: 'playCard', args: {cardInstance}})}
-          disabled={!isPlayerActionsPhase}
+          disabled={!isPlayerActionsPhase || !isOwnTurn}
         />
       ))}
     </div>

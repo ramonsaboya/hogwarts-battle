@@ -43,10 +43,12 @@ const useStyles = createUseStyles({
 export default function CardShop() {
   const classes = useStyles();
   const runAction = useAction();
-  const {gameStateView} = usePlayerView();
+  const {gameContext, gameStateView} = usePlayerView();
 
   const cards = gameStateView.playerCards.availableCards;
 
+  const isOwnTurn =
+    gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isPlayerActionsPhase =
     gameStateView.turnPhase === TurnPhase.PLAYER_ACTIONS;
 
@@ -66,7 +68,7 @@ export default function CardShop() {
                   args: {cardInstance},
                 });
               }}
-              disabled={!isPlayerActionsPhase}
+              disabled={!isPlayerActionsPhase || !isOwnTurn}
             />
           </div>
         ))}

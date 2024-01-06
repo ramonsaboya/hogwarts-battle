@@ -31,6 +31,7 @@ export interface InternalPlayer {
   deck: Stack<PlayerCardInstance>;
   discardPile: PlayerCardInstance[];
   cardsDuringTurnPile: PlayerCardInstance[];
+  stunned: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -75,6 +76,7 @@ export function getInitialPlayerState(
     deck: new Stack<PlayerCardInstance>(startingDeck.slice(5)),
     discardPile: [],
     cardsDuringTurnPile: [],
+    stunned: false,
   };
 }
 

@@ -195,7 +195,6 @@ export class Game {
       this.gameState.villains.deck.length() === 0
     ) {
       this.gameContext.gameResult = GameResult.WIN;
-      console.log('WIN');
     }
     this.maybeReplaceLocation();
     if (this.gameContext.gameResult !== null) {
@@ -255,13 +254,12 @@ export class Game {
       return this.gameState;
     }
 
+    this.gameState.locations.deck.pop()!;
     if (this.gameState.locations.deck.length() === 0) {
       this.gameContext.gameResult = GameResult.LOSS;
-      console.log('LOSS');
       return this.gameState;
     }
 
-    this.gameState.locations.deck.pop()!;
     this.gameState = {
       ...this.gameState,
       locations: {
@@ -317,6 +315,15 @@ function drawNewHand(
       players: gameState.players.map(player => {
         if (player.playerID !== currentPlayerID) {
           return player;
+        }
+
+        if (player.stunned) {
+          player = {
+            ...player,
+            stunned: false,
+            health: 10,
+            cardsDuringTurnPile: [],
+          };
         }
 
         return {

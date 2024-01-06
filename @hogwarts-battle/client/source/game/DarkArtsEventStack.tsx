@@ -35,9 +35,11 @@ const useStyles = createUseStyles({
 
 export default function DarkArtsEventStack() {
   const classes = useStyles();
-  const {gameStateView} = usePlayerView();
+  const {gameContext, gameStateView} = usePlayerView();
   const runAction = useAction();
 
+  const isOwnTurn =
+    gameContext.currentPlayer === gameStateView.players.selfPlayer.playerID;
   const isDarkArtsEventRevealPhase =
     gameStateView.turnPhase === TurnPhase.DARK_ARTS_EVENT_REVEAL;
 
@@ -46,7 +48,7 @@ export default function DarkArtsEventStack() {
       <button
         className={classes.darkArtsEventCard}
         onClick={() => runAction({action: 'revealDarkArtsEvent', args: {}})}
-        disabled={!isDarkArtsEventRevealPhase}
+        disabled={!isDarkArtsEventRevealPhase || !isOwnTurn}
       />
     </div>
   );

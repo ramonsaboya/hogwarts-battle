@@ -297,6 +297,14 @@ export class SubtractHeartMutation extends StateMutation<SubtractHeartMutationIn
   ): GameState {
     const {playerID, amount} = input;
 
+    const newHealth =
+      gameState.players.find(player => player.playerID === playerID)!.health -
+      amount;
+
+    if (newHealth <= 0) {
+      return StunHeroMutation.get().execute(gameState, {playerID});
+    }
+
     return {
       ...gameState,
       players: gameState.players.map(player => {
@@ -307,6 +315,43 @@ export class SubtractHeartMutation extends StateMutation<SubtractHeartMutationIn
           };
         }
         return player;
+      }),
+    };
+  }
+}
+
+export interface StunHeroMutationInput extends StateMutationInput {
+  playerID: PlayerID;
+}
+export class StunHeroMutation extends StateMutation<StunHeroMutationInput> {
+  private static instance: StunHeroMutation;
+  static get(): StunHeroMutation {
+    if (!StunHeroMutation.instance) {
+      StunHeroMutation.instance = new StunHeroMutation();
+    }
+    return StunHeroMutation.instance;
+  }
+
+  protected finalMiddleware(
+    gameState: GameState,
+    input: StunHeroMutationInput
+  ): GameState {
+    const {playerID} = input;
+
+    return {
+      ...gameState,
+      players: gameState.players.map(player => {
+        if (player.playerID !== playerID) {
+          return player;
+        }
+
+        return {
+          ...player,
+          influenceTokens: 0,
+          attackTokens: 0,
+          health: -1,
+          stunned: true,
+        };
       }),
     };
   }
