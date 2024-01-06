@@ -1,8 +1,7 @@
 import React from 'react';
-import {usePlayerView} from './PlayerViewContext';
 import {createUseStyles} from 'react-jss';
 import GameArea from './GameArea';
-import PlayerDisplay from './PlayerDisplay';
+import SelfPlayerDisplay from './SelfPlayerDisplay';
 
 const useStyles = createUseStyles({
   container: {
@@ -20,14 +19,10 @@ const useStyles = createUseStyles({
 export default function Game() {
   const classes = useStyles();
 
-  const {gameStateView} = usePlayerView();
-
   return (
     <div className={classes.container}>
       <GameArea />
-      <div>
-        <PlayerDisplay player={gameStateView.players.selfPlayer} />
-      </div>
+      <SelfPlayerDisplay />
     </div>
   );
 }

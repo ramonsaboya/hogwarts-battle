@@ -1,22 +1,25 @@
 import React from 'react';
 import {usePlayerView} from './PlayerViewContext';
-import PlayersDisplay from './PlayersDisplay';
 import {createUseStyles} from 'react-jss';
+import PlayerDisplay from './PlayerDisplay';
 
 const useStyles = createUseStyles({
   container: {
     display: 'flex',
-    width: '10%',
+    flexDirection: 'row',
+    width: '100%',
+    height: '20%',
   },
 });
 
-export default function OtherPlayersDisplay() {
+export default function SelfPlayerDisplay() {
   const classes = useStyles();
+
   const {gameStateView} = usePlayerView();
 
   return (
     <div className={classes.container}>
-      <PlayersDisplay players={gameStateView.players.otherPlayers} />
+      <PlayerDisplay player={gameStateView.players.selfPlayer} />
     </div>
   );
 }

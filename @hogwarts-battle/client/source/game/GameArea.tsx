@@ -6,6 +6,7 @@ import OtherPlayersDisplay from './OtherPlayersDisplay';
 
 const useStyles = createUseStyles({
   container: {
+    display: 'flex',
     flex: 1,
     flexDirection: 'row',
     width: '100%',
