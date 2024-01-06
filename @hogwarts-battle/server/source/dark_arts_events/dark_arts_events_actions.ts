@@ -1,5 +1,5 @@
 import {ActionListener} from '../actions';
-import {PlayerID, TurnPhase} from '@hogwarts-battle/common';
+import {PlayerID, Stack, TurnPhase, shuffle} from '@hogwarts-battle/common';
 import {GameState} from '../game_state';
 import {getDarkArtsEventCardEffect} from './dark_arts_event_cards_config';
 import {ChangeTurnPhaseMutation} from '../state_mutations/state_mutation_manager';
@@ -8,16 +8,31 @@ const revealDarkArtsEventAction: ActionListener = [
   'revealDarkArtsEvent',
   (gameState: GameState, args: {}, playerID: PlayerID): GameState => {
     const activeDarkArtsEvent = gameState.darkArtsEvents.active;
-
-    const newDeck = gameState.darkArtsEvents.deck;
-    const newDarkArtsEventCard = newDeck.pop();
-    if (!newDarkArtsEventCard) {
-      throw new Error('No more dark arts events');
-    }
     const newDiscardPile = [
       ...gameState.darkArtsEvents.discardPile,
       ...(activeDarkArtsEvent ? [activeDarkArtsEvent] : []),
     ];
+    if (gameState.darkArtsEvents.deck.length() === 0) {
+      gameState = {
+        ...gameState,
+        darkArtsEvents: {
+          deck: new Stack(shuffle(newDiscardPile)),
+          active: null,
+          discardPile: [],
+        },
+      };
+    } else {
+      gameState = {
+        ...gameState,
+        darkArtsEvents: {
+          ...gameState.darkArtsEvents,
+          active: null,
+          discardPile: newDiscardPile,
+        },
+      };
+    }
+
+    const newDarkArtsEventCard = gameState.darkArtsEvents.deck.pop()!;
 
     gameState = getDarkArtsEventCardEffect(newDarkArtsEventCard.name)(
       gameState,
@@ -31,9 +46,8 @@ const revealDarkArtsEventAction: ActionListener = [
     return {
       ...gameState,
       darkArtsEvents: {
-        deck: newDeck,
+        ...gameState.darkArtsEvents,
         active: newDarkArtsEventCard,
-        discardPile: newDiscardPile,
       },
     };
   },

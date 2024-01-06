@@ -195,10 +195,12 @@ export class Game {
       this.gameState.villains.deck.length() === 0
     ) {
       this.gameContext.gameResult = GameResult.WIN;
+      console.log('WIN');
+    }
+    this.maybeReplaceLocation();
+    if (this.gameContext.gameResult !== null) {
       return;
     }
-
-    this.maybeReplaceLocation();
 
     const darkArtsEvent = this.gameState.darkArtsEvents.active!;
     getDarkArtsEventCardCleanup(darkArtsEvent.name)();
@@ -255,6 +257,7 @@ export class Game {
 
     if (this.gameState.locations.deck.length() === 0) {
       this.gameContext.gameResult = GameResult.LOSS;
+      console.log('LOSS');
       return this.gameState;
     }
 

@@ -22,10 +22,7 @@ export default function Game() {
   const classes = useStyles();
   const {gameContext} = usePlayerView();
 
-  if (
-    gameContext.playerTurnOrder !== undefined &&
-    gameContext.gameResult !== null
-  ) {
+  if (gameContext.gameResult !== null) {
     const gameResult = gameContext.gameResult;
     if (gameResult === GameResult.WIN) {
       return <div>YOU WIN!</div>;
