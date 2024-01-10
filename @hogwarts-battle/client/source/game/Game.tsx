@@ -19,9 +19,9 @@ const useStyles = createUseStyles({
 
 export default function Game() {
   const classes = useStyles();
-  const {gameContext} = usePlayerView();
+  const {hasGameStarted, gameContext} = usePlayerView();
 
-  if (gameContext.gameResult !== null) {
+  if (hasGameStarted && gameContext.gameResult !== null) {
     return (
       <div className={classes.container}>Result: {gameContext.gameResult}</div>
     );

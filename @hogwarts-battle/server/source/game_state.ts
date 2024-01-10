@@ -57,6 +57,7 @@ export function createPlayerView(
   }
 
   return {
+    hasGameStarted: game.hasGameStarted,
     gameContext: game.getGameContext,
     gameStateView: {
       turnPhase: gameState.turnPhase,

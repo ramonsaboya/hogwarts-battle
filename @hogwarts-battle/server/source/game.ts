@@ -30,6 +30,7 @@ const MAX_PLAYERS = 4;
 export class Game {
   private gameContext: GameContext;
   gameState: GameState;
+  hasGameStarted = false;
 
   private playerSocketMap: Map<PlayerID, Socket>;
 
@@ -117,6 +118,10 @@ export class Game {
   }
 
   startGame() {
+    if (this.hasGameStarted) {
+      throw new Error('Game is already running');
+    }
+
     const playerTurnOrder = HERO_TURN_ORDER.reduce((acc, hero) => {
       const maybePlayer = this.gameState.players.find(
         player => player.hero === hero
@@ -165,6 +170,8 @@ export class Game {
         return next(gameState, input);
       }
     );
+
+    this.hasGameStarted = true;
   }
 
   isPlayerTurn(playerID: number) {

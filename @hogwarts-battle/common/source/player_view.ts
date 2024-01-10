@@ -37,11 +37,6 @@ export enum TurnPhase {
   PLAYER_ACTIONS = 'PLAYER_ACTIONS',
 }
 
-export interface PlayerView {
-  gameContext: GameContext;
-  gameStateView: GameStateView;
-}
-
 export interface GameStateView {
   turnPhase: TurnPhase;
   players: PlayersExternalState;
@@ -59,7 +54,13 @@ interface SerializedGameStateView {
   locations: SerializedLocationsExternalState;
 }
 
+export interface PlayerView {
+  hasGameStarted: boolean;
+  gameContext: GameContext;
+  gameStateView: GameStateView;
+}
 export interface SerializedPlayerView {
+  hasGameStarted: boolean;
   gameContext: GameContext;
   gameStateView: SerializedGameStateView;
 }
@@ -67,6 +68,7 @@ export interface SerializedPlayerView {
 export const serializePlayerView: (
   playerView: PlayerView
 ) => SerializedPlayerView = playerView => ({
+  hasGameStarted: playerView.hasGameStarted,
   gameContext: playerView.gameContext,
   gameStateView: {
     turnPhase: playerView.gameStateView.turnPhase,
@@ -87,6 +89,7 @@ export const serializePlayerView: (
 export const deserializePlayerView: (
   serializedPlayerView: SerializedPlayerView
 ) => PlayerView = serializedPlayerView => ({
+  hasGameStarted: serializedPlayerView.hasGameStarted,
   gameContext: serializedPlayerView.gameContext,
   gameStateView: {
     turnPhase: serializedPlayerView.gameStateView.turnPhase,
