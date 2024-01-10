@@ -4,6 +4,9 @@ import VillainsDisplay from './VillainsDisplay';
 import {createUseStyles} from 'react-jss';
 import DarkArtsEventDisplay from './DarkArtsEventDisplay';
 import DarkArtsEventStack from './DarkArtsEventStack';
+import {usePlayerView} from './PlayerViewContext';
+import {PlayerInputType} from '@hogwarts-battle/common';
+import RequiredPlayerInputDisplay from './RequiredPlayerInputDisplay';
 
 const useStyles = createUseStyles({
   container: {
@@ -44,6 +47,17 @@ const useStyles = createUseStyles({
 
 export default function MainBoard() {
   const classes = useStyles();
+  const {gameStateView} = usePlayerView();
+
+  let requiredInput = null;
+  if (gameStateView.players.selfPlayer.requiredPlayerInput !== null) {
+    if (
+      gameStateView.players.selfPlayer.requiredPlayerInput.type !==
+      PlayerInputType.CHOOSE_DISCARD_CARD
+    ) {
+      requiredInput = <RequiredPlayerInputDisplay />;
+    }
+  }
 
   return (
     <div className={classes.container}>
@@ -54,7 +68,7 @@ export default function MainBoard() {
           <DarkArtsEventDisplay />
         </div>
       </div>
-      <div className={classes.villainStackAndDiscard}></div>
+      <div className={classes.villainStackAndDiscard}>{requiredInput}</div>
       <div className={classes.villains}>
         <VillainsDisplay />
       </div>
