@@ -4,6 +4,7 @@ import {useAction} from '../socket/useAction';
 import {usePlayerView} from './PlayerViewContext';
 import {createUseStyles} from 'react-jss';
 import {TurnPhase} from '@hogwarts-battle/common';
+import EmptyPlayerCardDisplay from './EmptyPlayerCardDisplay';
 
 const useStyles = createUseStyles({
   container: {
@@ -62,24 +63,34 @@ export default function CardShop() {
         <div className={classes.cardShopStack}></div>
       </div>
       <div className={classes.cardShopAvailableArea}>
-        {cards.map(cardInstance => (
-          <div key={cardInstance.id} className={classes.cardWrapper}>
-            <PlayerCardDisplay
-              cardInstance={cardInstance}
-              onClick={() => {
-                if (disableAction) {
-                  return;
-                }
+        {cards.map(cardInstance => {
+          if (cardInstance === null) {
+            return (
+              <div className={classes.cardWrapper}>
+                <EmptyPlayerCardDisplay />
+              </div>
+            );
+          }
 
-                runAction({
-                  action: 'acquireCard',
-                  args: {cardInstance},
-                });
-              }}
-              disabled={disableAction}
-            />
-          </div>
-        ))}
+          return (
+            <div key={cardInstance.id} className={classes.cardWrapper}>
+              <PlayerCardDisplay
+                cardInstance={cardInstance}
+                onClick={() => {
+                  if (disableAction) {
+                    return;
+                  }
+
+                  runAction({
+                    action: 'acquireCard',
+                    args: {cardInstance},
+                  });
+                }}
+                disabled={disableAction}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ import {
 import {getPlayerHogwartsCardAmount} from './player_cards_config';
 
 export interface PlayerCardsInternalState {
-  availableCards: PlayerCardInstance[];
+  availableCards: (PlayerCardInstance | null)[];
   deck: Stack<PlayerCardInstance>;
 }
 

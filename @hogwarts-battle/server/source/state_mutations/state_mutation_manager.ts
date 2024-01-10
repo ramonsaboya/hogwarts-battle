@@ -103,9 +103,9 @@ export class AcquireCardMutation extends StateMutation<AcquireCardMutationInput>
     }
 
     const cardIdx = playerCards.availableCards.findIndex(
-      card => card.id === cardInstance.id
+      card => card?.id === cardInstance.id
     );
-    playerCards.availableCards[cardIdx] = playerCards.deck.pop()!;
+    playerCards.availableCards[cardIdx] = playerCards.deck.pop() ?? null;
 
     return {
       ...gameState,

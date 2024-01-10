@@ -12,7 +12,7 @@ export interface PlayerCardsEvents {
 }
 
 export interface PlayerCardsExternalState {
-  availableCards: PlayerCardInstance[];
+  availableCards: (PlayerCardInstance | null)[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
