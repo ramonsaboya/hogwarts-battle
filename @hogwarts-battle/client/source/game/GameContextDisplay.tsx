@@ -16,7 +16,6 @@ export default function GameContextDisplay() {
     player => player.playerID === gameContext.currentPlayer
   )!;
 
-  console.log(gameContext.playerTurnOrder);
   const playerOrder = gameContext.playerTurnOrder.map(playerID => {
     const player = allPlayers.find(player => player.playerID === playerID)!;
     return player.playerName;

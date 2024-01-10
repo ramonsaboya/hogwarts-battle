@@ -16,15 +16,15 @@ type Props = {
 
 export default function PlayerGenericPileDisplay({pile}: Props) {
   const classes = useStyles();
+
+  if (pile.length === 0) {
+    return null;
+  }
+
+  const mostRecentCard = pile[pile.length - 1];
   return (
     <div className={classes.container}>
-      {pile.map(cardInstance => (
-        <PlayerCardDisplay
-          key={cardInstance.id}
-          cardInstance={cardInstance}
-          disabled={true}
-        />
-      ))}
+      <PlayerCardDisplay cardInstance={mostRecentCard} disabled={true} />
     </div>
   );
 }
