@@ -12,7 +12,7 @@ const useStyles = createUseStyles({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'end',
+    justifyContent: 'start',
     alignItems: 'center',
     height: '150px',
     width: '100px',
@@ -29,13 +29,22 @@ const useStyles = createUseStyles({
       cursor: 'not-allowed',
     },
   },
-  type: {},
+  type: {
+    marginTop: '5px',
+  },
   name: {
     marginTop: '10px',
-    marginBottom: '10px',
+    textWrap: 'nowrap',
+    maxWidth: '100%',
+    minHeight: '25px',
+    textOverflow: 'ellipsis',
+    maxLines: '1',
+    overflow: 'clip',
   },
   description: {
     textAlign: 'start',
+    overflow: 'scroll',
+    marginBottom: '25px',
   },
   cost: {
     position: 'absolute',
@@ -44,6 +53,8 @@ const useStyles = createUseStyles({
   },
   hero: {
     marginTop: '10px',
+    position: 'absolute',
+    bottom: '5px',
   },
 });
 
